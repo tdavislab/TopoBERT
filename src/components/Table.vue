@@ -7,8 +7,9 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in tableData.rows">
+      <tr class="tooltip-container" v-for="row in tableData.rows">
         <td v-for="rowElement in row">{{ rowElement }}</td>
+        <td class="tooltip-text" v-html="tableHover(row)"></td>
       </tr>
       </tbody>
     </table>
@@ -22,6 +23,15 @@ export default {
   data() {
     this.tableData = this.$store.state.tableData;
   },
+  methods: {
+    tableHover(row) {
+      function formatSentence(sentence, word_id) {
+        return `<p>${sentence.split(' ').map((d, i) => i === word_id - 1 ? `<u><b>${d}</b></u>` : d).join(' ')}</p>`
+      }
+      let sent_id = row[0], word_id = row[1] ;
+      return formatSentence(this.$store.state.sentData[sent_id], word_id);
+    }
+  }
 }
 </script>
 
@@ -29,5 +39,55 @@ export default {
 #data-table {
   height: 65vh;
   overflow-y: auto;
+}
+
+.tooltip-container {
+    /*display:inline-block;*/
+    position:relative;
+    border-bottom:1px dotted #666;
+    /*text-align:left;*/
+}
+
+.tooltip-container .tooltip-text {
+    min-width:200px;
+    top:40px;
+    left:50%;
+    transform:translate(-50%, 0);
+    padding:10px 20px;
+    color:#444444;
+    background-color:#EEEEEE;
+    font-weight:normal;
+    font-size:13px;
+    border-radius:8px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+    visibility:hidden; opacity:0; transition:opacity 0.8s;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility:visible; opacity:1;
+}
+
+.tooltip-container .tooltip-text i {
+    position:absolute;
+    bottom:100%;
+    left:50%;
+    margin-left:-12px;
+    width:24px;
+    height:12px;
+    overflow:hidden;
+}
+
+.tooltip-container .tooltip-text i::after {
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    left:50%;
+    transform:translate(-50%,50%) rotate(45deg);
+    background-color:#EEEEEE;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
 }
 </style>

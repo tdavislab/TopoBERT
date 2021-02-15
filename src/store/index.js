@@ -1,6 +1,7 @@
 import {createStore} from 'vuex'
 import layerData from '../../public/static/data/layerData.json'
 import graphData from '../../public/static/mapper_graphs/euclidean_l2_50/0.json'
+import sentData from '../../public/static/sentences.json'
 
 import $ from 'jquery'
 
@@ -8,6 +9,7 @@ export default createStore({
   state: {
     layers: layerData.layerData,
     graphData: graphData,
+    sentData: sentData,
     dataset: 'euclidean_l2_50',
     currentIteration: 0,
     tableData: {
