@@ -10,7 +10,7 @@ export default createStore({
     layers: layerData.layerData,
     graphData: graphData,
     sentData: sentData,
-    dataset: 'euclidean_l2_50',
+    dataset: 'euclidean_l2_50_75',
     currentIteration: 0,
     tableData: {
       header: ['sent_id', 'word_id', 'word', 'label', 'L2 norm'],
@@ -49,8 +49,17 @@ export default createStore({
       context.commit('changeCurrentIteration', newIterationNum);
       $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, function (newGraphData) {
         context.commit('updateGraphData', newGraphData);
-        console.log('Loaded iteration = ', context.state.dataset, context.state.currentIteration)
-      });
+      })
+        .done(function () {
+          console.log('Loaded iteration = ', context.state.dataset, context.state.currentIteration);
+        })
+        .fail(function () {
+          $.getJSON(process.env.VUE_APP_ROOT_API + 'get_graph',
+            {dataset: context.state.dataset, iteration: context.state.currentIteration},
+            function (response) {
+              console.log(response);
+            })
+        })
     },
     changeDataset(context, newDataset) {
       context.commit('changeDataset', newDataset);
