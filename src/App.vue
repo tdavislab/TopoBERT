@@ -4,15 +4,14 @@
   </nav>
 
   <div id="app-body" class="container-fluid">
-    <div class="row pt-2">
-      <Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-6"></Layers>
-      <DatasetSelector class="col-2"></DatasetSelector>
-      <IterationSlider class="col-4"></IterationSlider>
-    </div>
-
     <div class="row">
       <Graph class="col-8"></Graph>
       <div class="col-4">
+        <div>
+          <!-- <Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-2"></Layers> -->
+          <DatasetSelector></DatasetSelector>
+          <IterationSlider></IterationSlider>
+        </div>
         <Stats></Stats>
         <Table></Table>
       </div>

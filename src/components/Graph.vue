@@ -68,7 +68,7 @@ export default {
   /*margin-left: 0.8em;*/
   /*margin-right: 0.8em;*/
   /*background: #dddddd;*/
-  padding: 0;
+  margin-top: 0.5rem;
   height: 85vh;
 }
 </style>

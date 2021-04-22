@@ -5,7 +5,7 @@
     </label>
     <div class="row">
       <div id="playBtn" class="col-1" v-on:click="togglePlay" v-html="symbol"></div>
-      <input type="range" id="iterationSlider" class="form-range" min="0" max="176" step="1" v-model="value" v-on:change="iterationChanged">
+      <input type="range" id="iterationSlider" class="form-range col-11" min="0" max="176" step="1" v-model="value" v-on:change="iterationChanged">
     </div>
   </div>
 </template>
