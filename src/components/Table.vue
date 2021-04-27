@@ -37,7 +37,7 @@ export default {
 
 <style scoped>
 #data-table {
-  height: 65vh;
+  height: 49vh;
   overflow-y: auto;
 }
 

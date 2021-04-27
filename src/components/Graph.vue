@@ -11,6 +11,31 @@
 import ForceGraph from './ForceGraph';
 import * as d3 from "d3";
 
+function updateTable(node, store) {
+  let rawRowData = node.datum().membership.metadata;
+  let rowData = rawRowData.map(d => [...d.slice(0, 4), d[4].toFixed(2)]);
+  store.commit('updateTableRows', rowData);
+  let newStats = {
+    nodeName: node.datum().id,
+    numMembers: node.datum().membership.metadata.length,
+    avgNorm: node.datum().l2avg.toFixed(2)
+  }
+  store.commit('updateStats', newStats);
+}
+
+function nodeClickDecoration(clickedNode, allNodes) {
+  allNodes.attr('stroke-width', '1px');
+  clickedNode.attr('stroke-width', '3px');
+}
+
+function dismissClickSelection(clickEvent, app) {
+  if (clickEvent.target.id === 'mapper-graph') {
+    app.graph.nodes.attr('stroke-width', '1px');
+    app.$store.commit('resetTableRows');
+    app.$store.commit('resetStats');
+  }
+}
+
 export default {
   name: "Graph",
   data() {
@@ -24,39 +49,33 @@ export default {
   mounted: function () {
     this.graphData = this.$store.state.graphData;
     this.graph = new ForceGraph('#mapper-graph', this.width, this.height);
-    this.graph.graphData(this.graphData);
-    const store = this.$store;
-    this.graph.nodes.on('click', function (d) {
-      let node = d3.select(this);
-      let rawRowData = node.datum().membership.metadata;
-      let rowData = rawRowData.map(d => [...d.slice(0, 4), d[4].toFixed(2)]);
-      store.commit('updateTableRows', rowData);
-      let newStats = {
-        nodeName: node.datum().id,
-        numMembers: node.datum().membership.metadata.length,
-        avgNorm: node.datum().l2avg.toFixed(2)
-      }
-      store.commit('updateStats', newStats);
+    this.graph.graphDataBackup(this.graphData);
+    const parent = this;
+    parent.graph.svg.on('click', function (e) {
+      dismissClickSelection(e, parent);
     })
+
+    parent.graph.nodes.on('click', function (d) {
+      console.log('d', d);
+      let node = d3.select(this);
+      updateTable(node, parent.$store);
+      nodeClickDecoration(node, parent.graph.nodes);
+    });
   },
   watch: {
     '$store.state.graphData': function () {
       this.graphData = this.$store.state.graphData;
-      this.graph.simulation.stop();
-      this.graph.graphData(this.graphData);
-      const store = this.$store;
-      this.graph.nodes.on('click', function (d) {
-        let node = d3.select(this);
-        let rawRowData = node.datum().membership.metadata;
-        let rowData = rawRowData.map(d => [...d.slice(0, 4), d[4].toFixed(2)]);
-        store.commit('updateTableRows', rowData);
-        let newStats = {
-          nodeName: node.datum().id,
-          numMembers: node.datum().membership.metadata.length,
-          avgNorm: node.datum().l2avg.toFixed(2)
-        }
-        store.commit('updateStats', newStats);
+      // this.graph.simulation.stop();
+      this.graph.graphDataBackup(this.graphData);
+      const parent = this;
+      parent.graph.svg.on('click',function (e) {
+        dismissClickSelection(e, parent);
       })
+      parent.graph.nodes.on('click', function (d) {
+        let node = d3.select(this);
+        updateTable(node, parent.$store);
+        nodeClickDecoration(node, parent.graph.nodes);
+      });
     }
   },
   methods: {}
@@ -69,6 +88,7 @@ export default {
   /*margin-right: 0.8em;*/
   /*background: #dddddd;*/
   margin-top: 0.5rem;
-  height: 85vh;
+  height: 90vh;
 }
+
 </style>

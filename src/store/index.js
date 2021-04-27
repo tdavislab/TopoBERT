@@ -10,7 +10,7 @@ export default createStore({
     layers: layerData.layerData,
     graphData: graphData,
     sentData: sentData,
-    dataset: 'euclidean_l2_50_75',
+    dataset: 'euclidean_l2_50_50',
     currentIteration: 0,
     tableData: {
       header: ['sent_id', 'word_id', 'word', 'label', 'L2 norm'],
@@ -42,11 +42,23 @@ export default createStore({
     },
     changeDataset(state, newDataset) {
       state.dataset = newDataset;
+    },
+    resetTableRows(state) {
+      state.tableData.rows = [];
+    },
+    resetStats(state) {
+      state.stats = {
+        nodeName: '...',
+        numMembers: '...',
+        avgNorm: '...'
+      }
     }
   },
   actions: {
     loadIterationFile(context, newIterationNum) {
       context.commit('changeCurrentIteration', newIterationNum);
+      context.commit('resetTableRows');
+      context.commit('resetStats');
       $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, function (newGraphData) {
         context.commit('updateGraphData', newGraphData);
       })

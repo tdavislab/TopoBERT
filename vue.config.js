@@ -1,3 +1,10 @@
 module.exports = {
-  lintOnSave: false
+  lintOnSave: false,
+  // configureWebpack: {
+  //   devServer: {
+  //     watchOptions: {
+  //       ignored: [/node_modules/, /public/],
+  //     }
+  //   }
+  // }
 }

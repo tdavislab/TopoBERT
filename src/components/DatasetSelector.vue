@@ -44,7 +44,7 @@
       </select>
     </div>
 
-    <button id="run-btn" class="btn btn-primary" v-on:click="changeDataset()">Run</button>
+    <button id="run-btn" class="btn btn-primary" v-on:click="changeDataset()">Update graph</button>
   </div>
 </template>
 
