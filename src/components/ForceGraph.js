@@ -100,7 +100,6 @@ export default class ForceGraph {
 
     const linkData = this.gData.links.map(d => Object.assign({}, d));
     const nodeData = this.gData.nodes.map(d => Object.assign({}, d));
-    console.log(nodeData)
 
     // Scales
     this.nodeColorScale = d3.scaleSequential(d3.interpolateTurbo).domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));

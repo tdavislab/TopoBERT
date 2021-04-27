@@ -21,6 +21,7 @@ export default {
   name: "Table",
   data() {
     this.tableData = this.$store.state.tableData;
+    return {};
   },
   methods: {
     tableHover(row) {

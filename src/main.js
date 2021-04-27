@@ -8,4 +8,4 @@ const vm = createApp(App)
   .use(store)
   .mount('#app');
 
-console.log(vm)
+// console.log(vm)

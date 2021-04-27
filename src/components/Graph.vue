@@ -1,8 +1,7 @@
 <template>
   <div class="col-8">
     <div id="graph" class="border rounded">
-      <svg id="mapper-graph" v-bind:width="width" v-bind:height="height">
-      </svg>
+      <svg id="mapper-graph" v-bind:width="width" v-bind:height="height"></svg>
     </div>
   </div>
 </template>
@@ -47,9 +46,9 @@ export default {
     }
   },
   mounted: function () {
-    this.graphData = this.$store.state.graphData;
-    this.graph = new ForceGraph('#mapper-graph', this.width, this.height);
-    this.graph.graphDataBackup(this.graphData);
+    this.$store.commit('setGraph', new ForceGraph('#mapper-graph', this.width, this.height));
+    this.graph = this.$store.state.graph;
+    this.graph.graphDataBackup(this.$store.state.graphData);
     const parent = this;
     parent.graph.svg.on('click', function (e) {
       dismissClickSelection(e, parent);
@@ -64,11 +63,9 @@ export default {
   },
   watch: {
     '$store.state.graphData': function () {
-      this.graphData = this.$store.state.graphData;
-      // this.graph.simulation.stop();
-      this.graph.graphDataBackup(this.graphData);
+      this.graph.graphDataBackup(this.$store.state.graphData);
       const parent = this;
-      parent.graph.svg.on('click',function (e) {
+      parent.graph.svg.on('click', function (e) {
         dismissClickSelection(e, parent);
       })
       parent.graph.nodes.on('click', function (d) {
@@ -76,6 +73,7 @@ export default {
         updateTable(node, parent.$store);
         nodeClickDecoration(node, parent.graph.nodes);
       });
+      this.$store.dispatch('filterJaccard', -1.0);
     }
   },
   methods: {}

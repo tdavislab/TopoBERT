@@ -8,10 +8,12 @@ import $ from 'jquery'
 export default createStore({
   state: {
     layers: layerData.layerData,
+    graph: [],
     graphData: graphData,
     sentData: sentData,
     dataset: 'euclidean_l2_50_50',
     currentIteration: 0,
+    jaccardFilter: 0.0,
     tableData: {
       header: ['sent_id', 'word_id', 'word', 'label', 'L2 norm'],
       rows: []
@@ -28,6 +30,9 @@ export default createStore({
         layer.selected = layer.id === layerId;
       })
     },
+    setGraph(state, forceGraphObj) {
+      state.graph = forceGraphObj;
+    },
     updateGraphData(state, newGraphData) {
       state.graphData = newGraphData;
     },
@@ -43,6 +48,9 @@ export default createStore({
     changeDataset(state, newDataset) {
       state.dataset = newDataset;
     },
+    changeJaccard(state, newJaccardVal) {
+      state.jaccardFilter = newJaccardVal;
+    },
     resetTableRows(state) {
       state.tableData.rows = [];
     },
@@ -52,7 +60,7 @@ export default createStore({
         numMembers: '...',
         avgNorm: '...'
       }
-    }
+    },
   },
   actions: {
     loadIterationFile(context, newIterationNum) {
@@ -76,6 +84,13 @@ export default createStore({
     changeDataset(context, newDataset) {
       context.commit('changeDataset', newDataset);
       context.dispatch('loadIterationFile', 0);
+    },
+    filterJaccard(context, newJaccard) {
+      if (newJaccard !== -1.0) {
+        context.commit('changeJaccard', newJaccard);
+      }
+      context.state.graph.links.attr('visibility', 'visible');
+      context.state.graph.links.filter(d => d.intersection <= context.state.jaccardFilter).attr('visibility', 'hidden');
     }
   },
   modules: {},

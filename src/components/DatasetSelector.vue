@@ -61,6 +61,7 @@ export default {
       intervals: '50',
       overlap: '50',
     }
+    return {};
   },
   methods: {
     changeDataset() {

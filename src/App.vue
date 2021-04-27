@@ -12,6 +12,7 @@
           <DatasetSelector></DatasetSelector>
           <IterationSlider></IterationSlider>
         </div>
+        <JaccardFilter></JaccardFilter>
         <Stats></Stats>
         <Table></Table>
       </div>
@@ -27,6 +28,7 @@ import IterationSlider from "./components/IterationSlider";
 import Table from "./components/Table";
 import Stats from "./components/Stats";
 import DatasetSelector from "./components/DatasetSelector";
+import JaccardFilter from "@/components/JaccardFilter";
 
 export default {
   name: 'App',
@@ -36,10 +38,11 @@ export default {
     IterationSlider,
     Graph,
     Stats,
-    Table
+    Table,
+    JaccardFilter
   },
   data() {
-
+    return {};
   },
   methods: {
     clickLayer(layerId) {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="border rounded px-4 py-2 mb-2">
     <label id="sliderLabel" for="iterationSlider" class="form-label">
       Current graph = {{ value }}
     </label>
