@@ -27,11 +27,11 @@ function nodeClickDecoration(clickedNode, allNodes) {
   clickedNode.attr('stroke-width', '3px');
 }
 
-function dismissClickSelection(clickEvent, app) {
+function dismissClickSelection(clickEvent, parent) {
   if (clickEvent.target.id === 'mapper-graph') {
-    app.graph.nodes.attr('stroke-width', '1px');
-    app.$store.commit('resetTableRows');
-    app.$store.commit('resetStats');
+    parent.graph.nodes.attr('stroke-width', '1px');
+    parent.$store.commit('resetTableRows');
+    parent.$store.commit('resetStats');
   }
 }
 
@@ -48,32 +48,32 @@ export default {
   mounted: function () {
     this.$store.commit('setGraph', new ForceGraph('#mapper-graph', this.width, this.height));
     this.graph = this.$store.state.graph;
-    this.graph.graphDataBackup(this.$store.state.graphData);
+    console.log(this.graph)
+    this.$store.dispatch('drawGraph');
     const parent = this;
-    parent.graph.svg.on('click', function (e) {
-      dismissClickSelection(e, parent);
-    })
-
-    parent.graph.nodes.on('click', function (d) {
-      console.log('d', d);
-      let node = d3.select(this);
-      updateTable(node, parent.$store);
-      nodeClickDecoration(node, parent.graph.nodes);
-    });
+    // parent.graph.svg.on('click', function (e) {
+    //   dismissClickSelection(e, parent);
+    // })
+    //
+    // parent.graph.nodes.on('click', function (d) {
+    //   let node = d3.select(this);
+    //   updateTable(node, parent.$store);
+    //   nodeClickDecoration(node, parent.graph.nodes);
+    // });
   },
   watch: {
     '$store.state.graphData': function () {
-      this.graph.graphDataBackup(this.$store.state.graphData);
+      this.$store.dispatch('drawGraph');
       const parent = this;
-      parent.graph.svg.on('click', function (e) {
-        dismissClickSelection(e, parent);
-      })
-      parent.graph.nodes.on('click', function (d) {
-        let node = d3.select(this);
-        updateTable(node, parent.$store);
-        nodeClickDecoration(node, parent.graph.nodes);
-      });
-      this.$store.dispatch('filterJaccard', -1.0);
+      // parent.graph.svg.on('click', function (e) {
+      //   dismissClickSelection(e, parent);
+      // })
+      // parent.graph.nodes.on('click', function (d) {
+      //   let node = d3.select(this);
+      //   updateTable(node, parent.$store);
+      //   nodeClickDecoration(node, parent.graph.nodes);
+      // });
+      // this.$store.dispatch('filterJaccard', -1.0);
     }
   },
   methods: {}

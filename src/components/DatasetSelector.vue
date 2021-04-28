@@ -44,7 +44,19 @@
       </select>
     </div>
 
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <label for="param-layout" class="input-group-text">Layout</label>
+      </div>
+      <select id="param-layout" class="form-select" v-model="params.layout" v-on:change="layoutChanged()">
+        <option disabled value="" selected>Select graph layout</option>
+        <option value="force">Force directed</option>
+        <option value="pca">PCA</option>
+      </select>
+    </div>
+
     <button id="run-btn" class="btn btn-primary" v-on:click="changeDataset()">Update graph</button>
+
   </div>
 </template>
 
@@ -60,6 +72,7 @@ export default {
       filter: 'l2',
       intervals: '50',
       overlap: '50',
+      layout: 'force'
     }
     return {};
   },
@@ -71,6 +84,11 @@ export default {
     },
     paramChanged() {
       $('#run-btn').prop('disabled', false);
+    },
+    layoutChanged() {
+      let layout = this.params.layout;
+      this.$store.commit('changeGraphType', layout);
+      this.$store.dispatch('drawGraph');
     }
   }
 }

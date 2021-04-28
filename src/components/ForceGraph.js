@@ -8,14 +8,13 @@ export default class ForceGraph {
     this.svg_group = this.svg.append("g").attr("id", "graph-container-group");
   }
 
-  graphData(gData) {
+  graphDataPCA(gData) {
     this.svg_group.selectAll('*').remove();
 
     this.gData = gData;
 
     const linkData = this.gData.links.map(d => Object.assign({}, d));
     const nodeData = this.gData.nodes.map(d => Object.assign({}, d));
-    console.log(nodeData)
 
     // Scales
     this.nodeColorScale = d3.scaleSequential(d3.interpolateTurbo).domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));
@@ -93,7 +92,7 @@ export default class ForceGraph {
     }
   }
 
-  graphDataBackup(gData) {
+  graphDataForce(gData) {
     this.svg_group.selectAll('*').remove();
 
     this.gData = gData;
