@@ -1,9 +1,35 @@
-import {createStore} from 'vuex'
-import layerData from '../../public/static/data/layerData.json'
-import graphData from '../../public/static/mapper_graphs/euclidean_l2_50_50/0.json'
-import sentData from '../../public/static/sentences.json'
+import {createStore} from 'vuex';
+import layerData from '../../public/static/data/layerData.json';
+import graphData from '../../public/static/mapper_graphs/euclidean_l2_50_50/0.json';
+import sentData from '../../public/static/sentences.json';
 
-import $ from 'jquery'
+import $ from 'jquery';
+import * as d3 from "d3";
+
+function updateTable(node, context) {
+  let rawRowData = node.datum().membership.metadata;
+  let rowData = rawRowData.map(d => [...d.slice(0, 4), d[4].toFixed(2)]);
+  context.commit('updateTableRows', rowData);
+  let newStats = {
+    nodeName: node.datum().id,
+    numMembers: node.datum().membership.metadata.length,
+    avgNorm: node.datum().l2avg.toFixed(2)
+  }
+  context.commit('updateStats', newStats);
+}
+
+function nodeClickDecoration(clickedNode, allNodes) {
+  allNodes.attr('stroke-width', '1px');
+  clickedNode.attr('stroke-width', '3px');
+}
+
+function dismissClickSelection(clickEvent, context) {
+  if (clickEvent.target.id === 'mapper-graph') {
+    context.state.graph.nodes.attr('stroke-width', '1px');
+    context.commit('resetTableRows');
+    context.commit('resetStats');
+  }
+}
 
 export default createStore({
   state: {
@@ -88,7 +114,7 @@ export default createStore({
     },
     changeDataset(context, newDataset) {
       context.commit('changeDataset', newDataset);
-      context.dispatch('loadIterationFile', 0);
+      context.dispatch('loadIterationFile', context.state.currentIteration);
     },
     filterJaccard(context, newJaccard) {
       if (newJaccard !== -1.0) {
@@ -98,12 +124,23 @@ export default createStore({
       context.state.graph.links.filter(d => d.intersection <= context.state.jaccardFilter).attr('visibility', 'hidden');
     },
     drawGraph(context) {
+      // Draw graph using the layout parameter
       if (context.state.graphType === 'force') {
         context.state.graph.graphDataForce(context.state.graphData);
-      }
-      else if (context.state.graphType === 'pca') {
+      } else if (context.state.graphType === 'pca') {
         context.state.graph.graphDataPCA(context.state.graphData);
       }
+
+      context.state.graph.svg.on('click', function (clickEvent) {
+        dismissClickSelection(clickEvent, context)
+      });
+
+      context.state.graph.nodes.on('click', function (clickEvent) {
+        let node = d3.select(this);
+        updateTable(node, context);
+        nodeClickDecoration(node, context.state.graph.nodes);
+      });
+
       context.dispatch('filterJaccard', context.state.jaccardFilter);
     }
   },

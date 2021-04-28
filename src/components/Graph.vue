@@ -8,32 +8,6 @@
 
 <script>
 import ForceGraph from './ForceGraph';
-import * as d3 from "d3";
-
-function updateTable(node, store) {
-  let rawRowData = node.datum().membership.metadata;
-  let rowData = rawRowData.map(d => [...d.slice(0, 4), d[4].toFixed(2)]);
-  store.commit('updateTableRows', rowData);
-  let newStats = {
-    nodeName: node.datum().id,
-    numMembers: node.datum().membership.metadata.length,
-    avgNorm: node.datum().l2avg.toFixed(2)
-  }
-  store.commit('updateStats', newStats);
-}
-
-function nodeClickDecoration(clickedNode, allNodes) {
-  allNodes.attr('stroke-width', '1px');
-  clickedNode.attr('stroke-width', '3px');
-}
-
-function dismissClickSelection(clickEvent, parent) {
-  if (clickEvent.target.id === 'mapper-graph') {
-    parent.graph.nodes.attr('stroke-width', '1px');
-    parent.$store.commit('resetTableRows');
-    parent.$store.commit('resetStats');
-  }
-}
 
 export default {
   name: "Graph",
@@ -47,10 +21,7 @@ export default {
   },
   mounted: function () {
     this.$store.commit('setGraph', new ForceGraph('#mapper-graph', this.width, this.height));
-    this.graph = this.$store.state.graph;
-    console.log(this.graph)
     this.$store.dispatch('drawGraph');
-    const parent = this;
     // parent.graph.svg.on('click', function (e) {
     //   dismissClickSelection(e, parent);
     // })
@@ -64,7 +35,6 @@ export default {
   watch: {
     '$store.state.graphData': function () {
       this.$store.dispatch('drawGraph');
-      const parent = this;
       // parent.graph.svg.on('click', function (e) {
       //   dismissClickSelection(e, parent);
       // })
