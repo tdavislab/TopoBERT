@@ -1,6 +1,6 @@
 <template>
   <div id="stats-div" class="border rounded p-2">
-    <h4>Statistics</h4>
+    <h5>Statistics</h5>
     <hr/>
     <table class="table table-striped">
       <thead>

@@ -14,6 +14,7 @@
         </div>
         <JaccardFilter></JaccardFilter>
         <Stats></Stats>
+        <LabelFilter></LabelFilter>
         <Table></Table>
       </div>
     </div>
@@ -29,10 +30,12 @@ import Table from "./components/Table";
 import Stats from "./components/Stats";
 import DatasetSelector from "./components/DatasetSelector";
 import JaccardFilter from "@/components/JaccardFilter";
+import LabelFilter from "@/components/LabelFilter";
 
 export default {
   name: 'App',
   components: {
+    LabelFilter,
     Layers,
     DatasetSelector,
     IterationSlider,

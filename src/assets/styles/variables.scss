@@ -5,7 +5,9 @@ $layer-text-color: white;
 $svg-background-color: white;
 $master-bg-color: #c1c1c1;
 $separator-color: darken($master-bg-color, 50%);
-$separator-color: darken($master-bg-color, 50%);
+$label-bg-color: #707acf;
+$label-bg-color-hover: darken($label-bg-color, 20%);
+$label-bg-color-selected: darken($label-bg-color, 15%);
 
 //line {
 //  filter: drop-shadow(4px 4px 5px grey);

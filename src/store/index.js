@@ -1,5 +1,6 @@
 import {createStore} from 'vuex';
 import layerData from '../../public/static/data/layerData.json';
+import labels from '../../public/static/data/labels.json'
 import graphData from '../../public/static/mapper_graphs/euclidean_l2_50_50/0.json';
 import sentData from '../../public/static/sentences.json';
 
@@ -49,9 +50,22 @@ export default createStore({
       nodeName: '...',
       numMembers: '...',
       avgNorm: '...'
-    }
+    },
+    labels: labels.labels
   },
   mutations: {
+    toggleLabelSelection(state, selectedLabel) {
+      state.labels.forEach(function (labelItem) {
+        if (labelItem.label === selectedLabel) {
+          labelItem.selected = !labelItem.selected;
+        }
+      });
+    },
+    resetLabelSelection(state) {
+      state.labels.forEach(function (label) {
+        label.selected = false;
+      });
+    },
     setActiveLayer(state, layerId) {
       state.layers.forEach(function (layer) {
         layer.selected = layer.id === layerId;
@@ -123,6 +137,30 @@ export default createStore({
       context.state.graph.links.attr('visibility', 'visible');
       context.state.graph.links.filter(d => d.intersection <= context.state.jaccardFilter).attr('visibility', 'hidden');
     },
+    filterLabel(context, label) {
+      function labelCriteria(metadata, activeLabels) {
+        let total = metadata.length;
+        let overlap = metadata.filter(d => activeLabels.includes(d[3]));
+        return overlap.length > 0;
+      }
+
+      if (label === -1) {
+        context.commit('resetLabelSelection');
+        context.state.graph.nodes.attr('opacity', '1');
+        context.state.graph.links.attr('opacity', '1');
+      } else {
+        context.commit('toggleLabelSelection', label);
+        let activeLabels = context.state.labels.filter(d => d.selected === true).map(d => d.label);
+        if (activeLabels.length === 0) {
+          context.state.graph.nodes.attr('opacity', '1');
+          context.state.graph.links.attr('opacity', '1');
+        } else {
+          context.state.graph.nodes.filter(d => !labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '0.3');
+          context.state.graph.nodes.filter(d => labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '1');
+          context.state.graph.links.attr('opacity', '0.3');
+        }
+      }
+    },
     drawGraph(context) {
       // Draw graph using the layout parameter
       if (context.state.graphType === 'force') {
@@ -142,6 +180,7 @@ export default createStore({
       });
 
       context.dispatch('filterJaccard', context.state.jaccardFilter);
+      context.dispatch('filterLabel', null);
     }
   },
   modules: {},
