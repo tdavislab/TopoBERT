@@ -6,6 +6,13 @@ export default class ForceGraph {
     this.height = height;
     this.svg = d3.select(svg).attr('viewBox', [0, 0, 1000, 1000]);
     this.svg_group = this.svg.append("g").attr("id", "graph-container-group");
+
+    // Scales
+    this.nodeColorScale = d3.scaleSequential(d3.interpolateTurbo);
+    this.nodeSizeScale = d3.scaleLinear().range([5, 15]);
+    this.linkColorScale = d3.scaleSequential(d3.interpolatePlasma);
+    // this.linkColorScale = function(d) {return '#484848'}
+    this.linkWidthScale = d3.scaleLinear().range([1, 10]);
   }
 
   graphDataPCA(gData) {
@@ -16,11 +23,10 @@ export default class ForceGraph {
     const linkData = this.gData.links.map(d => Object.assign({}, d));
     const nodeData = this.gData.nodes.map(d => Object.assign({}, d));
 
-    // Scales
-    this.nodeColorScale = d3.scaleSequential(d3.interpolateTurbo).domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));
-    this.nodeSizeScale = d3.scaleLog().domain(d3.extent(nodeData.map(d => d["membership"]["membership_ids"].length))).range([3, 8]);
-    this.linkColorScale = d3.scaleSequential(d3.interpolatePlasma).domain(d3.extent(linkData.map(d => d.intersection)));
-    this.linkWidthScale = d3.scaleLog().domain(d3.extent(linkData.map(d => d["intersection"]))).range([1, 4]);
+    this.nodeColorScale.domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));
+    this.nodeSizeScale.domain(d3.extent(nodeData.map(d => d["membership"]["membership_ids"].length)))
+    this.linkColorScale.domain(d3.extent(linkData.map(d => d.intersection)));
+    this.linkWidthScale.domain(d3.extent(linkData.map(d => d["intersection"])))
 
     // Axes
     this.xAxis = d3.scaleLinear().domain(d3.extent(nodeData.map(d => d.membership.x))).range([0, 1000]);
@@ -51,7 +57,7 @@ export default class ForceGraph {
       .attr("y1", d => this.yAxis(get_node(d.source).membership.y))
       .attr("x2", d => this.xAxis(get_node(d.target).membership.x))
       .attr("y2", d => this.yAxis(get_node(d.target).membership.y))
-      // .call(this.drag(this.simulation));
+    // .call(this.drag(this.simulation));
 
     // Nodes
     this.nodes = this.svg_group.append("g")
@@ -66,7 +72,7 @@ export default class ForceGraph {
       .attr("cx", d => this.xAxis(d.membership.x))
       .attr("cy", d => this.yAxis(d.membership.y))
       .attr("r", d => this.nodeSizeScale(d["membership"]["membership_ids"].length))
-      // .call(this.drag(this.simulation));
+    // .call(this.drag(this.simulation));
 
     // this.simulation.on('tick', () => {
     //   this.nodes
@@ -100,11 +106,12 @@ export default class ForceGraph {
     const linkData = this.gData.links.map(d => Object.assign({}, d));
     const nodeData = this.gData.nodes.map(d => Object.assign({}, d));
 
-    // Scales
-    this.nodeColorScale = d3.scaleSequential(d3.interpolateTurbo).domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));
-    this.nodeSizeScale = d3.scaleLog().domain(d3.extent(nodeData.map(d => d["membership"]["membership_ids"].length))).range([3, 8]);
-    this.linkColorScale = d3.scaleSequential(d3.interpolatePlasma).domain(d3.extent(linkData.map(d => d.intersection)));
-    this.linkWidthScale = d3.scaleLog().domain(d3.extent(linkData.map(d => d["intersection"]))).range([1, 4]);
+    console.log(nodeData);
+
+    this.nodeColorScale.domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));
+    this.nodeSizeScale.domain(d3.extent(nodeData.map(d => d["membership"]["membership_ids"].length)))
+    // this.linkColorScale.domain(d3.extent(linkData.map(d => d.intersection)));
+    this.linkWidthScale.domain(d3.extent(linkData.map(d => d["intersection"])))
 
     // Simulation
     this.simulation = d3.forceSimulation(nodeData)
@@ -191,5 +198,16 @@ export default class ForceGraph {
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended);
+  }
+
+  colorNodesByLabel(allLabels, nodeColorScale) {
+    function majorityLabel(datapoint) {
+      let arr = datapoint.membership.metadata.map(d => d[3]);
+      return arr.sort((a, b) => arr.filter(v => v === a).length - arr.filter(v => v === b).length).pop();
+    }
+
+    this.nodes.attr('fill', d => nodeColorScale(majorityLabel(d)))
+      .append('title')
+      .text(d => majorityLabel(d))
   }
 }

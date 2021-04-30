@@ -9,9 +9,9 @@
         ({{ numFiltered }} selected <font-awesome-icon icon="times-circle"/>)
       </span>
     </div>
-    <div id="tag-container">
+    <div id="tag-container" hidden>
       <div v-for="labelItem in labels" v-bind:key="labelItem.label" v-bind:class="{'label-selected': labelItem.selected}"
-           v-on:click="labelClicked(labelItem.label)" class="label-tag">
+           v-on:click="labelClicked(labelItem.label)" class="label-tag" v-bind:style="bgColor(labelItem.label)">
         {{ labelItem.label }}
       </div>
     </div>
@@ -45,6 +45,9 @@ export default {
     },
     clearSelection() {
       this.$store.dispatch('filterLabel', -1);
+    },
+    bgColor(label) {
+      return {'border-style': 'solid', 'border-color': this.$store.state.nodeColorScale(label)};
     }
   }
 }
@@ -57,17 +60,17 @@ export default {
   cursor: pointer;
   margin: 0.4em;
   font-size: 0.8em;
-  //font-weight: bold;
-  color: #EEEEEE;
+  font-weight: bold;
+  //color: #EEEEEE;
   padding: 0.4em 0.5em 0.5em 0.4em;
   display: inline-block;
-  background-color: $label-bg-color;
+  //background-color: $label-bg-color;
   border-radius: 10px;
   box-shadow: #c3c3c3 3px 3px 5px;
 }
 
 .label-tag:hover {
-  background-color: $label-bg-color-hover;
+  background-color: #bcbcbc;
 }
 
 .label-tag:active {
@@ -76,7 +79,7 @@ export default {
 }
 
 .label-selected {
-  background-color: $label-bg-color-selected;
+  background-color: #919191;
 }
 
 .header-text {

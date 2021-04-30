@@ -1,6 +1,6 @@
 <template>
   <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark">
-    <h1 id="header-text" class="navbar-brand">Probing with TopoAct</h1>
+    <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
   </nav>
 
   <div id="app-body" class="container-fluid">

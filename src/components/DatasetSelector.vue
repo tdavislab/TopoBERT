@@ -17,7 +17,9 @@
       </div>
       <select id="param-filter" class="form-select" v-model="params.filter" v-on:change="paramChanged()">
         <option disabled value="" selected>Filter function</option>
+        <option value="l1">L1</option>
         <option value="l2">L2</option>
+        <option value="knn5">Average KNN - 5</option>
       </select>
     </div>
 

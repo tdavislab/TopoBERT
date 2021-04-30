@@ -32,6 +32,63 @@ function dismissClickSelection(clickEvent, context) {
   }
 }
 
+console.log(labels.labels)
+
+// @formatter:off
+let handTunedColorScale =  {
+  // Circumstance
+  'p.Circumstance'  : '#00429d',
+  'p.Time'          : '#5e5caf',
+    'p.StartTime'     : '#5e5caf',
+    'p.EndTime'       : '#5e5caf',
+  'p.Frequency'     : '#8f7ac0',
+  'p.Duration'      : '#b89bd3',
+  'p.Interval'      : '#debfe8',
+  'p.Locus'         : '#ffe5ff',
+    'p.Goal'          : '#ffe5ff',
+    'p.Source'        : '#ffe5ff',
+  'p.Path'          : '#eabcdd',
+  'p.Direction'     : '#d693b8',
+    'p.Extent'        : '#d693b8',
+  'p.Means'         : '#c26a90',
+  'p.Manner'        : '#ad3f65',
+  'p.Explanation'   : '#93003a',
+    'p.Purpose'       : '#93003a',
+
+  // Participant
+  'p.Causer'        : '#486721',
+    'p.Agent'         : '#486721',
+      'p.Co-Agent'    : '#486721',
+  'p.Theme'         : '#658b4f',
+    'p.Co-Theme'      : '#658b4f',
+    'p.Topic'         : '#658b4f',
+  'p.Stimulus'      : '#85af7d',
+  'p.Experiencer'   : '#a8d5ad',
+  'p.Originator'    : '#d0fbdd',
+  'p.Recipient'     : '#afeccc',
+  'p.Cost'          : '#8cddbf',
+  'p.Beneficiary'   : '#63ceb4',
+  'p.Instrument'    : '#22bfac',
+
+  'p.Identity'      : '#ecad00',
+  'p.Species'       : '#f4b842',
+  'p.Gestalt'       : '#fac368',
+    'p.Possessor'     : '#fac368',
+    'p.Whole'         : '#fac368',
+  'p.Characteristic': '#ffcf8a',
+    'p.Possession'    : '#ffcf8a',
+    'p.PartPortion'   : '#ffcf8a',
+    'p.Stuff'         : '#ffcf8a',
+  'p.Accompanier'   : '#ffdbac',
+  'p.ComparisonRef' : '#ffe8ce',
+  'p.RateUnit'      : '#f5c8a2',
+  'p.Quantity'      : '#eca87c',
+    'p.Approximator'  : '#eca87c',
+  'p.SocialRel'     : '#d86042',
+  'p.OrgRole'       : '#cd3030',
+}
+// @formatter:on
+
 export default createStore({
   state: {
     layers: layerData.layerData,
@@ -51,7 +108,9 @@ export default createStore({
       numMembers: '...',
       avgNorm: '...'
     },
-    labels: labels.labels
+    labels: labels.labels,
+    // nodeColorScale: d3.scaleOrdinal(d3.schemeSet1).domain(labels.labels.map(d => d.label))
+    nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]))
   },
   mutations: {
     toggleLabelSelection(state, selectedLabel) {
@@ -111,10 +170,7 @@ export default createStore({
       context.commit('changeCurrentIteration', newIterationNum);
       context.commit('resetTableRows');
       context.commit('resetStats');
-      $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, function (newGraphData) {
-        context.commit('updateGraphData', newGraphData);
-        context.commit('changeGraphType', context.state.graphType);
-      })
+      $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph)
         .done(function () {
           console.log('Loaded iteration = ', context.state.dataset, context.state.currentIteration);
         })
@@ -122,9 +178,18 @@ export default createStore({
           $.getJSON(process.env.VUE_APP_ROOT_API + 'get_graph',
             {dataset: context.state.dataset, iteration: context.state.currentIteration},
             function (response) {
-              console.log(response);
+              console.log('success', response);
+              $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph);
             })
+            .fail((response) => {
+              console.log('failure', response)
+            });
         })
+
+      function updateGraph(newGraphData) {
+        context.commit('updateGraphData', newGraphData);
+        context.commit('changeGraphType', context.state.graphType);
+      }
     },
     changeDataset(context, newDataset) {
       context.commit('changeDataset', newDataset);
@@ -139,9 +204,8 @@ export default createStore({
     },
     filterLabel(context, label) {
       function labelCriteria(metadata, activeLabels) {
-        let total = metadata.length;
         let overlap = metadata.filter(d => activeLabels.includes(d[3]));
-        return overlap.length > 0;
+        return (overlap.length / metadata.length) > 0.2;
       }
 
       if (label === -1) {
@@ -155,9 +219,9 @@ export default createStore({
           context.state.graph.nodes.attr('opacity', '1');
           context.state.graph.links.attr('opacity', '1');
         } else {
-          context.state.graph.nodes.filter(d => !labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '0.3');
+          context.state.graph.nodes.filter(d => !labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '0.05');
           context.state.graph.nodes.filter(d => labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '1');
-          context.state.graph.links.attr('opacity', '0.3');
+          context.state.graph.links.attr('opacity', '0.05');
         }
       }
     },
@@ -179,6 +243,7 @@ export default createStore({
         nodeClickDecoration(node, context.state.graph.nodes);
       });
 
+      context.state.graph.colorNodesByLabel(context.state.labels.map(d => d.label), context.state.nodeColorScale);
       context.dispatch('filterJaccard', context.state.jaccardFilter);
       context.dispatch('filterLabel', null);
     }
