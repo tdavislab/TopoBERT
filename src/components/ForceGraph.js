@@ -106,8 +106,6 @@ export default class ForceGraph {
     const linkData = this.gData.links.map(d => Object.assign({}, d));
     const nodeData = this.gData.nodes.map(d => Object.assign({}, d));
 
-    console.log(nodeData);
-
     this.nodeColorScale.domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));
     this.nodeSizeScale.domain(d3.extent(nodeData.map(d => d["membership"]["membership_ids"].length)))
     // this.linkColorScale.domain(d3.extent(linkData.map(d => d.intersection)));

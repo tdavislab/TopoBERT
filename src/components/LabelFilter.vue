@@ -10,7 +10,7 @@
       </span>
     </div>
     <div id="tag-container" hidden>
-      <div v-for="labelItem in labels" v-bind:key="labelItem.label" v-bind:class="{'label-selected': labelItem.selected}"
+      <div v-for="labelItem in labels" v-bind:class="{'label-selected': labelItem.selected}"
            v-on:click="labelClicked(labelItem.label)" class="label-tag" v-bind:style="bgColor(labelItem.label)">
         {{ labelItem.label }}
       </div>
@@ -47,7 +47,7 @@ export default {
       this.$store.dispatch('filterLabel', -1);
     },
     bgColor(label) {
-      return {'border-style': 'solid', 'border-color': this.$store.state.nodeColorScale(label)};
+      return {'border': '5px solid ' + this.$store.state.nodeColorScale(label)};
     }
   }
 }
@@ -70,12 +70,12 @@ export default {
 }
 
 .label-tag:hover {
-  background-color: #bcbcbc;
+  background-color: #d2d2d2;
 }
 
 .label-tag:active {
   transform: translateY(2px);
-  box-shadow: #858585 3px 3px 5px;
+  box-shadow: #b7b7b7 3px 3px 5px;
 }
 
 .label-selected {

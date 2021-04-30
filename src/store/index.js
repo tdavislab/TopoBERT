@@ -204,8 +204,14 @@ export default createStore({
     },
     filterLabel(context, label) {
       function labelCriteria(metadata, activeLabels) {
-        let overlap = metadata.filter(d => activeLabels.includes(d[3]));
-        return (overlap.length / metadata.length) > 0.2;
+        function majorityLabel(dataarray) {
+          let arr = dataarray.map(d => d[3]);
+          return arr.sort((a, b) => arr.filter(v => v === a).length - arr.filter(v => v === b).length).pop();
+        }
+
+        // let overlap = metadata.filter(d => activeLabels.includes(d[3]));
+        // return (overlap.length / metadata.length) > 0.2;
+        return activeLabels.includes(majorityLabel(metadata));
       }
 
       if (label === -1) {
