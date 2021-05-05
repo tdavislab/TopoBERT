@@ -14,4 +14,3 @@ const vm = createApp(App)
   .component('font-awesome-icon', FontAwesomeIcon)
   .mount('#app');
 
-// console.log(vm)

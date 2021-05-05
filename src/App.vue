@@ -1,42 +1,43 @@
 <template>
-  <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark">
-    <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
-  </nav>
+  <div>
+    <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark">
+      <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
+    </nav>
 
-  <div id="app-body" class="container-fluid">
-    <div class="row">
-      <Graph class="col-8"></Graph>
-      <div class="col-4">
-        <div>
-          <!-- <Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-2"></Layers> -->
-          <DatasetSelector></DatasetSelector>
-          <IterationSlider></IterationSlider>
+    <div id="app-body" class="container-fluid">
+      <div class="row">
+        <Graph class="col-8"></Graph>
+        <div class="col-4">
+          <div>
+            <!-- <Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-2"></Layers> -->
+            <DatasetSelector></DatasetSelector>
+            <IterationSlider></IterationSlider>
+          </div>
+          <JaccardFilter></JaccardFilter>
+          <Stats></Stats>
+          <LabelFilter></LabelFilter>
+          <Table></Table>
         </div>
-        <JaccardFilter></JaccardFilter>
-        <Stats></Stats>
-        <LabelFilter></LabelFilter>
-        <Table></Table>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import store from "./store/index.js";
 import Layers from "./components/Layers";
 import Graph from "./components/Graph";
 import IterationSlider from "./components/IterationSlider";
 import Table from "./components/Table";
 import Stats from "./components/Stats";
 import DatasetSelector from "./components/DatasetSelector";
-import JaccardFilter from "@/components/JaccardFilter";
-import LabelFilter from "@/components/LabelFilter";
+import JaccardFilter from "./components/JaccardFilter";
+import LabelFilter from "./components/LabelFilter";
 
 export default {
   name: 'App',
   components: {
     LabelFilter,
-    Layers,
+    // Layers,
     DatasetSelector,
     IterationSlider,
     Graph,

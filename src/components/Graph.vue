@@ -1,6 +1,7 @@
 <template>
   <div class="col-8">
-    <div id="graph" class="border rounded">
+    <div id="graph" class="border rounded" style="position:relative;">
+      <Minimap></Minimap>
       <svg id="mapper-graph" v-bind:width="width" v-bind:height="height"></svg>
     </div>
   </div>
@@ -8,9 +9,11 @@
 
 <script>
 import ForceGraph from './ForceGraph';
+import Minimap from "@/components/Minimap";
 
 export default {
   name: "Graph",
+  components: {Minimap},
   data() {
     return {
       width: "100%",

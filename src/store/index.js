@@ -10,6 +10,7 @@ import * as d3 from "d3";
 function updateTable(node, context) {
   let rawRowData = node.datum().membership.metadata;
   let rowData = rawRowData.map(d => [...d.slice(0, 4), d[4].toFixed(2)]);
+
   context.commit('updateTableRows', rowData);
   let newStats = {
     nodeName: node.datum().id,
@@ -31,8 +32,6 @@ function dismissClickSelection(clickEvent, context) {
     context.commit('resetStats');
   }
 }
-
-console.log(labels.labels)
 
 // @formatter:off
 let handTunedColorScale =  {
@@ -233,23 +232,27 @@ export default createStore({
     },
     drawGraph(context) {
       // Draw graph using the layout parameter
-      if (context.state.graphType === 'force') {
-        context.state.graph.graphDataForce(context.state.graphData);
-      } else if (context.state.graphType === 'pca') {
-        context.state.graph.graphDataPCA(context.state.graphData);
-      }
+      // if (context.state.graphType === 'force') {
+      //   context.state.graph.graphDataForce(context.state.graphData);
+      // } else if (context.state.graphType === 'pca') {
+      //   context.state.graph.graphDataPCA(context.state.graphData);
+      // }
 
-      context.state.graph.svg.on('click', function (clickEvent) {
+      let state = context.state;
+      let graph = state.graph;
+      graph.graphData(state.graphData, state.graphType, state.nodeColorScale);
+
+      graph.svg.on('click', function (clickEvent) {
         dismissClickSelection(clickEvent, context)
       });
 
-      context.state.graph.nodes.on('click', function (clickEvent) {
+      graph.nodes.on('click', function (clickEvent) {
         let node = d3.select(this);
         updateTable(node, context);
-        nodeClickDecoration(node, context.state.graph.nodes);
+        nodeClickDecoration(node, state.graph.nodes);
       });
 
-      context.state.graph.colorNodesByLabel(context.state.labels.map(d => d.label), context.state.nodeColorScale);
+      // graph.colorNodesByLabel(state.labels.map(d => d.label), state.nodeColorScale);
       context.dispatch('filterJaccard', context.state.jaccardFilter);
       context.dispatch('filterLabel', null);
     }

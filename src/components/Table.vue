@@ -1,13 +1,13 @@
 <template>
   <div id="data-table" class="mt-3">
-    <table class="table table-striped table-bordered table-hover">
+    <table class="table table-bordered table-hover">
       <thead>
       <tr>
         <th v-for="hItem in tableData.header" scope="col">{{ hItem }}</th>
       </tr>
       </thead>
       <tbody>
-      <tr class="tooltip-container" v-for="row in tableData.rows">
+      <tr class="tooltip-container" v-for="row in tableData.rows" v-bind:style="bgColor(row)">
         <td v-for="rowElement in row">{{ rowElement }}</td>
         <td class="tooltip-text" v-html="tableHover(row)"></td>
       </tr>
@@ -16,6 +16,16 @@
   </div>
 </template>
 <script>
+import * as d3 from "d3";
+
+function bgColorPicker(backgroundColor, lightColor, darkColor) {
+  let color = (backgroundColor.charAt(0) === '#') ? backgroundColor.substring(1, 7) : backgroundColor;
+  let r = parseInt(color.substring(0, 2), 16); // hexToR
+  let g = parseInt(color.substring(2, 4), 16); // hexToG
+  let b = parseInt(color.substring(4, 6), 16); // hexToB
+  return (((r * 0.299) + (g * 0.587) + (b * 0.114)) > 186) ?
+      darkColor : lightColor;
+}
 
 export default {
   name: "Table",
@@ -31,6 +41,16 @@ export default {
 
       let sent_id = row[0], word_id = row[1];
       return formatSentence(this.$store.state.sentData[sent_id], word_id);
+    },
+    bgColor(row) {
+      if (this.$store.state.labels.map(d => d.label).includes(row[3])) {
+        // return {'border': '5px solid ' + this.$store.state.nodeColorScale(row), 'box-sizing': 'border-box'}
+        let scaleColor = this.$store.state.nodeColorScale(row[3]);
+        return {
+          'background': scaleColor,
+          'color': bgColorPicker(scaleColor, 'white', 'black')
+        }
+      }
     }
   }
 }
