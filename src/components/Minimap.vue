@@ -25,7 +25,7 @@ export default {
       let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => x[1] - y[1]).slice(0, numPies));
       let chartData = pie.map(d => ({pie: (d), group: d.data[0]}));
 
-      let radius = 55;
+      let radius = 25;
       let arcGenerator = d3.arc().innerRadius(0).outerRadius(20);
 
       d3.select('#minimap-svg')
@@ -43,15 +43,19 @@ export default {
           .selectAll('text')
           .data(chartData)
           .join('text')
-          .attr('text-anchor', 'middle')
+          // .attr('text-anchor', 'middle')
           .attr('font-size', '6px')
           .attr("x", d => {
             let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
-            return d.x = Math.cos(a) * (radius - 20);
+            return d.x = Math.cos(a) * radius;
           })
           .attr("y", d => {
             let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
-            return d.y = Math.sin(a) * (radius - 20);
+            return d.y = Math.sin(a) * radius;
+          })
+          .attr('text-anchor', function (d) {
+            if (d.x >= 0) return 'start';
+            if (d.x < 0) return 'end';
           })
           .text(d => d.group);
     }
