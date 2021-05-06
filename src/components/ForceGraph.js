@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import logger from "@fortawesome/vue-fontawesome/src/logger";
 
 console.log(d3)
 
@@ -313,7 +314,7 @@ export default class ForceGraph {
     this.simulation.tick(200);
     this.simulation.restart();
 
-    function generatePiePath(datapoint, nodeSizeScale, numPies = 8) {
+    function generatePiePath(datapoint, nodeSizeScale, numPies = 5) {
       let mData = datapoint.membership.metadata;
       let groupedmData = d3.rollup(mData, v => v.length, d => d[3]);
       let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => x[1] - y[1]).slice(0, numPies));
@@ -335,7 +336,6 @@ export default class ForceGraph {
       .attr("y2", d => d.target.y)
       .call(this.drag(this.simulation));
 
-
     this.nodes = this.svgGroup.append("g")
       .selectAll("g")
       .data(nodeData)
@@ -344,7 +344,6 @@ export default class ForceGraph {
       .attr("style", "cursor: pointer")
       .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
       .call(this.drag(this.simulation));
-
 
     this.pies = this.nodes.selectAll('path')
       .data(d => generatePiePath(d, this.nodeSizeScale))

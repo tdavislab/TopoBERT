@@ -248,6 +248,7 @@ export default createStore({
 
       graph.nodes.on('click', function (clickEvent) {
         let node = d3.select(this);
+        console.log(node);
         updateTable(node, context);
         nodeClickDecoration(node, state.graph.nodes);
       });
