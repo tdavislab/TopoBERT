@@ -10,7 +10,9 @@ import {colorScale} from "../public/static/colorScale.js"
 
 function updateTable(node, context) {
   let rawRowData = node.datum().membership.metadata;
+  let sortingArr = [...d3.rollup(rawRowData, v => v.length, d => d[3]).entries()].sort((x, y) => y[1] - x[1]).map(d => d[0]);
   let rowData = rawRowData.map(d => [...d.slice(0, 4), d[4].toFixed(2)]);
+  rowData.sort((a, b) => sortingArr.indexOf(a[3]) - sortingArr.indexOf(b[3]));
 
   context.commit('updateTableRows', rowData);
   let newStats = {
@@ -196,7 +198,6 @@ export default createStore({
 
       graph.nodes.on('click', function (clickEvent) {
         let node = d3.select(this);
-        console.log(node);
         updateTable(node, context);
         nodeClickDecoration(node, state.graph.nodes);
       });

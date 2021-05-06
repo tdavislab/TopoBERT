@@ -317,7 +317,7 @@ export default class ForceGraph {
     function generatePiePath(datapoint, nodeSizeScale, numPies = 5) {
       let mData = datapoint.membership.metadata;
       let groupedmData = d3.rollup(mData, v => v.length, d => d[3]);
-      let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => x[1] - y[1]).slice(0, numPies));
+      let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(0, numPies));
       // let pie = d3.pie().value(d => d[1])(Array.from(groupedmData));
       let size = datapoint.membership.membership_ids.length;
       return pie.map(d => ({arc: d3.arc().innerRadius(0).outerRadius(nodeSizeScale(size))(d), group: d.data[0]}));

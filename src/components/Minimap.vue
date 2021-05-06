@@ -1,5 +1,5 @@
 <template>
-  <svg id="minimap-svg" width="20%" height="20%" viewBox="-50 -50 100 100" hidden>
+  <svg id="minimap-svg" width="25%" height="25%" viewBox="-50 -50 100 100" hidden>
     {{ generatePiePath(nodeData) }}
   </svg>
 </template>
@@ -22,8 +22,8 @@ export default {
       }
 
       let groupedmData = d3.rollup(mData, v => v.length, d => d[3]);
-      let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => x[1] - y[1]).slice(0, numPies));
-      let chartData = pie.map(d => ({pie: (d), group: d.data[0]}));
+      let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(0, numPies));
+      let chartData = pie.map(d => ({pie: (d), group: d.data[0], count: d.data[1]}));
 
       let radius = 25;
       let arcGenerator = d3.arc().innerRadius(0).outerRadius(20);
@@ -37,7 +37,7 @@ export default {
           .attr('stroke-width', '0.4px')
           .attr('fill', d => this.$store.state.nodeColorScale(d.group))
           .append('title')
-          .text(d => d.group);
+          .text(d => `${d.group} (${d.count})`);
 
       d3.select('#minimap-svg')
           .selectAll('text')
@@ -57,7 +57,7 @@ export default {
             if (d.x >= 0) return 'start';
             if (d.x < 0) return 'end';
           })
-          .text(d => d.group);
+          .text(d => `${d.group} (${d.count})`);
     }
   }
 }
@@ -68,8 +68,8 @@ export default {
   border-radius: 5px;
   background-color: #ffffff;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  bottom: 10px;
+  right: 10px;
   box-shadow: 5px 5px 10px #a0a0a0;
 }
 
