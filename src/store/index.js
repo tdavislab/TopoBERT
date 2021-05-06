@@ -41,6 +41,8 @@ function dismissClickSelection(clickEvent, context) {
   if (clickEvent.target.id === 'mapper-graph') {
     // context.state.graph.nodes.attr('stroke-width', '1px');
     context.state.graph.nodes.selectAll('.outline').remove();
+    context.state.graph.nodes.attr('opacity', '1');
+    context.state.graph.links.attr('opacity', '1');
     context.commit('resetTableRows');
     context.commit('resetStats');
   }
@@ -188,6 +190,21 @@ export default createStore({
           context.state.graph.nodes.filter(d => labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '1');
           context.state.graph.links.attr('opacity', '0.05');
         }
+      }
+    },
+    searchWord(context, searchTerm) {
+      function searchCriteria(metadata, searchTerm) {
+        let words = metadata.map(d => d[2]);
+        return words.includes(searchTerm);
+      }
+
+      if (searchTerm === '') {
+        context.state.graph.nodes.attr('opacity', '1');
+        context.state.graph.links.attr('opacity', '1');
+      } else {
+        context.state.graph.nodes.filter(d => !searchCriteria(d.membership.metadata, searchTerm)).attr('opacity', '0.05');
+        context.state.graph.nodes.filter(d => searchCriteria(d.membership.metadata, searchTerm)).attr('opacity', '1');
+        context.state.graph.links.attr('opacity', '0.05');
       }
     },
     drawGraph(context) {

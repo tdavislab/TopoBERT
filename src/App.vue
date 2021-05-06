@@ -1,7 +1,8 @@
 <template>
   <div>
-    <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark">
+    <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark justify-content-between">
       <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
+      <WordSearch></WordSearch>
     </nav>
 
     <div id="app-body" class="container-fluid">
@@ -32,10 +33,12 @@ import Stats from "./components/Stats";
 import DatasetSelector from "./components/DatasetSelector";
 import JaccardFilter from "./components/JaccardFilter";
 import LabelFilter from "./components/LabelFilter";
+import WordSearch from "@/components/WordSearch";
 
 export default {
   name: 'App',
   components: {
+    WordSearch,
     LabelFilter,
     // Layers,
     DatasetSelector,
