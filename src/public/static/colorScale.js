@@ -77,7 +77,5 @@ for (let i = 0; i < 46*5; i += 5) {
   rainbowColorScale[Object.keys(handTunedColorScale)[i/5]] = rainbow[i];
 }
 
-console.log(rainbowColorScale)
-
 export let colorScale = handTunedColorScale;
 // export let colorScale = rainbowColorScale;

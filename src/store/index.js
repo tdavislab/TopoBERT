@@ -45,6 +45,8 @@ function dismissClickSelection(clickEvent, context) {
     context.state.graph.links.attr('opacity', '1');
     context.commit('resetTableRows');
     context.commit('resetStats');
+    context.commit('resetLabelSelection');
+    context.commit('resetLabelThreshold');
   }
 }
 
@@ -70,8 +72,8 @@ export default createStore({
       avgNorm: '...'
     },
     labels: labels.labels,
-    // nodeColorScale: d3.scaleOrdinal(d3.schemeSet1).domain(labels.labels.map(d => d.label))
-    nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]))
+    nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label])),
+    labelThreshold: 0
   },
   mutations: {
     toggleLabelSelection(state, selectedLabel) {
@@ -103,6 +105,9 @@ export default createStore({
     updateStats(state, newStats) {
       state.stats = newStats;
     },
+    updateThreshold(state, newThreshold) {
+      state.labelThreshold = newThreshold;
+    },
     changeCurrentIteration(state, newIterationNum) {
       state.currentIteration = newIterationNum
     },
@@ -125,6 +130,10 @@ export default createStore({
         avgNorm: '...'
       }
     },
+    resetLabelThreshold(state) {
+      state.labelThreshold = 0;
+      $('#threshold-slider').val(0);
+    }
   },
   actions: {
     loadIterationFile(context, newIterationNum) {
@@ -164,19 +173,28 @@ export default createStore({
       context.state.graph.links.filter(d => d.intersection <= context.state.jaccardFilter).attr('visibility', 'hidden');
     },
     filterLabel(context, label) {
-      function labelCriteria(metadata, activeLabels) {
+      function labelCriteria(metadata, activeLabels, labelThreshold) {
         function majorityLabel(dataarray) {
           let arr = dataarray.map(d => d[3]);
           return arr.sort((a, b) => arr.filter(v => v === a).length - arr.filter(v => v === b).length).pop();
         }
 
-        // let overlap = metadata.filter(d => activeLabels.includes(d[3]));
-        // return (overlap.length / metadata.length) > 0.2;
+        if (0 < labelThreshold && labelThreshold < 100) {
+          // Fractional filtering
+          let overlap = metadata.filter(d => activeLabels.includes(d[3]));
+          return (overlap.length / metadata.length) > labelThreshold / 100;
+        } else if (100 <= labelThreshold && labelThreshold <= 200) {
+          let overlap = metadata.filter(d => activeLabels.includes(d[3]));
+          return overlap.length >= labelThreshold - 100;
+        }
         return activeLabels.includes(majorityLabel(metadata));
       }
 
+      let labelThreshold = context.state.labelThreshold;
+
       if (label === -1) {
         context.commit('resetLabelSelection');
+        context.commit('resetLabelThreshold');
         context.state.graph.nodes.attr('opacity', '1');
         context.state.graph.links.attr('opacity', '1');
       } else {
@@ -186,8 +204,8 @@ export default createStore({
           context.state.graph.nodes.attr('opacity', '1');
           context.state.graph.links.attr('opacity', '1');
         } else {
-          context.state.graph.nodes.filter(d => !labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '0.05');
-          context.state.graph.nodes.filter(d => labelCriteria(d.membership.metadata, activeLabels)).attr('opacity', '1');
+          context.state.graph.nodes.filter(d => !labelCriteria(d.membership.metadata, activeLabels, labelThreshold)).attr('opacity', '0.05');
+          context.state.graph.nodes.filter(d => labelCriteria(d.membership.metadata, activeLabels, labelThreshold)).attr('opacity', '1');
           context.state.graph.links.attr('opacity', '0.05');
         }
       }
@@ -206,6 +224,10 @@ export default createStore({
         context.state.graph.nodes.filter(d => searchCriteria(d.membership.metadata, searchTerm)).attr('opacity', '1');
         context.state.graph.links.attr('opacity', '0.05');
       }
+    },
+    thresholdChanged(context, newThreshold) {
+      context.commit('updateThreshold', newThreshold);
+      context.dispatch('filterLabel', newThreshold);
     },
     drawGraph(context) {
       // Draw graph using the layout parameter
@@ -232,7 +254,7 @@ export default createStore({
       // graph.colorNodesByLabel(state.labels.map(d => d.label), state.nodeColorScale);
       context.dispatch('filterJaccard', context.state.jaccardFilter);
       context.dispatch('filterLabel', null);
-      context.dispatch('searchWord', $('#searchBar').val());
+      // context.dispatch('searchWord', $('#searchBar').val());
     }
   },
   modules: {},
@@ -244,6 +266,6 @@ export default createStore({
           return layer.id;
         }
       }
-    }
+    },
   }
 })

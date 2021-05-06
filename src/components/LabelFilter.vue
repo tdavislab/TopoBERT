@@ -10,6 +10,11 @@
       </span>
     </div>
     <div id="tag-container" hidden>
+      <div id="threshold-container">
+        <label for="threshold-slider">Criteria: {{ threshold }}</label>
+        <input id="threshold-slider" class="form-range d-inline-block" type="range" min="0" max="200" step="1" value="0"
+               v-on:input="sliderDragged" v-on:change="thresholdChanged">
+      </div>
       <div v-for="labelItem in labels" v-bind:class="{'label-selected': labelItem.selected}"
            v-on:click="labelClicked(labelItem.label)" class="label-tag" v-bind:style="bgColor(labelItem.label)">
         {{ labelItem.label }}
@@ -20,6 +25,7 @@
 
 <script>
 import $ from 'jquery';
+import {mapState} from "vuex";
 
 export default {
   name: "LabelFilter",
@@ -31,6 +37,18 @@ export default {
   computed: {
     numFiltered() {
       return this.$store.state.labels.filter(d => d.selected === true).length
+    },
+    threshold() {
+      let threshold;
+      let storeThreshold = this.$store.state.labelThreshold;
+      if (storeThreshold === 0) {
+        return 'Most frequent label'
+      }
+      if (0 <= storeThreshold && storeThreshold < 100) {
+        return `Nodes where each selected label comprises of more than ${storeThreshold}%`
+      } else {
+        return `Nodes where each selected label occurs at least ${storeThreshold - 100} times`
+      }
     }
   },
   mounted: function () {
@@ -48,6 +66,12 @@ export default {
     },
     bgColor(label) {
       return {'border': '5px solid ' + this.$store.state.nodeColorScale(label)};
+    },
+    sliderDragged(event) {
+      this.$store.commit('updateThreshold', parseInt(event.target.value));
+    },
+    thresholdChanged(event) {
+      this.$store.dispatch('thresholdChanged', parseInt(event.target.value));
     }
   }
 }

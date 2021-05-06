@@ -1,10 +1,10 @@
 <template>
-  <form class="form-inline d-flex mx-3">
+  <div class="form-inline d-flex mx-3">
     <div class="input-group">
       <input id="searchBar" class="form-control mr-2" type="search" placeholder="Search by word" aria-label="Search">
-      <div class="input-group-append btn btn-primary my-2 my-sm-0" v-on:click="search">Search</div>
+      <button class="input-group-append btn btn-primary my-2 my-sm-0" v-on:click="search">Search</button>
     </div>
-  </form>
+  </div>
 </template>
 
 <script>

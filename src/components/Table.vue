@@ -58,7 +58,7 @@ export default {
 
 <style scoped>
 #data-table {
-  height: 49vh;
+  height: 32vh;
   overflow-y: auto;
 }
 
@@ -114,5 +114,10 @@ export default {
   transform: translate(-50%, 50%) rotate(45deg);
   background-color: #EEEEEE;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+
+.th {
+  position: sticky;
+  top: 0;
 }
 </style>
