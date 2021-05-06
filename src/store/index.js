@@ -232,6 +232,7 @@ export default createStore({
       // graph.colorNodesByLabel(state.labels.map(d => d.label), state.nodeColorScale);
       context.dispatch('filterJaccard', context.state.jaccardFilter);
       context.dispatch('filterLabel', null);
+      context.dispatch('searchWord', $('#searchBar').val());
     }
   },
   modules: {},
