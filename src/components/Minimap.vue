@@ -28,7 +28,12 @@ export default {
       let radius = 25;
       let arcGenerator = d3.arc().innerRadius(0).outerRadius(20);
 
+      d3.select('#minimap-svg').selectAll('*').remove();
+
+      // Pie-chart
       d3.select('#minimap-svg')
+          .append('g')
+          .attr('transform', `translate(${-radius - 10}, 0)`)
           .selectAll('path')
           .data(chartData)
           .join('path')
@@ -39,24 +44,57 @@ export default {
           .append('title')
           .text(d => `${d.group} (${d.count})`);
 
-      d3.select('#minimap-svg')
-          .selectAll('text')
+      // Legend
+      // d3.select('#minimap-svg')
+      //     .selectAll('text')
+      //     .data(chartData)
+      //     .join('text')
+      //     // .attr('text-anchor', 'middle')
+      //     .attr('font-size', '5px')
+      //     .attr("x", d => {
+      //       let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
+      //       return d.x = Math.cos(a) * radius;
+      //     })
+      //     .attr("y", d => {
+      //       let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
+      //       return d.y = Math.sin(a) * radius;
+      //     })
+      //     .attr('text-anchor', function (d) {
+      //       if (d.x >= 0) return 'start';
+      //       if (d.x < 0) return 'end';
+      //     })
+      //     .text(d => `${d.group} (${d.count})`);
+
+      let numLegend = chartData.length;
+
+      function position(i, numLegend) {
+        if (numLegend % 2 === 0) {
+          return -5 - (10 * (numLegend / 2)) + 10 * i;
+        } else {
+          return -5 - (10 * (numLegend - 1) / 2) + 10 * i;
+        }
+      }
+
+      let legend = d3.select('#minimap-svg')
+          .append('g')
+          .attr('id', 'legend')
+          .selectAll('g')
           .data(chartData)
-          .join('text')
-          // .attr('text-anchor', 'middle')
+          .join('g');
+
+      legend.append('rect')
+          .attr('x', radius - 30)
+          .attr('y', (d, i) => position(i, numLegend))
+          .attr('width', '10px')
+          .attr('height', '10px')
+          .attr('fill', d => this.$store.state.nodeColorScale(d.group))
+          .attr('stroke', 'black')
+          .attr('stroke-width', '0.5px')
+
+      legend.append('text')
+          .attr('x', radius - 12.5)
+          .attr('y', (d, i) => position(i, numLegend) + 7.5)
           .attr('font-size', '6px')
-          .attr("x", d => {
-            let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
-            return d.x = Math.cos(a) * radius;
-          })
-          .attr("y", d => {
-            let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
-            return d.y = Math.sin(a) * radius;
-          })
-          .attr('text-anchor', function (d) {
-            if (d.x >= 0) return 'start';
-            if (d.x < 0) return 'end';
-          })
           .text(d => `${d.group} (${d.count})`);
     }
   }

@@ -23,14 +23,24 @@ function updateTable(node, context) {
   context.commit('updateStats', newStats);
 }
 
-function nodeClickDecoration(clickedNode, allNodes) {
-  allNodes.attr('stroke-width', '1px');
-  clickedNode.attr('stroke-width', '3px');
+function nodeClickDecoration(clickedNode, allNodes, state) {
+  // allNodes.attr('stroke-width', '1px');
+  // clickedNode.attr('stroke-width', '3px');
+  // allNodes.selectAll('path').attr('stroke-width', '0.4px');
+  // clickedNode.selectAll('path').attr('stroke-width', '1.5px');
+
+  allNodes.selectAll('.outline').remove();
+  clickedNode.insert('circle', ':first-child')
+    .attr('class', 'outline')
+    .attr('r', state.graph.nodeSizeScale(clickedNode.datum()["membership"]["membership_ids"].length) + 2)
+    .attr('cx', 0)
+    .attr('cy', 0);
 }
 
 function dismissClickSelection(clickEvent, context) {
   if (clickEvent.target.id === 'mapper-graph') {
-    context.state.graph.nodes.attr('stroke-width', '1px');
+    // context.state.graph.nodes.attr('stroke-width', '1px');
+    context.state.graph.nodes.selectAll('.outline').remove();
     context.commit('resetTableRows');
     context.commit('resetStats');
   }
@@ -199,7 +209,7 @@ export default createStore({
       graph.nodes.on('click', function (clickEvent) {
         let node = d3.select(this);
         updateTable(node, context);
-        nodeClickDecoration(node, state.graph.nodes);
+        nodeClickDecoration(node, state.graph.nodes, state);
       });
 
       // graph.colorNodesByLabel(state.labels.map(d => d.label), state.nodeColorScale);
