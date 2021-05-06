@@ -6,6 +6,7 @@ import sentData from '../../public/static/sentences.json';
 
 import $ from 'jquery';
 import * as d3 from "d3";
+import {colorScale} from "../public/static/colorScale.js"
 
 function updateTable(node, context) {
   let rawRowData = node.datum().membership.metadata;
@@ -33,60 +34,7 @@ function dismissClickSelection(clickEvent, context) {
   }
 }
 
-// @formatter:off
-let handTunedColorScale =  {
-  // Circumstance
-  'p.Circumstance'  : '#00429d',
-  'p.Time'          : '#5e5caf',
-    'p.StartTime'     : '#5e5caf',
-    'p.EndTime'       : '#5e5caf',
-  'p.Frequency'     : '#8f7ac0',
-  'p.Duration'      : '#b89bd3',
-  'p.Interval'      : '#debfe8',
-  'p.Locus'         : '#ffe5ff',
-    'p.Goal'          : '#ffe5ff',
-    'p.Source'        : '#ffe5ff',
-  'p.Path'          : '#eabcdd',
-  'p.Direction'     : '#d693b8',
-    'p.Extent'        : '#d693b8',
-  'p.Means'         : '#c26a90',
-  'p.Manner'        : '#ad3f65',
-  'p.Explanation'   : '#93003a',
-    'p.Purpose'       : '#93003a',
-
-  // Participant
-  'p.Causer'        : '#486721',
-    'p.Agent'         : '#486721',
-      'p.Co-Agent'    : '#486721',
-  'p.Theme'         : '#658b4f',
-    'p.Co-Theme'      : '#658b4f',
-    'p.Topic'         : '#658b4f',
-  'p.Stimulus'      : '#85af7d',
-  'p.Experiencer'   : '#a8d5ad',
-  'p.Originator'    : '#d0fbdd',
-  'p.Recipient'     : '#afeccc',
-  'p.Cost'          : '#8cddbf',
-  'p.Beneficiary'   : '#63ceb4',
-  'p.Instrument'    : '#22bfac',
-
-  'p.Identity'      : '#ecad00',
-  'p.Species'       : '#f4b842',
-  'p.Gestalt'       : '#fac368',
-    'p.Possessor'     : '#fac368',
-    'p.Whole'         : '#fac368',
-  'p.Characteristic': '#ffcf8a',
-    'p.Possession'    : '#ffcf8a',
-    'p.PartPortion'   : '#ffcf8a',
-    'p.Stuff'         : '#ffcf8a',
-  'p.Accompanier'   : '#ffdbac',
-  'p.ComparisonRef' : '#ffe8ce',
-  'p.RateUnit'      : '#f5c8a2',
-  'p.Quantity'      : '#eca87c',
-    'p.Approximator'  : '#eca87c',
-  'p.SocialRel'     : '#d86042',
-  'p.OrgRole'       : '#cd3030',
-}
-// @formatter:on
+let handTunedColorScale = colorScale;
 
 export default createStore({
   state: {
