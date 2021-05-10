@@ -1,9 +1,9 @@
 <template>
   <div class="border rounded p-2 mt-2">
     <div id="filter-header">
-      <h5 class="header-text">
-        <span>Filter labels</span>
-        <!--        <font-awesome-icon icon="filter"/>-->
+      <h5 class="header-text" title="Placeholder for explanation of filtering criteria">
+        <span>Filter labels </span>
+        <font-awesome-icon id="filter-help" icon="question-circle"/>
       </h5>
       <span style="float: right" id="selection-indicator" title="Clear selection" v-on:click="clearSelection()">
         ({{ numFiltered }} selected <font-awesome-icon icon="times-circle"/>)
@@ -29,11 +29,11 @@ import {mapState} from "vuex";
 
 export default {
   name: "LabelFilter",
-  data: function () {
-    return {
-      labels: this.$store.state.labels,
-    }
-  },
+  // data: function () {
+  //   return {
+  //     labels: this.$store.state.labels,
+  //   }
+  // },
   computed: {
     numFiltered() {
       return this.$store.state.labels.filter(d => d.selected === true).length
@@ -49,6 +49,9 @@ export default {
       } else {
         return `Nodes where each selected label occurs at least ${storeThreshold - 100} times`
       }
+    },
+    labels() {
+      return this.$store.state.labels
     }
   },
   mounted: function () {

@@ -25,28 +25,10 @@ export default {
   mounted: function () {
     this.$store.commit('setGraph', new ForceGraph('#mapper-graph', this.width, this.height));
     this.$store.dispatch('drawGraph');
-    // parent.graph.svg.on('click', function (e) {
-    //   dismissClickSelection(e, parent);
-    // })
-    //
-    // parent.graph.nodes.on('click', function (d) {
-    //   let node = d3.select(this);
-    //   updateTable(node, parent.$store);
-    //   nodeClickDecoration(node, parent.graph.nodes);
-    // });
   },
   watch: {
     '$store.state.graphData': function () {
       this.$store.dispatch('drawGraph');
-      // parent.graph.svg.on('click', function (e) {
-      //   dismissClickSelection(e, parent);
-      // })
-      // parent.graph.nodes.on('click', function (d) {
-      //   let node = d3.select(this);
-      //   updateTable(node, parent.$store);
-      //   nodeClickDecoration(node, parent.graph.nodes);
-      // });
-      // this.$store.dispatch('filterJaccard', -1.0);
     }
   },
   methods: {}
@@ -55,9 +37,6 @@ export default {
 
 <style scoped>
 #graph {
-  /*margin-left: 0.8em;*/
-  /*margin-right: 0.8em;*/
-  /*background: #dddddd;*/
   margin-top: 0.5rem;
   height: 90vh;
 }

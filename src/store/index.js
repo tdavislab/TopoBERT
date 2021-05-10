@@ -1,12 +1,12 @@
 import {createStore} from 'vuex';
-import layerData from '../../public/static/data/layerData.json';
-import labels from '../../public/static/data/labels.json'
-import graphData from '../../public/static/mapper_graphs/euclidean_l2_50_50/0.json';
-import sentData from '../../public/static/sentences.json';
+import layerData from '../assets/data/layerData.json';
+import labels from '../assets/data/labels.json'
+import graphData from '../assets/data/0.json';
+import sentData from '../assets/data/sentences.json';
+import {colorScale} from '../assets/data/colorScale.js';
 
 import $ from 'jquery';
-import * as d3 from "d3";
-import {colorScale} from "../public/static/colorScale.js"
+import * as d3 from 'd3';
 
 function updateTable(node, context) {
   let rawRowData = node.datum().membership.metadata;
@@ -72,7 +72,7 @@ export default createStore({
       avgNorm: '...'
     },
     labels: labels.labels,
-    nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label])),
+    nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]).concat(handTunedColorScale['Others'])),
     labelThreshold: 0
   },
   mutations: {
@@ -254,7 +254,13 @@ export default createStore({
       // graph.colorNodesByLabel(state.labels.map(d => d.label), state.nodeColorScale);
       context.dispatch('filterJaccard', context.state.jaccardFilter);
       context.dispatch('filterLabel', null);
-      // context.dispatch('searchWord', $('#searchBar').val());
+      if (context.state.labels.filter(d => d.selected === true).length === 0) {
+        // If no active filtering then apply search word
+        context.dispatch('searchWord', $('#searchBar').val());
+      }
+    },
+    toggleNodeSize(context, nodeSizeType) {
+      context.state.graph.toggleNodeSize(nodeSizeType);
     }
   },
   modules: {},

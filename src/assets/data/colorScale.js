@@ -50,6 +50,8 @@ let handTunedColorScale =  {
     'p.Approximator'  : '#eca87c',
   'p.SocialRel'     : '#d86042',
   'p.OrgRole'       : '#cd3030',
+
+  'Others'          : '#989898',
 }
 // @formatter:on
 let rainbow = ["#6e40aa", "#7140ab", "#743fac", "#773fad", "#7a3fae", "#7d3faf", "#803eb0", "#833eb0", "#873eb1", "#8a3eb2", "#8d3eb2", "#903db2", "#943db3", "#973db3",
@@ -73,7 +75,7 @@ let rainbow = ["#6e40aa", "#7140ab", "#743fac", "#773fad", "#7a3fae", "#7d3faf",
   "#6b44b2", "#6c43af", "#6d41ad", "#6e40aa"]
 
 let rainbowColorScale = {};
-for (let i = 0; i < 46*5; i += 5) {
+for (let i = 0; i < 47*5; i += 5) {
   rainbowColorScale[Object.keys(handTunedColorScale)[i/5]] = rainbow[i];
 }
 

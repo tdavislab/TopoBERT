@@ -3,6 +3,21 @@ import logger from "@fortawesome/vue-fontawesome/src/logger";
 
 console.log(d3)
 
+function generatePiePath(datapoint, nodeSizeScale, numPies = 8) {
+  let mData = datapoint.membership.metadata;
+  let groupedmData = d3.rollup(mData, v => v.length, d => d[3]);
+  let numOthers = [...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(numPies - 1).reduce((acc, curr) => acc + curr[1], 0);
+  let topVals = [...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(0, numPies - 1);
+  if (numOthers > 0) {
+    topVals.push(['Others', numOthers]);
+  }
+  let pie = d3.pie().value(d => d[1]).sort(null)(topVals);
+  // let pie = d3.pie().value(d => d[1])(Array.from(groupedmData));
+  let size = datapoint.membership.membership_ids.length;
+  let chartData = pie.map(d => ({arc: d3.arc().innerRadius(0).outerRadius(nodeSizeScale(size))(d), group: d.data[0]}));
+  return chartData
+}
+
 export default class ForceGraph {
   constructor(svg, width, height) {
     this.width = width;
@@ -314,15 +329,6 @@ export default class ForceGraph {
     this.simulation.tick(200);
     this.simulation.restart();
 
-    function generatePiePath(datapoint, nodeSizeScale, numPies = 5) {
-      let mData = datapoint.membership.metadata;
-      let groupedmData = d3.rollup(mData, v => v.length, d => d[3]);
-      let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(0, numPies));
-      // let pie = d3.pie().value(d => d[1])(Array.from(groupedmData));
-      let size = datapoint.membership.membership_ids.length;
-      return pie.map(d => ({arc: d3.arc().innerRadius(0).outerRadius(nodeSizeScale(size))(d), group: d.data[0]}));
-    }
-
     // Links
     this.links = this.svgGroup.append("g")
       .selectAll("line")
@@ -364,7 +370,7 @@ export default class ForceGraph {
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
     })
-
+    console.log(this.nodeColorScale)
     let svg_group = this.svgGroup;
 
     const zoom = d3.zoom()
@@ -411,5 +417,23 @@ export default class ForceGraph {
     this.nodes.attr('fill', d => nodeColorScale(majorityLabel(d)))
       .append('title')
       .text(d => majorityLabel(d))
+  }
+
+  toggleNodeSize(mode = 'uniform') {
+    if (mode === 'uniform') {
+      this.nodeSizeScale.range([12, 12]);
+    } else if (mode === 'size-scaled') {
+      this.nodeSizeScale.range([5, 15]);
+    }
+    console.log(this.nodeSizeScale.range(), this.nodeSizeScale.domain());
+    this.nodes.selectAll('path')
+      .data(d => generatePiePath(d, this.nodeSizeScale))
+      .join('path')
+      .attr('d', d => d.arc)
+      .attr('stroke', 'black')
+      .attr('stroke-width', '0.4px')
+      .attr('fill', d => this.nodeColorScale(d.group))
+      .append('title')
+      .text(d => d.group);
   }
 }

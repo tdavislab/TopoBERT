@@ -13,11 +13,6 @@ export default {
   computed: mapState({
     value: state => state.jaccardFilter,
   }),
-  watch: {
-    '$store.state.jaccardFilter': function () {
-      console.log(this.$store.state.jaccardFilter);
-    }
-  },
   methods: {
     jaccardChanged: function (event) {
       this.$store.dispatch('filterJaccard', parseFloat(event.target.value));

@@ -8,13 +8,14 @@
     <div id="app-body" class="container-fluid">
       <div class="row">
         <Graph class="col-8"></Graph>
-        <div class="col-4">
+        <div id="controls" class="col-4">
           <div>
-            <!-- <Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-2"></Layers> -->
+            <!--<Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-2"></Layers>-->
             <DatasetSelector></DatasetSelector>
             <IterationSlider></IterationSlider>
           </div>
           <JaccardFilter></JaccardFilter>
+          <NodeSizeToggle></NodeSizeToggle>
           <Stats></Stats>
           <LabelFilter></LabelFilter>
           <Table></Table>
@@ -34,13 +35,15 @@ import DatasetSelector from "./components/DatasetSelector";
 import JaccardFilter from "./components/JaccardFilter";
 import LabelFilter from "./components/LabelFilter";
 import WordSearch from "@/components/WordSearch";
+import NodeSizeToggle from "@/components/NodeSizeToggle";
 
 export default {
   name: 'App',
   components: {
+    NodeSizeToggle,
     WordSearch,
     LabelFilter,
-    // Layers,
+    Layers,
     DatasetSelector,
     IterationSlider,
     Graph,

@@ -14,7 +14,7 @@ export default {
     nodeData: state => state.tableData.rows,
   }),
   methods: {
-    generatePiePath(mData, numPies = 5) {
+    generatePiePath(mData, numPies = 8) {
       if (mData.length !== 0) {
         d3.select('#minimap-svg').attr('hidden', null);
       } else {
@@ -22,7 +22,13 @@ export default {
       }
 
       let groupedmData = d3.rollup(mData, v => v.length, d => d[3]);
-      let pie = d3.pie().value(d => d[1])([...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(0, numPies));
+      let numOthers = [...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(numPies - 1).reduce((acc, curr) => acc + curr[1], 0);
+      let topVals = [...groupedmData.entries()].sort((x, y) => y[1] - x[1]).slice(0, numPies - 1);
+      if (numOthers > 0) {
+        topVals.push(['Others', numOthers]);
+      }
+
+      let pie = d3.pie().value(d => d[1]).sort(null)(topVals);
       let chartData = pie.map(d => ({pie: (d), group: d.data[0], count: d.data[1]}));
 
       let radius = 25;
