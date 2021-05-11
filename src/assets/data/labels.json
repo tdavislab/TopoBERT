@@ -45,6 +45,7 @@
     {"label": "p.Quantity", "selected":  false},
     {"label": "p.Approximator", "selected":  false},
     {"label": "p.SocialRel", "selected":  false},
-    {"label": "p.OrgRole", "selected":  false}
+    {"label": "p.OrgRole", "selected":  false},
+    {"label": "Others", "selected": false}
   ]
 }

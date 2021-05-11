@@ -45,7 +45,7 @@ export default {
     bgColor(row) {
       if (this.$store.state.labels.map(d => d.label).includes(row[3])) {
         // return {'border': '5px solid ' + this.$store.state.nodeColorScale(row), 'box-sizing': 'border-box'}
-        let scaleColor = this.$store.state.nodeColorScale(row[3]);
+        let scaleColor = this.$store.getters.nodeColorMap(row[3]);
         return {
           'background': scaleColor,
           'color': bgColorPicker(scaleColor, 'white', 'black')

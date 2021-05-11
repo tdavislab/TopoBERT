@@ -50,7 +50,7 @@ function dismissClickSelection(clickEvent, context) {
   }
 }
 
-let handTunedColorScale = colorScale;
+// let handTunedColorScale = colorScale;
 
 export default createStore({
   state: {
@@ -72,8 +72,20 @@ export default createStore({
       avgNorm: '...'
     },
     labels: labels.labels,
-    nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]).concat(handTunedColorScale['Others'])),
+    colorScale: colorScale,
+    // nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]).concat(handTunedColorScale['Others'])),
     labelThreshold: 0
+  },
+  getters: {
+    getLayers: state => state.layers,
+    getCurrentLayer: state => {
+      for (let layer in state.layers) {
+        if (layer.selected === true) {
+          return layer.id;
+        }
+      }
+    },
+    nodeColorMap: state => d3.scaleOrdinal().domain(state.labels.map(d => d.label)).range(state.labels.map(d => state.colorScale[d.label]))
   },
   mutations: {
     toggleLabelSelection(state, selectedLabel) {
@@ -107,6 +119,9 @@ export default createStore({
     },
     updateThreshold(state, newThreshold) {
       state.labelThreshold = newThreshold;
+    },
+    updateColorMap(state, newColorMap) {
+      state.colorScale = newColorMap;
     },
     changeCurrentIteration(state, newIterationNum) {
       state.currentIteration = newIterationNum
@@ -239,7 +254,7 @@ export default createStore({
 
       let state = context.state;
       let graph = state.graph;
-      graph.graphData(state.graphData, state.graphType, state.nodeColorScale);
+      graph.graphData(state.graphData, state.graphType, context.getters.nodeColorMap);
 
       graph.svg.on('click', function (clickEvent) {
         dismissClickSelection(clickEvent, context)
@@ -263,15 +278,5 @@ export default createStore({
       context.state.graph.toggleNodeSize(nodeSizeType);
     }
   },
-  modules: {},
-  getters: {
-    getLayers: state => state.layers,
-    getCurrentLayer: state => {
-      for (let layer in state.layers) {
-        if (layer.selected === true) {
-          return layer.id;
-        }
-      }
-    },
-  }
+  modules: {}
 })

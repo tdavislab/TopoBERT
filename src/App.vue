@@ -3,6 +3,7 @@
     <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark justify-content-between">
       <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
       <WordSearch></WordSearch>
+      <ColorSchemeDesigner></ColorSchemeDesigner>
     </nav>
 
     <div id="app-body" class="container-fluid">
@@ -36,10 +37,12 @@ import JaccardFilter from "./components/JaccardFilter";
 import LabelFilter from "./components/LabelFilter";
 import WordSearch from "@/components/WordSearch";
 import NodeSizeToggle from "@/components/NodeSizeToggle";
+import ColorSchemeDesigner from "@/assets/data/ColorSchemeDesigner";
 
 export default {
   name: 'App',
   components: {
+    ColorSchemeDesigner,
     NodeSizeToggle,
     WordSearch,
     LabelFilter,

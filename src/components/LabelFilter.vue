@@ -12,7 +12,7 @@
     <div id="tag-container" hidden>
       <div id="threshold-container">
         <label for="threshold-slider">Criteria: {{ threshold }}</label>
-        <input id="threshold-slider" class="form-range d-inline-block" type="range" min="0" max="200" step="1" value="0"
+        <input id="threshold-slider" class="custom-range d-inline-block" type="range" min="0" max="200" step="1" value="0"
                v-on:input="sliderDragged" v-on:change="thresholdChanged">
       </div>
       <div v-for="labelItem in labels" v-bind:class="{'label-selected': labelItem.selected}"
@@ -68,7 +68,7 @@ export default {
       this.$store.dispatch('filterLabel', -1);
     },
     bgColor(label) {
-      return {'border': '5px solid ' + this.$store.state.nodeColorScale(label)};
+      return {'border': '5px solid ' + this.$store.getters.nodeColorMap(label)};
     },
     sliderDragged(event) {
       this.$store.commit('updateThreshold', parseInt(event.target.value));

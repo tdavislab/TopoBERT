@@ -1,8 +1,6 @@
 import * as d3 from "d3";
 import logger from "@fortawesome/vue-fontawesome/src/logger";
 
-console.log(d3)
-
 function generatePiePath(datapoint, nodeSizeScale, numPies = 8) {
   let mData = datapoint.membership.metadata;
   let groupedmData = d3.rollup(mData, v => v.length, d => d[3]);
@@ -370,7 +368,7 @@ export default class ForceGraph {
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
     })
-    console.log(this.nodeColorScale)
+
     let svg_group = this.svgGroup;
 
     const zoom = d3.zoom()
@@ -421,19 +419,19 @@ export default class ForceGraph {
 
   toggleNodeSize(mode = 'uniform') {
     if (mode === 'uniform') {
-      this.nodeSizeScale.range([12, 12]);
+      this.nodeSizeScale.range([15, 15]);
     } else if (mode === 'size-scaled') {
       this.nodeSizeScale.range([5, 15]);
     }
-    console.log(this.nodeSizeScale.range(), this.nodeSizeScale.domain());
+
     this.nodes.selectAll('path')
       .data(d => generatePiePath(d, this.nodeSizeScale))
       .join('path')
+      .transition()
+      .duration(1000)
       .attr('d', d => d.arc)
       .attr('stroke', 'black')
       .attr('stroke-width', '0.4px')
-      .attr('fill', d => this.nodeColorScale(d.group))
-      .append('title')
-      .text(d => d.group);
+      .attr('fill', d => this.nodeColorScale(d.group));
   }
 }

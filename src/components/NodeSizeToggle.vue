@@ -4,19 +4,20 @@
       <div class="row">
         <legend class="col-form-label col-sm-3 pt-0">Node Size</legend>
         <div class="col-sm-9">
-          <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="size-scaled" v-on:click="nodeToSizeScaled" checked>
-          <label class="form-check-label" for="gridRadios1">
-            Scaled to cluster size
-          </label>
+          <div class="custom-control custom-radio">
+            <input class="custom-control-input" type="radio" name="gridRadios" id="gridRadios1" value="size-scaled" v-on:click="nodeToSizeScaled"
+                   checked>
+            <label class="custom-control-label" for="gridRadios1">
+              Scaled to cluster size
+            </label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input class="custom-control-input" type="radio" name="gridRadios" id="gridRadios2" value="uniform" v-on:click="nodeToUniform">
+            <label class="custom-control-label" for="gridRadios2">
+              Constant
+            </label>
+          </div>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="uniform" v-on:click="nodeToUniform">
-          <label class="form-check-label" for="gridRadios2">
-            Constantn
-          </label>
-        </div>
-      </div>
       </div>
     </fieldset>
   </form>

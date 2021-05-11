@@ -1,10 +1,10 @@
 <template>
   <div id="dataset-selector-div">
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label for="param-metric" class="input-group-text">Metric</label>
+      <div class="input-group-prepend w-50">
+        <label for="param-metric" class="input-group-text w-100">Metric</label>
       </div>
-      <select id="param-metric" class="form-select" v-model="params.metric" v-on:change="paramChanged()">
+      <select id="param-metric" class="custom-select w-50" v-model="params.metric" v-on:change="paramChanged()">
         <option disabled value="" selected>Distance metric</option>
         <option value="euclidean">Euclidean</option>
         <option value="cosine">Cosine</option>
@@ -12,10 +12,10 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label for="param-filter" class="input-group-text">Filter</label>
+      <div class="input-group-prepend w-50">
+        <label for="param-filter" class="input-group-text w-100">Filter</label>
       </div>
-      <select id="param-filter" class="form-select" v-model="params.filter" v-on:change="paramChanged()">
+      <select id="param-filter" class="custom-select w-50" v-model="params.filter" v-on:change="paramChanged()">
         <option disabled value="" selected>Filter function</option>
         <option value="l1">L1</option>
         <option value="l2">L2</option>
@@ -24,10 +24,10 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label for="param-intervals" class="input-group-text">Intervals</label>
+      <div class="input-group-prepend w-50">
+        <label for="param-intervals" class="input-group-text w-100">Intervals</label>
       </div>
-      <select id="param-intervals" class="form-select" v-model="params.intervals" v-on:change="paramChanged()">
+      <select id="param-intervals" class="custom-select w-50" v-model="params.intervals" v-on:change="paramChanged()">
         <option disabled value="" selected>Intervals</option>
         <option value="50">50</option>
         <option value="100">100</option>
@@ -35,10 +35,10 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label for="param-overlap" class="input-group-text">Overlap</label>
+      <div class="input-group-prepend w-50">
+        <label for="param-overlap" class="input-group-text w-100">Overlap</label>
       </div>
-      <select id="param-overlap" class="form-select" v-model="params.overlap" v-on:change="paramChanged()">
+      <select id="param-overlap" class="custom-select w-50" v-model="params.overlap" v-on:change="paramChanged()">
         <option disabled value="" selected>Overlap</option>
         <option value="25">25</option>
         <option value="50">50</option>
@@ -47,10 +47,10 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label for="param-layout" class="input-group-text">Layout</label>
+      <div class="input-group-prepend w-50">
+        <label for="param-layout" class="input-group-text w-100">Layout</label>
       </div>
-      <select id="param-layout" class="form-select" v-model="params.layout" v-on:change="layoutChanged()">
+      <select id="param-layout" class="custom-select w-50" v-model="params.layout" v-on:change="layoutChanged()">
         <option disabled value="" selected>Select graph layout</option>
         <option value="force">Force directed</option>
         <option value="pca">PCA</option>

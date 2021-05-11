@@ -39,14 +39,14 @@ export default {
       // Pie-chart
       d3.select('#minimap-svg')
           .append('g')
-          .attr('transform', `translate(${-radius - 10}, 0)`)
+          .attr('transform', `translate(${-radius - 15}, 0)`)
           .selectAll('path')
           .data(chartData)
           .join('path')
           .attr('d', d => arcGenerator(d.pie))
           .attr('stroke', 'black')
           .attr('stroke-width', '0.4px')
-          .attr('fill', d => this.$store.state.nodeColorScale(d.group))
+          .attr('fill', d => this.$store.getters.nodeColorMap(d.group))
           .append('title')
           .text(d => `${d.group} (${d.count})`);
 
@@ -89,16 +89,16 @@ export default {
           .join('g');
 
       legend.append('rect')
-          .attr('x', radius - 30)
+          .attr('x', radius - 35)
           .attr('y', (d, i) => position(i, numLegend))
           .attr('width', '10px')
           .attr('height', '10px')
-          .attr('fill', d => this.$store.state.nodeColorScale(d.group))
+          .attr('fill', d => this.$store.getters.nodeColorMap(d.group))
           .attr('stroke', 'black')
           .attr('stroke-width', '0.5px')
 
       legend.append('text')
-          .attr('x', radius - 12.5)
+          .attr('x', radius - 17.5)
           .attr('y', (d, i) => position(i, numLegend) + 7.5)
           .attr('font-size', '6px')
           .text(d => `${d.group} (${d.count})`);
