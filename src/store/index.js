@@ -57,10 +57,38 @@ export default createStore({
     layers: layerData.layerData,
     graph: [],
     graphData: graphData,
+    projectionData: {
+      type: "scatter",
+      data: {
+        labels: ['All data'],
+        datasets: [
+          {
+            label: '',
+            data: []
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: x => '',
+              footer: x => ''
+            }
+          }
+        }
+      }
+    },
+    chartRef: null,
     graphType: 'force',
     sentData: sentData,
     dataset: 'euclidean_l2_50_50',
+    datasetConfigs: {
+      intervals: [50, 100],
+      overlaps: [25, 50, 75]
+    },
     currentIteration: 0,
+    currentProjection: 'PCA',
     jaccardFilter: 0.0,
     tableData: {
       header: ['sent_id', 'word_id', 'word', 'label', 'L2 norm'],
@@ -122,6 +150,23 @@ export default createStore({
     },
     updateColorMap(state, newColorMap) {
       state.colorScale = newColorMap;
+    },
+    updateCurrentProjection(state, newProjMethod) {
+      state.currentProjection = newProjMethod;
+    },
+    updateProjectionData(state, {processedData, proj}) {
+      state.projectionData.data.datasets[0].data = processedData;
+      state.projectionData.data.datasets[0].backgroundColor = processedData.map(d => state.colorScale[d.label])
+      state.projectionData.data.datasets[0].label = proj;
+    },
+    addDataSetConfig(state, newConfig) {
+      let {interval, overlap} = newConfig;
+      if (interval !== '') {
+        state.datasetConfigs.intervals.push(parseInt(interval));
+      }
+      if (overlap !== '') {
+        state.datasetConfigs.overlaps.push(parseInt(overlap));
+      }
     },
     changeCurrentIteration(state, newIterationNum) {
       state.currentIteration = newIterationNum
@@ -273,9 +318,33 @@ export default createStore({
         // If no active filtering then apply search word
         context.dispatch('searchWord', $('#searchBar').val());
       }
+      context.dispatch('drawProjection', context.state.currentProjection);
     },
     toggleNodeSize(context, nodeSizeType) {
       context.state.graph.toggleNodeSize(nodeSizeType);
+    },
+    drawProjection(context, proj) {
+      context.commit('updateCurrentProjection', proj);
+
+      $('.loader').prop('hidden', null);
+
+      d3.csv(`static/projections/${context.state.currentProjection}/${context.state.currentIteration}.csv`).then(function (data) {
+        let processedData = data.map(d => {
+          return {
+            x: parseFloat(d.x), y: parseFloat(d.y),
+            index: parseInt(d.index), word: d.word, label: d.label,
+          }
+        })
+
+        context.commit('updateProjectionData', {processedData, proj});
+
+        context.state.projectionData.options.plugins.tooltip.callbacks.footer = (toolTipItems) => {
+          return toolTipItems.map(d => `${d.raw.label}-${d.raw.word}`);
+        }
+
+        $('.loader').prop('hidden', true);
+        context.state.chartRef.update();
+      });
     }
   },
   modules: {}

@@ -13,6 +13,8 @@
           <div>
             <!--<Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-2"></Layers>-->
             <DatasetSelector></DatasetSelector>
+            <AddParamConfig></AddParamConfig>
+            <Projection></Projection>
             <IterationSlider></IterationSlider>
           </div>
           <JaccardFilter></JaccardFilter>
@@ -20,6 +22,11 @@
           <Stats></Stats>
           <LabelFilter></LabelFilter>
           <Table></Table>
+        </div>
+      </div>
+      <div class="row">
+        <div id="projection" class="col-8">
+          <canvas id="projection-canvas" width="100%" height="100%"></canvas>
         </div>
       </div>
     </div>
@@ -38,10 +45,14 @@ import LabelFilter from "./components/LabelFilter";
 import WordSearch from "@/components/WordSearch";
 import NodeSizeToggle from "@/components/NodeSizeToggle";
 import ColorSchemeDesigner from "@/assets/data/ColorSchemeDesigner";
+import AddParamConfig from "@/components/AddParamConfig";
+import Projection from "@/components/Projection";
 
 export default {
   name: 'App',
   components: {
+    Projection,
+    AddParamConfig,
     ColorSchemeDesigner,
     NodeSizeToggle,
     WordSearch,

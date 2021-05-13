@@ -29,8 +29,7 @@
       </div>
       <select id="param-intervals" class="custom-select w-50" v-model="params.intervals" v-on:change="paramChanged()">
         <option disabled value="" selected>Intervals</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
+        <option v-for="intervalElem in intervalList" v-bind:value="intervalElem" v-bind:selected="intervalElem===50">{{ intervalElem }}</option>
       </select>
     </div>
 
@@ -39,10 +38,8 @@
         <label for="param-overlap" class="input-group-text w-100">Overlap</label>
       </div>
       <select id="param-overlap" class="custom-select w-50" v-model="params.overlap" v-on:change="paramChanged()">
-        <option disabled value="" selected>Overlap</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="75">75</option>
+        <option disabled value="">Overlap</option>
+        <option v-for="overlapElem in overlapList" v-bind:value="overlapElem" v-bind:selected="overlapElem===50">{{ overlapElem }}</option>
       </select>
     </div>
 
@@ -65,6 +62,7 @@
 <script>
 // import {mapState} from "vuex";
 import $ from "jquery";
+import {mapState} from "vuex";
 
 export default {
   name: "DatasetSelector",
@@ -72,12 +70,16 @@ export default {
     this.params = {
       metric: 'euclidean',
       filter: 'l2',
-      intervals: '50',
-      overlap: '50',
+      intervals: 50,
+      overlap: 50,
       layout: 'force'
     }
     return {};
   },
+  computed: mapState({
+    intervalList: state => state.datasetConfigs.intervals,
+    overlapList: state => state.datasetConfigs.overlaps,
+  }),
   methods: {
     changeDataset() {
       let {metric, filter, intervals, overlap} = this.params;
