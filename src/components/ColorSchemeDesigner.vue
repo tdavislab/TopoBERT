@@ -14,7 +14,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body overflow-auto">
           <div v-for="label in labels" class="input-group"
                v-bind:id="'colorpicker-' + label.label.replace('.', '-')"
                v-bind:data-color="colorScale(label.label)">
@@ -83,5 +83,7 @@ export default {
 </script>
 
 <style scoped>
-
+.modal-body {
+  max-height: 80vh;
+}
 </style>

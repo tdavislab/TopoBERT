@@ -44,7 +44,7 @@ import JaccardFilter from "./components/JaccardFilter";
 import LabelFilter from "./components/LabelFilter";
 import WordSearch from "@/components/WordSearch";
 import NodeSizeToggle from "@/components/NodeSizeToggle";
-import ColorSchemeDesigner from "@/assets/data/ColorSchemeDesigner";
+import ColorSchemeDesigner from "@/components/ColorSchemeDesigner";
 import AddParamConfig from "@/components/AddParamConfig";
 import Projection from "@/components/Projection";
 

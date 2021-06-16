@@ -57,13 +57,13 @@ export default {
   mounted() {
     $('#projection-panel').draggable({
       handle: ".modal-header"
-    })
-    this.$store.state.chartRef = this.$refs.chartRef
+    });
+    this.$store.state.chartRef = this.$refs.chartRef;
   },
   methods: {
     projBtnClicked(event) {
       let proj = this.currentProjection;
-      let chartRef = this.$refs.chartRef
+      let chartRef = this.$refs.chartRef;
       this.$store.dispatch('drawProjection', proj);
     },
     projMethodChanged(event) {
@@ -82,8 +82,8 @@ export default {
 
 #projection-panel {
   width: auto !important;
-  min-width: 800px;
-  min-height: 700px;
+  /*min-width: 800px;*/
+  /*min-height: 700px;*/
   height: auto !important;
 }
 

@@ -101,6 +101,7 @@ export default createStore({
     },
     labels: labels.labels,
     colorScale: colorScale,
+    selectedMemberIds: [],
     // nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]).concat(handTunedColorScale['Others'])),
     labelThreshold: 0
   },
@@ -133,6 +134,9 @@ export default createStore({
         layer.selected = layer.id === layerId;
       })
     },
+    setSelectedMemberIds(state, memberIds) {
+      state.selectedMemberIds = memberIds
+    },
     setGraph(state, forceGraphObj) {
       state.graph = forceGraphObj;
     },
@@ -156,7 +160,12 @@ export default createStore({
     },
     updateProjectionData(state, {processedData, proj}) {
       state.projectionData.data.datasets[0].data = processedData;
-      state.projectionData.data.datasets[0].backgroundColor = processedData.map(d => state.colorScale[d.label])
+      if (state.selectedMemberIds.length === 0) {
+        state.projectionData.data.datasets[0].backgroundColor = processedData.map(d => state.colorScale[d.label]);
+      } else {
+        state.projectionData.data.datasets[0].backgroundColor = processedData.map(d => 
+          state.selectedMemberIds.includes(d.index) ? state.colorScale[d.label] : 'rgb(144,144,144, 0.1)')
+      }
       state.projectionData.data.datasets[0].label = proj;
     },
     addDataSetConfig(state, newConfig) {
@@ -302,12 +311,23 @@ export default createStore({
       graph.graphData(state.graphData, state.graphType, context.getters.nodeColorMap);
 
       graph.svg.on('click', function (clickEvent) {
+        context.commit('setSelectedMemberIds', []);
+        // let processedData = context.state.projectionData.data.datasets[0].data;
+        // let proj = context.state.projectionData.data.datasets[0].label;
+        // context.commit('updateProjectionData', {processedData, proj})
+        // context.state.chartRef.update();
         dismissClickSelection(clickEvent, context)
       });
 
       graph.nodes.on('click', function (clickEvent) {
         let node = d3.select(this);
         updateTable(node, context);
+        let node_member_ids = node.datum().membership.membership_ids;
+        context.commit('setSelectedMemberIds', node_member_ids);
+        let processedData = context.state.projectionData.data.datasets[0].data;
+        let proj = context.state.projectionData.data.datasets[0].label;
+        context.commit('updateProjectionData', {processedData, proj})
+        context.state.chartRef.update();
         nodeClickDecoration(node, state.graph.nodes, state);
       });
 
@@ -349,3 +369,5 @@ export default createStore({
   },
   modules: {}
 })
+
+// Projection data updated to reflect gray labels for non-selected points
