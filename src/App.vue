@@ -13,6 +13,7 @@
       <ColorSchemeDesigner></ColorSchemeDesigner>
     </nav>
 
+
     <div id="app-body" class="container-fluid">
       <div class="row">
         <Graph class="col-8"></Graph>
@@ -49,11 +50,11 @@ import Stats from "./components/Stats";
 import DatasetSelector from "./components/DatasetSelector";
 import JaccardFilter from "./components/JaccardFilter";
 import LabelFilter from "./components/LabelFilter";
-import WordSearch from "@/components/WordSearch";
-import NodeSizeToggle from "@/components/NodeSizeToggle";
-import ColorSchemeDesigner from "@/components/ColorSchemeDesigner";
-import AddParamConfig from "@/components/AddParamConfig";
-import Projection from "@/components/Projection";
+import WordSearch from "./components/WordSearch";
+import NodeSizeToggle from "./components/NodeSizeToggle";
+import ColorSchemeDesigner from "./components/ColorSchemeDesigner";
+import AddParamConfig from "./components/AddParamConfig";
+import Projection from "./components/Projection";
 
 export default {
   name: "App",
