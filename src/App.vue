@@ -1,8 +1,8 @@
 <template>
   <div>
     <nav
-      id="header"
-      class="
+        id="header"
+        class="
         navbar navbar-static-top navbar-dark
         bg-dark
         justify-content-between

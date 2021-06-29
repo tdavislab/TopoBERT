@@ -3,16 +3,14 @@ module.exports = {
   // configureWebpack: {
   //   devServer: {
   //     watchOptions: {
-  //       ignored: '**/public/static/mapper_graphs/**/*.json',
+  //       ignored: ['**/node_modules/', '**/public/'],
   //     }
   //   }
   // },
-  // chainWebpack: (config) => {
-  //   config.plugin("copy").tap(([options]) => {
-  //     console.log(options);
-  //     // options[0].ignore.push("public/**/*");
-  //     // console.log(options);
-  //     return [options];
-  //   });
-  // },
+  chainWebpack: (config) => {
+    config.plugin("copy").tap(([options]) => {
+      options[0].ignore.push("**/*");
+      return [options];
+    });
+  },
 }
