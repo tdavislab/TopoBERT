@@ -1,17 +1,17 @@
 <template>
   <svg
-    id="minimap-svg"
-    width="25%"
-    height="25%"
-    viewBox="-50 -50 100 100"
-    hidden
+      id="minimap-svg"
+      width="25%"
+      height="25%"
+      viewBox="-50 -50 100 100"
+      hidden
   >
     {{ generatePiePath(nodeData) }}
   </svg>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 import * as d3 from "d3";
 
 export default {
@@ -28,25 +28,25 @@ export default {
       }
 
       let groupedmData = d3.rollup(
-        mData,
-        (v) => v.length,
-        (d) => d[3]
+          mData,
+          (v) => v.length,
+          (d) => d[3]
       );
       let numOthers = [...groupedmData.entries()]
-        .sort((x, y) => y[1] - x[1])
-        .slice(numPies - 1)
-        .reduce((acc, curr) => acc + curr[1], 0);
+          .sort((x, y) => y[1] - x[1])
+          .slice(numPies - 1)
+          .reduce((acc, curr) => acc + curr[1], 0);
       let topVals = [...groupedmData.entries()]
-        .sort((x, y) => y[1] - x[1])
-        .slice(0, numPies - 1);
+          .sort((x, y) => y[1] - x[1])
+          .slice(0, numPies - 1);
       if (numOthers > 0) {
         topVals.push(["Others", numOthers]);
       }
 
       let pie = d3
-        .pie()
-        .value((d) => d[1])
-        .sort(null)(topVals);
+          .pie()
+          .value((d) => d[1])
+          .sort(null)(topVals);
       let chartData = pie.map((d) => ({
         pie: d,
         group: d.data[0],
@@ -60,17 +60,17 @@ export default {
 
       // Pie-chart
       d3.select("#minimap-svg")
-        .append("g")
-        .attr("transform", `translate(${-radius - 15}, 0)`)
-        .selectAll("path")
-        .data(chartData)
-        .join("path")
-        .attr("d", (d) => arcGenerator(d.pie))
-        .attr("stroke", "black")
-        .attr("stroke-width", "0.4px")
-        .attr("fill", (d) => this.$store.getters.nodeColorMap(d.group))
-        .append("title")
-        .text((d) => `${d.group} (${d.count})`);
+          .append("g")
+          .attr("transform", `translate(${-radius - 15}, 0)`)
+          .selectAll("path")
+          .data(chartData)
+          .join("path")
+          .attr("d", (d) => arcGenerator(d.pie))
+          .attr("stroke", "black")
+          .attr("stroke-width", "0.4px")
+          .attr("fill", (d) => this.$store.getters.nodeColorMap(d.group))
+          .append("title")
+          .text((d) => `${d.group} (${d.count})`);
 
       // Legend
       // d3.select('#minimap-svg')
@@ -104,29 +104,29 @@ export default {
       }
 
       let legend = d3
-        .select("#minimap-svg")
-        .append("g")
-        .attr("id", "legend")
-        .selectAll("g")
-        .data(chartData)
-        .join("g");
+          .select("#minimap-svg")
+          .append("g")
+          .attr("id", "legend")
+          .selectAll("g")
+          .data(chartData)
+          .join("g");
 
       legend
-        .append("rect")
-        .attr("x", radius - 35)
-        .attr("y", (d, i) => position(i, numLegend))
-        .attr("width", "10px")
-        .attr("height", "10px")
-        .attr("fill", (d) => this.$store.getters.nodeColorMap(d.group))
-        .attr("stroke", "black")
-        .attr("stroke-width", "0.5px");
+          .append("rect")
+          .attr("x", radius - 35)
+          .attr("y", (d, i) => position(i, numLegend))
+          .attr("width", "10px")
+          .attr("height", "10px")
+          .attr("fill", (d) => this.$store.getters.nodeColorMap(d.group))
+          .attr("stroke", "black")
+          .attr("stroke-width", "0.5px");
 
       legend
-        .append("text")
-        .attr("x", radius - 17.5)
-        .attr("y", (d, i) => position(i, numLegend) + 7.5)
-        .attr("font-size", "6px")
-        .text((d) => `${d.group} (${d.count})`);
+          .append("text")
+          .attr("x", radius - 17.5)
+          .attr("y", (d, i) => position(i, numLegend) + 7.5)
+          .attr("font-size", "6px")
+          .text((d) => `${d.group} (${d.count})`);
     },
   },
 };

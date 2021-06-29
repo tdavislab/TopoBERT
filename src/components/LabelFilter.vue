@@ -2,42 +2,42 @@
   <div class="border rounded p-2 mt-2">
     <div id="filter-header">
       <h5
-        class="header-text"
-        title="Placeholder for explanation of filtering criteria"
+          class="header-text"
+          title="Placeholder for explanation of filtering criteria"
       >
         <span>Filter labels </span>
-        <font-awesome-icon id="filter-help" icon="question-circle" />
+        <font-awesome-icon id="filter-help" icon="question-circle"/>
       </h5>
       <span
-        style="float: right"
-        id="selection-indicator"
-        title="Clear selection"
-        v-on:click="clearSelection()"
+          style="float: right"
+          id="selection-indicator"
+          title="Clear selection"
+          v-on:click="clearSelection()"
       >
-        ({{ numFiltered }} selected <font-awesome-icon icon="times-circle" />)
+        ({{ numFiltered }} selected <font-awesome-icon icon="times-circle"/>)
       </span>
     </div>
     <div id="tag-container" hidden>
       <div id="threshold-container">
         <label for="threshold-slider">Criteria: {{ threshold }}</label>
         <input
-          id="threshold-slider"
-          class="custom-range d-inline-block"
-          type="range"
-          min="0"
-          max="200"
-          step="1"
-          value="0"
-          v-on:input="sliderDragged"
-          v-on:change="thresholdChanged"
+            id="threshold-slider"
+            class="custom-range d-inline-block"
+            type="range"
+            min="0"
+            max="200"
+            step="1"
+            value="0"
+            v-on:input="sliderDragged"
+            v-on:change="thresholdChanged"
         />
       </div>
       <div
-        v-for="labelItem in labels"
-        v-bind:class="{ 'label-selected': labelItem.selected }"
-        v-on:click="labelClicked(labelItem.label)"
-        class="label-tag"
-        v-bind:style="bgColor(labelItem.label)"
+          v-for="labelItem in labels"
+          v-bind:class="{ 'label-selected': labelItem.selected }"
+          v-on:click="labelClicked(labelItem.label)"
+          class="label-tag"
+          v-bind:style="bgColor(labelItem.label)"
       >
         {{ labelItem.label }}
       </div>
@@ -47,7 +47,7 @@
 
 <script>
 import $ from "jquery";
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "LabelFilter",
@@ -70,7 +70,7 @@ export default {
         return `Nodes where each selected label comprises of more than ${storeThreshold}%`;
       } else {
         return `Nodes where each selected label occurs at least ${
-          storeThreshold - 100
+            storeThreshold - 100
         } times`;
       }
     },
@@ -92,7 +92,7 @@ export default {
       this.$store.dispatch("filterLabel", -1);
     },
     bgColor(label) {
-      return { border: "5px solid " + this.$store.getters.nodeColorMap(label) };
+      return {border: "5px solid " + this.$store.getters.nodeColorMap(label)};
     },
     sliderDragged(event) {
       this.$store.commit("updateThreshold", parseInt(event.target.value));

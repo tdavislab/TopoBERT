@@ -7,10 +7,10 @@ module.exports = {
   //     }
   //   }
   // },
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     config.plugin("copy").tap(([options]) => {
       options[0].ignore.push("**/*");
       return [options];
     });
-  },
-}
+  }
+};

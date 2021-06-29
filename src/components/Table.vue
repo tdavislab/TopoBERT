@@ -2,19 +2,19 @@
   <div id="data-table" class="mt-3">
     <table class="table table-bordered table-hover">
       <thead>
-        <tr>
-          <th v-for="hItem in tableData.header" scope="col">{{ hItem }}</th>
-        </tr>
+      <tr>
+        <th v-for="hItem in tableData.header" scope="col">{{ hItem }}</th>
+      </tr>
       </thead>
       <tbody>
-        <tr
+      <tr
           class="tooltip-container"
           v-for="row in tableData.rows"
           v-bind:style="bgColor(row)"
-        >
-          <td v-for="rowElement in row">{{ rowElement }}</td>
-          <td class="tooltip-text" v-html="tableHover(row)"></td>
-        </tr>
+      >
+        <td v-for="rowElement in row">{{ rowElement }}</td>
+        <td class="tooltip-text" v-html="tableHover(row)"></td>
+      </tr>
       </tbody>
     </table>
   </div>
@@ -24,9 +24,9 @@ import * as d3 from "d3";
 
 function bgColorPicker(backgroundColor, lightColor, darkColor) {
   let color =
-    backgroundColor.charAt(0) === "#"
-      ? backgroundColor.substring(1, 7)
-      : backgroundColor;
+      backgroundColor.charAt(0) === "#"
+          ? backgroundColor.substring(1, 7)
+          : backgroundColor;
   let r = parseInt(color.substring(0, 2), 16); // hexToR
   let g = parseInt(color.substring(2, 4), 16); // hexToG
   let b = parseInt(color.substring(4, 6), 16); // hexToB
@@ -43,13 +43,13 @@ export default {
     tableHover(row) {
       function formatSentence(sentence, word_id) {
         return `<p>${sentence
-          .split(" ")
-          .map((d, i) => (i === word_id - 1 ? `<u><b>${d}</b></u>` : d))
-          .join(" ")}</p>`;
+            .split(" ")
+            .map((d, i) => (i === word_id - 1 ? `<u><b>${d}</b></u>` : d))
+            .join(" ")}</p>`;
       }
 
       let sent_id = row[0],
-        word_id = row[1];
+          word_id = row[1];
       return formatSentence(this.$store.state.sentData[sent_id], word_id);
     },
     bgColor(row) {

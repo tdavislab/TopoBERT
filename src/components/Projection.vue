@@ -1,12 +1,12 @@
 <template>
   <div id="projection-view">
     <button
-      id="proj-button"
-      class="btn btn-primary w-100"
-      data-backdrop="false"
-      data-toggle="modal"
-      data-target="#projection-panel"
-      v-on:click="projBtnClicked"
+        id="proj-button"
+        class="btn btn-primary w-100"
+        data-backdrop="false"
+        data-toggle="modal"
+        data-target="#projection-panel"
+        v-on:click="projBtnClicked"
     >
       2D Projection
     </button>
@@ -17,16 +17,16 @@
             <h5 class="modal-title" id="exampleModalLabel">2D projection</h5>
             <div class="mx-5">
               <select
-                name="projection-list"
-                id="projection-list-dropdown"
-                class="custom-select"
-                v-on:change="projMethodChanged"
+                  name="projection-list"
+                  id="projection-list-dropdown"
+                  class="custom-select"
+                  v-on:change="projMethodChanged"
               >
                 <option disabled value="">Choose projection</option>
                 <option
-                  v-for="method in methodList"
-                  v-bind:value="method"
-                  v-bind:selected="method === currentProjection"
+                    v-for="method in methodList"
+                    v-bind:value="method"
+                    v-bind:selected="method === currentProjection"
                 >
                   {{ method }}
                 </option>
@@ -34,18 +34,18 @@
             </div>
             <div class="loader" hidden></div>
             <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
             >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <vue3-chart-js
-              ref="chartRef"
-              v-bind="{ ...projectionData }"
+                ref="chartRef"
+                v-bind="{ ...projectionData }"
             ></vue3-chart-js>
             <!--            <canvas id="projection-canvas" width="800" height="800"></canvas>-->
           </div>
@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { mapGetters, mapState } from "vuex";
+import {ref} from "vue";
+import {mapGetters, mapState} from "vuex";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/draggable";
 import "jquery-ui/ui/widgets/resizable";
@@ -70,7 +70,7 @@ export default {
     Vue3ChartJs,
   },
   data() {
-    return { methodList: ["PCA", "TSNE", "UMAP"] };
+    return {methodList: ["PCA", "TSNE", "UMAP"]};
   },
   computed: {
     ...mapState({

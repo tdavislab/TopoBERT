@@ -13,7 +13,7 @@ import Minimap from "@/components/Minimap";
 
 export default {
   name: "Graph",
-  components: { Minimap },
+  components: {Minimap},
   data() {
     return {
       width: "100%",
@@ -24,8 +24,8 @@ export default {
   },
   mounted: function () {
     this.$store.commit(
-      "setGraph",
-      new ForceGraph("#mapper-graph", this.width, this.height)
+        "setGraph",
+        new ForceGraph("#mapper-graph", this.width, this.height)
     );
     this.$store.dispatch("drawGraph");
   },

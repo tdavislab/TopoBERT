@@ -6,13 +6,13 @@
         <div class="col-sm-9">
           <div class="custom-control custom-radio">
             <input
-              class="custom-control-input"
-              type="radio"
-              name="gridRadios"
-              id="gridRadios1"
-              value="size-scaled"
-              v-on:click="nodeToSizeScaled"
-              checked
+                class="custom-control-input"
+                type="radio"
+                name="gridRadios"
+                id="gridRadios1"
+                value="size-scaled"
+                v-on:click="nodeToSizeScaled"
+                checked
             />
             <label class="custom-control-label" for="gridRadios1">
               Scaled to cluster size
@@ -20,12 +20,12 @@
           </div>
           <div class="custom-control custom-radio">
             <input
-              class="custom-control-input"
-              type="radio"
-              name="gridRadios"
-              id="gridRadios2"
-              value="uniform"
-              v-on:click="nodeToUniform"
+                class="custom-control-input"
+                type="radio"
+                name="gridRadios"
+                id="gridRadios2"
+                value="uniform"
+                v-on:click="nodeToUniform"
             />
             <label class="custom-control-label" for="gridRadios2">
               Constant

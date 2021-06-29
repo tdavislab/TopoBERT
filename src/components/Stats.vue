@@ -1,21 +1,21 @@
 <template>
   <div id="stats-div" class="border rounded p-2">
     <h5>Statistics</h5>
-    <hr />
+    <hr/>
     <table class="table table-striped">
       <thead>
-        <tr>
-          <th>Node ID</th>
-          <th>Num Points</th>
-          <th>Avg L2 norm</th>
-        </tr>
+      <tr>
+        <th>Node ID</th>
+        <th>Num Points</th>
+        <th>Avg L2 norm</th>
+      </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>{{ stats.nodeName }}</td>
-          <td>{{ stats.numMembers }}</td>
-          <td>{{ stats.avgNorm }}</td>
-        </tr>
+      <tr>
+        <td>{{ stats.nodeName }}</td>
+        <td>{{ stats.numMembers }}</td>
+        <td>{{ stats.avgNorm }}</td>
+      </tr>
       </tbody>
     </table>
     <!--    <div class="stat-item">Node ID: {{ stats.nodeName }}</div>-->
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import {mapState, mapMutations} from "vuex";
 
 export default {
   name: "Stats",

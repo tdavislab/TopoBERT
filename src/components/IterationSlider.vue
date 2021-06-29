@@ -5,27 +5,27 @@
     </label>
     <div class="row">
       <div
-        id="playBtn"
-        class="col-1"
-        v-on:click="togglePlay"
-        v-html="symbol"
+          id="playBtn"
+          class="col-1"
+          v-on:click="togglePlay"
+          v-html="symbol"
       ></div>
       <input
-        type="range"
-        id="iterationSlider"
-        class="custom-range col-11"
-        min="0"
-        max="176"
-        step="1"
-        v-model="value"
-        v-on:change="iterationChanged"
+          type="range"
+          id="iterationSlider"
+          class="custom-range col-11"
+          min="0"
+          max="176"
+          step="1"
+          v-model="value"
+          v-on:change="iterationChanged"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "IterationSlider",
@@ -50,8 +50,8 @@ export default {
         this.timer = setInterval(() => {
           // this.value = (parseInt(this.value) + 1) % 177;
           this.$store.dispatch(
-            "loadIterationFile",
-            (parseInt(this.value) + 1) % 177
+              "loadIterationFile",
+              (parseInt(this.value) + 1) % 177
           );
         }, 1000);
       } else {

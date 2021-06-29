@@ -5,10 +5,10 @@
         <label for="param-metric" class="input-group-text w-100">Metric</label>
       </div>
       <select
-        id="param-metric"
-        class="custom-select w-50"
-        v-model="params.metric"
-        v-on:change="paramChanged()"
+          id="param-metric"
+          class="custom-select w-50"
+          v-model="params.metric"
+          v-on:change="paramChanged()"
       >
         <option disabled value="" selected>Distance metric</option>
         <option value="euclidean">Euclidean</option>
@@ -21,10 +21,10 @@
         <label for="param-filter" class="input-group-text w-100">Filter</label>
       </div>
       <select
-        id="param-filter"
-        class="custom-select w-50"
-        v-model="params.filter"
-        v-on:change="paramChanged()"
+          id="param-filter"
+          class="custom-select w-50"
+          v-model="params.filter"
+          v-on:change="paramChanged()"
       >
         <option disabled value="" selected>Filter function</option>
         <option value="l1">L1</option>
@@ -36,20 +36,20 @@
     <div class="input-group">
       <div class="input-group-prepend w-50">
         <label for="param-intervals" class="input-group-text w-100"
-          >Intervals</label
+        >Intervals</label
         >
       </div>
       <select
-        id="param-intervals"
-        class="custom-select w-50"
-        v-model="params.intervals"
-        v-on:change="paramChanged()"
+          id="param-intervals"
+          class="custom-select w-50"
+          v-model="params.intervals"
+          v-on:change="paramChanged()"
       >
         <option disabled value="" selected>Intervals</option>
         <option
-          v-for="intervalElem in intervalList"
-          v-bind:value="intervalElem"
-          v-bind:selected="intervalElem === 50"
+            v-for="intervalElem in intervalList"
+            v-bind:value="intervalElem"
+            v-bind:selected="intervalElem === 50"
         >
           {{ intervalElem }}
         </option>
@@ -59,20 +59,20 @@
     <div class="input-group">
       <div class="input-group-prepend w-50">
         <label for="param-overlap" class="input-group-text w-100"
-          >Overlap</label
+        >Overlap</label
         >
       </div>
       <select
-        id="param-overlap"
-        class="custom-select w-50"
-        v-model="params.overlap"
-        v-on:change="paramChanged()"
+          id="param-overlap"
+          class="custom-select w-50"
+          v-model="params.overlap"
+          v-on:change="paramChanged()"
       >
         <option disabled value="">Overlap</option>
         <option
-          v-for="overlapElem in overlapList"
-          v-bind:value="overlapElem"
-          v-bind:selected="overlapElem === 50"
+            v-for="overlapElem in overlapList"
+            v-bind:value="overlapElem"
+            v-bind:selected="overlapElem === 50"
         >
           {{ overlapElem }}
         </option>
@@ -84,10 +84,10 @@
         <label for="param-layout" class="input-group-text w-100">Layout</label>
       </div>
       <select
-        id="param-layout"
-        class="custom-select w-50"
-        v-model="params.layout"
-        v-on:change="layoutChanged()"
+          id="param-layout"
+          class="custom-select w-50"
+          v-model="params.layout"
+          v-on:change="layoutChanged()"
       >
         <option disabled value="" selected>Select graph layout</option>
         <option value="force">Force directed</option>
@@ -104,7 +104,7 @@
 <script>
 // import {mapState} from "vuex";
 import $ from "jquery";
-import { mapState } from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "DatasetSelector",
@@ -124,7 +124,7 @@ export default {
   }),
   methods: {
     changeDataset() {
-      let { metric, filter, intervals, overlap } = this.params;
+      let {metric, filter, intervals, overlap} = this.params;
       let newDataset = `${metric}_${filter}_${intervals}_${overlap}`;
       this.$store.dispatch("changeDataset", newDataset);
     },
