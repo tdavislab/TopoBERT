@@ -12,7 +12,7 @@ function generatePiePath(datapoint, nodeSizeScale, numPies = 8) {
   let pie = d3.pie().value(d => d[1]).sort(null)(topVals);
   // let pie = d3.pie().value(d => d[1])(Array.from(groupedmData));
   let size = datapoint.membership.membership_ids.length;
-  let chartData = pie.map(d => ({arc: d3.arc().innerRadius(0).outerRadius(nodeSizeScale(size))(d), group: d.data[0]}));
+  let chartData = pie.map(d => ({ arc: d3.arc().innerRadius(0).outerRadius(nodeSizeScale(size))(d), group: d.data[0] }));
   return chartData
 }
 

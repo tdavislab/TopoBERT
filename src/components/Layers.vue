@@ -2,8 +2,11 @@
   <div>
     <span class="d-inline-block">Layers</span>
     <div v-for="layer in layers" v-bind:key="layer.id" class="layer-container">
-      <div class="layer-button m-2"
-           v-bind:class="{'layer-selected': layer.selected}" v-on:click="layerClicked(layer.id)">
+      <div
+        class="layer-button m-2"
+        v-bind:class="{ 'layer-selected': layer.selected }"
+        v-on:click="layerClicked(layer.id)"
+      >
         {{ layer.id }}
       </div>
     </div>
@@ -11,7 +14,7 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex'
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "Layers",
@@ -19,18 +22,18 @@ export default {
     this.layers = this.$store.state.layers;
   },
   computed: mapState({
-    layers: state => state.layers,
+    layers: (state) => state.layers,
   }),
   methods: {
     layerClicked(layerId) {
-      this.$store.commit('setActiveLayer', layerId)
+      this.$store.commit("setActiveLayer", layerId);
     },
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
+@import "../assets/styles/variables.scss";
 
 .layer-container {
   display: inline-block;

@@ -1,6 +1,13 @@
 <template>
   <div>
-    <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark justify-content-between">
+    <nav
+      id="header"
+      class="
+        navbar navbar-static-top navbar-dark
+        bg-dark
+        justify-content-between
+      "
+    >
       <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
       <WordSearch></WordSearch>
       <ColorSchemeDesigner></ColorSchemeDesigner>
@@ -49,7 +56,7 @@ import AddParamConfig from "@/components/AddParamConfig";
 import Projection from "@/components/Projection";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Projection,
     AddParamConfig,
@@ -63,23 +70,23 @@ export default {
     Graph,
     Stats,
     Table,
-    JaccardFilter
+    JaccardFilter,
   },
   data() {
     return {};
   },
   methods: {
     clickLayer(layerId) {
-      this.layers.forEach(layerElement => {
-        layerElement.selected = (layerId === layerElement.id);
-      })
-    }
-  }
-}
+      this.layers.forEach((layerElement) => {
+        layerElement.selected = layerId === layerElement.id;
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss">
-@import './assets/styles/variables.scss';
+@import "./assets/styles/variables.scss";
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -95,5 +102,4 @@ export default {
 #header-text {
   padding-left: 1em;
 }
-
 </style>

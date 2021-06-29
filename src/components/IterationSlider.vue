@@ -4,15 +4,28 @@
       Current graph = {{ value }}
     </label>
     <div class="row">
-      <div id="playBtn" class="col-1" v-on:click="togglePlay" v-html="symbol"></div>
-      <input type="range" id="iterationSlider" class="custom-range col-11" min="0" max="176" step="1" v-model="value" v-on:change="iterationChanged">
+      <div
+        id="playBtn"
+        class="col-1"
+        v-on:click="togglePlay"
+        v-html="symbol"
+      ></div>
+      <input
+        type="range"
+        id="iterationSlider"
+        class="custom-range col-11"
+        min="0"
+        max="176"
+        step="1"
+        v-model="value"
+        v-on:change="iterationChanged"
+      />
     </div>
   </div>
 </template>
 
 <script>
-
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "IterationSlider",
@@ -20,15 +33,15 @@ export default {
     return {
       play: false,
       symbol: "<p>&#9654</p>",
-      timer: ''
-    }
+      timer: "",
+    };
   },
   computed: mapState({
-    value: state => state.currentIteration,
+    value: (state) => state.currentIteration,
   }),
   methods: {
     iterationChanged(event) {
-      this.$store.dispatch('loadIterationFile', parseInt(event.target.value));
+      this.$store.dispatch("loadIterationFile", parseInt(event.target.value));
     },
     togglePlay() {
       this.play = !this.play;
@@ -36,15 +49,18 @@ export default {
         this.symbol = "<p>&#9209</p>";
         this.timer = setInterval(() => {
           // this.value = (parseInt(this.value) + 1) % 177;
-          this.$store.dispatch('loadIterationFile', (parseInt(this.value) + 1) % 177)
-        }, 1000)
+          this.$store.dispatch(
+            "loadIterationFile",
+            (parseInt(this.value) + 1) % 177
+          );
+        }, 1000);
       } else {
         this.symbol = "<p>&#9654</p>";
         clearInterval(this.timer);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
