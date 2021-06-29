@@ -129,7 +129,14 @@ export default {
 </script>
 
 <style scoped>
+
+.modal-dialog {
+  max-width: 800px;
+}
 .modal-body {
   max-height: 80vh;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 0 2em;
 }
 </style>
