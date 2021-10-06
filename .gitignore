@@ -1,7 +1,7 @@
 .DS_Store
 node_modules
-/dist
-/public/static/
+frontend/dist
+frontend/public/static/
 
 # local env files
 .env.local
@@ -21,3 +21,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# backend
+backend/data/
+
+__pycache__/

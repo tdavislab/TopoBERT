@@ -1,0 +1,9 @@
+numpy
+tqdm
+pandas
+scikit-learn
+MulticoreTSNE
+umap-learn
+networkx
+kmapper
+kneed
