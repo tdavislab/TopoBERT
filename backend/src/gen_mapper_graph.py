@@ -5,6 +5,7 @@ import zipfile
 import ast
 import kmapper as km
 from sklearn.cluster import DBSCAN
+from hdbscan import HDBSCAN
 from networkx.readwrite import json_graph
 import json
 import os
@@ -17,6 +18,8 @@ from pyBallMapper import BallMapper
 from sklearn.decomposition import PCA
 from tqdm import tqdm
 import kneed
+
+import matplotlib.pyplot as plt
 
 
 @dataclass
@@ -33,16 +36,20 @@ def generate_configs(small=False):
         metrics = ['euclidean']
         filter_funcs = ['l2']
         intervals = [50]
-    metrics = ['euclidean', 'cosine']
-    filter_funcs = ['l2', 'knn5', 'l1']
-    intervals = [50, 100]
-    overlaps = [0.25, 0.50, 0.75]
+        overlaps = [0.50]
+    else:
+        metrics = ['euclidean', 'cosine']
+        filter_funcs = ['l2', 'knn5', 'l1']
+        intervals = [50, 100]
+        overlaps = [0.25, 0.50, 0.75]
 
     config_list = []
+
     for metric, filter_func, interval, overlap in itertools.product(metrics, filter_funcs, intervals, overlaps):
         config_list.append(Config(metric=metric, filter_func=filter_func, intervals=interval, overlap=overlap))
 
     return config_list
+
     # return [Config(algo='ballmapper', filter_func='l2', intervals=50, overlap=0.50)]
     # conf_euc_50_25 = Config(metric='euclidean', filter_func=filter_func, intervals=50, overlap=0.25)
     # conf_euc_50_50 = Config(metric='euclidean', filter_func=filter_func, intervals=50, overlap=0.50)
@@ -221,8 +228,11 @@ def store_as_json(graph, path):
 def elbow_eps(data):
     nbrs = NearestNeighbors(n_neighbors=2).fit(data)
     distances, indices = nbrs.kneighbors(data)
+    distances = np.sort(distances, axis=0)
+    # plt.plot(distances[:, 1])
+    # plt.show()
     kneedle = kneed.KneeLocator(distances[:, 1], np.linspace(0, 1, num=len(distances)), curve='convex', direction='increasing')
-    return kneedle.knee
+    return kneedle.knee * 0.5
 
 
 def create_mapper(file_name, label_file, activation_file, graph_output_file, conf):
@@ -255,8 +265,12 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
 
         eps = elbow_eps(activations)
         # eps = 10
-        graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=1),
+
+        graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=2),
                            cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
+
+        # graph = mapper.map(projected_data, activations, clusterer=HDBSCAN(metric=conf.metric, min_samples=5, min_cluster_size=5),
+        #                    cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
         add_node_metadata(graph, labels, activations)
 
@@ -264,11 +278,11 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
 
 
 if __name__ == "__main__":
-    for config in generate_configs():
+    for config in generate_configs(small=True):
         LABEL_FILE = '../data/Supersense-Role/entities/train.txt'
         ACTIVATION_FILE = '../data/Supersense-Role/SS_fine_tuned.zip'
-        GRAPH_OUTPUT_FILE = '../probing-topoact/public/static/mapper_graphs/' + \
+        GRAPH_OUTPUT_FILE = '../../frontend/public/static/mapper_graphs/' + \
                             f'{config.metric}_{config.filter_func}_{config.intervals}_{int(config.overlap * 100)}/'
 
-        for file_index in tqdm(range(177)):
+        for file_index in tqdm(range(0, 177)):
             create_mapper(f'{file_index}.txt', LABEL_FILE, ACTIVATION_FILE, GRAPH_OUTPUT_FILE, config)

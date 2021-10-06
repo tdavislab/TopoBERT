@@ -41,4 +41,4 @@ def create_sentence_file(sentence_list, output_filepath):
 if __name__ == '__main__':
     sentence_data = read_file_from_zip('../data/Supersense-Role/topoAct.zip', 'topoAct/streusle.ud_train.json', type='json')
     sentences = [Sentence(sent, i) for i, sent in enumerate(sentence_data)]
-    create_sentence_file(sentences, '../probing-topoact/src/assets/data/sentences.json')
+    create_sentence_file(sentences, '../../frontend/src/assets/data/sentences.json')

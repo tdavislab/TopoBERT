@@ -60,7 +60,7 @@ def compute_projection(file_name, label_file, activation_file, output_path, meth
 if __name__ == '__main__':
     LABEL_FILE = '../data/Supersense-Role/entities/train.txt'
     ACTIVATION_FILE = '../data/Supersense-Role/SS_fine_tuned.zip'
-    OUTPUT_PATH = '../probing-topoact/public/static/projections/'
+    OUTPUT_PATH = '../../frontend/public/static/projections/'
 
     labels = read_labels(LABEL_FILE)
 
