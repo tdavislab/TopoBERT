@@ -281,7 +281,7 @@ if __name__ == "__main__":
     for config in generate_configs(small=True):
         LABEL_FILE = '../data/Supersense-Role/entities/train.txt'
         ACTIVATION_FILE = '../data/Supersense-Role/SS_fine_tuned.zip'
-        GRAPH_OUTPUT_FILE = '../frontend/public/static/mapper_graphs/' + \
+        GRAPH_OUTPUT_FILE = '../../frontend/public/static/mapper_graphs/' + \
                             f'{config.metric}_{config.filter_func}_{config.intervals}_{int(config.overlap * 100)}/'
 
         for file_index in tqdm(range(0, 177)):

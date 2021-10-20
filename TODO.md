@@ -65,3 +65,5 @@
   sameness (makes more sense at t=0, best quality at initial stage would mean 
   better filter function), show metric at each  time-step
 - [ ] Select chain by clicking on edge
+
+

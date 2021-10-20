@@ -23,6 +23,7 @@
             <DatasetSelector></DatasetSelector>
             <AddParamConfig></AddParamConfig>
             <Projection></Projection>
+            <NodePurities></NodePurities>
             <IterationSlider></IterationSlider>
           </div>
           <JaccardFilter></JaccardFilter>
@@ -55,10 +56,12 @@ import NodeSizeToggle from "./components/NodeSizeToggle";
 import ColorSchemeDesigner from "./components/ColorSchemeDesigner";
 import AddParamConfig from "./components/AddParamConfig";
 import Projection from "./components/Projection";
+import NodePurities from "./components/NodePurities";
 
 export default {
   name: "App",
   components: {
+    NodePurities,
     Projection,
     AddParamConfig,
     ColorSchemeDesigner,

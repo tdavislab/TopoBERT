@@ -1,7 +1,8 @@
 import {createStore} from 'vuex';
 import layerData from '../assets/data/layerData.json';
 import labels from '../assets/data/labels.json'
-import graphData from '../assets/data/0.json';
+import pointLabels from '../assets/data/point_data_labels.json'
+import graphData from '../../public/static/mapper_graphs/euclidean_l2_50_50/0.json';
 import sentData from '../assets/data/sentences.json';
 import {colorScale} from '../assets/data/colorScale.js';
 
@@ -68,7 +69,10 @@ export default createStore({
           }
         ]
       },
+      width: 800,
+      height: 400,
       options: {
+        responsive: false,
         plugins: {
           tooltip: {
             callbacks: {
@@ -80,6 +84,24 @@ export default createStore({
       }
     },
     chartRef: null,
+    purityChartRef: null,
+    purityData: {
+      type: "line",
+      data: {
+        labels: Array.from({length: 177}, (v, x) => x),
+        datasets: [
+          {
+            label: "",
+            data: [],
+          },
+        ],
+      },
+      width: 800,
+      height: 400,
+      options: {
+        responsive: false,
+      }
+    },
     graphType: 'force',
     sentData: sentData,
     dataset: 'euclidean_l2_50_50',
@@ -163,7 +185,7 @@ export default createStore({
       if (state.selectedMemberIds.length === 0) {
         state.projectionData.data.datasets[0].backgroundColor = processedData.map(d => state.colorScale[d.label]);
       } else {
-        state.projectionData.data.datasets[0].backgroundColor = processedData.map(d => 
+        state.projectionData.data.datasets[0].backgroundColor = processedData.map(d =>
           state.selectedMemberIds.includes(d.index) ? state.colorScale[d.label] : 'rgb(144,144,144, 0.1)')
       }
       state.projectionData.data.datasets[0].label = proj;
@@ -329,6 +351,7 @@ export default createStore({
         context.commit('updateProjectionData', {processedData, proj})
         context.state.chartRef.update();
         nodeClickDecoration(node, state.graph.nodes, state);
+        context.dispatch('drawNodePurities', node_member_ids);
       });
 
       // graph.colorNodesByLabel(state.labels.map(d => d.label), state.nodeColorScale);
@@ -364,7 +387,39 @@ export default createStore({
 
         $('.loader').prop('hidden', true);
         context.state.chartRef.update();
+        console.log(context.state.projectionData);
       });
+    },
+    drawNodePurities(context, pointIds) {
+      console.log('Fetching purity update')
+      d3.csv('static/mapper_graphs/euclidean_l2_50_50/node_purities.csv').then(function (data) {
+          console.log(data)
+          // let pointIds = [0, 1, 2];
+          pointIds = pointIds.slice(0, 20)
+          // context.state.purityData.data.labels = Array.from({length: 177}, (v, x) => x);
+          context.state.purityData.data.datasets = []
+          for (let idx = 0; idx < pointIds.length; idx++) {
+            let pointId = pointIds[idx];
+            let pointData = data[pointId];
+            context.state.purityData.data.datasets.push({label: `Point ${pointId} (${pointLabels[pointId][3]})`, data: [], borderColor: "#41B883"});
+            for (let i = 0; i < 177; i++) {
+              let keyName = `epoch_${i}_purity`;
+              context.state.purityData.data.datasets[idx].data.push(pointData[keyName]);
+            }
+          }
+          context.state.purityChartRef.update();
+          // console.log(context.state.purityData)
+          // let pointId = 0;
+          // let pointData = data[pointId]
+          // context.state.purityData.data.datasets[pointId].label = "Point 0";
+          // context.state.purityData.data.datasets[pointId].data = [];
+          // for (let i = 0; i < 177; i++) {
+          //   let keyName = `epoch_${i}_purity`;
+          //   context.state.purityData.data.datasets[pointId].data.push(pointData[keyName]);
+          // }
+          // console.log(context.state.purityData)
+        }
+      );
     }
   },
   modules: {}

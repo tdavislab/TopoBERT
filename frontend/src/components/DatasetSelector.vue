@@ -1,7 +1,25 @@
 <template>
   <div id="dataset-selector-div">
     <div class="input-group">
-      <div class="input-group-prepend w-50">
+      <div class="input-group-prepend w-30">
+        <label for="param-metric" class="input-group-text w-100">Dataset</label>
+      </div>
+      <select
+          id="dataset-picker"
+          class="custom-select w-50"
+          v-model="params.dataset"
+          v-on:change="paramChanged()"
+      >
+        <option disabled value="" selected>Select dataset</option>
+        <option value="ss-role">SuperSense-Role</option>
+        <option value="ss-func">SuperSense-Function</option>
+        <option value="pos">Part of Speech</option>
+        <option value="dep">Dependency</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <div class="input-group-prepend w-30">
         <label for="param-metric" class="input-group-text w-100">Metric</label>
       </div>
       <select
@@ -17,7 +35,7 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend w-50">
+      <div class="input-group-prepend w-30">
         <label for="param-filter" class="input-group-text w-100">Filter</label>
       </div>
       <select
@@ -34,7 +52,7 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend w-50">
+      <div class="input-group-prepend w-30">
         <label for="param-intervals" class="input-group-text w-100"
         >Intervals</label
         >
@@ -57,7 +75,7 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend w-50">
+      <div class="input-group-prepend w-30">
         <label for="param-overlap" class="input-group-text w-100"
         >Overlap</label
         >
@@ -80,7 +98,7 @@
     </div>
 
     <div class="input-group">
-      <div class="input-group-prepend w-50">
+      <div class="input-group-prepend w-30">
         <label for="param-layout" class="input-group-text w-100">Layout</label>
       </div>
       <select
@@ -94,7 +112,6 @@
         <option value="pca">PCA</option>
       </select>
     </div>
-
     <button id="run-btn" class="btn btn-primary" v-on:click="changeDataset()">
       Update graph
     </button>
@@ -115,6 +132,7 @@ export default {
       intervals: 50,
       overlap: 50,
       layout: "force",
+      dataset: "ss-role"
     };
     return {};
   },
@@ -145,6 +163,10 @@ export default {
 
 .input-group-prepend {
   width: 35%;
+}
+
+#run-btn {
+  grid-column: 1 / 3;
 }
 
 #dataset-selector-div {
