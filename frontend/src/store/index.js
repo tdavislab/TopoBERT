@@ -267,6 +267,11 @@ export default createStore({
       //       });
       //   })
 
+      console.log({
+        params: context.state.param_str,
+        iteration: context.state.currentIteration,
+        layer: context.state.layers.filter(layer => layer.selected)[0].id,
+      })
       // make ajax call to get graph data
       $.ajax({
         url: process.env.VUE_APP_ROOT_API + 'get_graph',
@@ -440,7 +445,6 @@ export default createStore({
 
         $('.loader').prop('hidden', true);
         context.state.chartRef.update();
-        console.log(context.state.projectionData);
       });
     },
     drawNodePurities(context, pointIds) {

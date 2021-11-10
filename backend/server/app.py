@@ -38,6 +38,18 @@ def get_graph():
         label_file = '../data/ss-role/entities/train.txt'
         activation_file = f'../data/ss-role/fine-tuned-bert-based-uncased/train/{iteration}/{layer}.txt'
         graph_output_file = '../../frontend/public/static/mapper_graphs/' + f'{metric}_{filter_func}_{intervals}_{overlap}/'
+    elif dataset == 'ss-func':
+        label_file = '../data/ss-func/entities/train.txt'
+        activation_file = f'../data/ss-func/fine-tuned-bert-based-uncased/train/{iteration}/{layer}.txt'
+        graph_output_file = '../../frontend/public/static/mapper_graphs/' + f'{metric}_{filter_func}_{intervals}_{overlap}/'
+    elif dataset == 'pos':
+        label_file = '../data/pos/entities/train.txt'
+        activation_file = f'../data/pos/fine-tuned-bert-based-uncased/train/{iteration}/{layer}.txt'
+        graph_output_file = '../../frontend/public/static/mapper_graphs/' + f'{metric}_{filter_func}_{intervals}_{overlap}/'
+    elif dataset == 'dep':
+        label_file = '../data/dep/entities/train.txt'
+        activation_file = f'../data/dep/fine-tuned-bert-based-uncased/train/{iteration}/{layer}.txt'
+        graph_output_file = '../../frontend/public/static/mapper_graphs/' + f'{metric}_{filter_func}_{intervals}_{overlap}/'
     else:
         raise ValueError('Dataset not supported')
 

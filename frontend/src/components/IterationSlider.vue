@@ -1,7 +1,7 @@
 <template>
   <div class="border rounded px-4 py-2 mb-2">
     <label id="sliderLabel" for="iterationSlider" class="form-label">
-      Current graph = {{ value }}
+      Current graph = <span class="param-highlight">{{ value }}</span>
     </label>
     <div class="row">
       <div
@@ -75,5 +75,15 @@ export default {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.param-highlight {
+  background: #949494;
+  color: white;
+  padding-top: 0.25em;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+  padding-bottom: 0.25em;
+  border-radius: 0.25rem;
 }
 </style>

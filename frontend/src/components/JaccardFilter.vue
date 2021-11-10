@@ -1,7 +1,7 @@
 <template>
   <div id="jaccard-holder" class="border rounded px-4 py-2 mb-2">
     <label id="sliderLabel" for="iterationSlider" class="form-label"
-    >Show links with intersection > {{ value }}</label
+    >Show links with weight greater than: <span class="param-highlight">{{ value }}</span></label
     >
     <input
         type="range"
@@ -33,4 +33,13 @@ export default {
 </script>
 
 <style scoped>
+.param-highlight {
+  background: #949494;
+  color: white;
+  padding-top: 0.25em;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+  padding-bottom: 0.25em;
+  border-radius: 0.25rem;
+}
 </style>
