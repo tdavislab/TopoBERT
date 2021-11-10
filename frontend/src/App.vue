@@ -80,6 +80,9 @@ export default {
   data() {
     return {};
   },
+  mounted: function() {
+    this.$store.dispatch('loadIterationFile', 0);
+  },
   methods: {
     clickLayer(layerId) {
       this.layers.forEach((layerElement) => {
