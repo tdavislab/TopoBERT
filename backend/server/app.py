@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from graph_generator import create_mapper, Config, NumpyEncoder
+from utils import get_purities
 
 # configuration
 DEBUG = True
@@ -12,6 +13,7 @@ DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.json_encoder = NumpyEncoder
+app.graph_data = None
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
@@ -56,7 +58,11 @@ def get_graph():
     graph = create_mapper('', label_file, activation_file, graph_output_file,
                           Config(metric=metric, filter_func=filter_func, intervals=int(intervals), overlap=float(overlap) / 100))
 
-    return jsonify(graph)
+    app.graph_data = graph
+
+    purities, bin_edges = get_purities(graph)
+
+    return jsonify(graph=graph, purities=purities, bin_edges=bin_edges)
 
 
 if __name__ == '__main__':

@@ -184,7 +184,7 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
         raise KeyError('Unexpected filter function')
 
     eps = elbow_eps(activations)
-    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric),
+    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=3),
                        cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
     add_node_metadata(graph, labels, activations)

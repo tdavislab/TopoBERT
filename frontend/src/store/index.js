@@ -110,7 +110,7 @@ export default createStore({
     sentData: sentData,
     param_str: 'ss-role_euclidean_l2_50_50',
     datasetConfigs: {
-      intervals: [50, 100],
+      intervals: [25, 50, 100],
       overlaps: [25, 50, 75]
     },
     currentIteration: 0,
@@ -168,6 +168,9 @@ export default createStore({
     },
     updateGraphData(state, newGraphData) {
       state.graphData = newGraphData;
+    },
+    updatePurityHists(state, newPurityData) {
+      state.purityHists = newPurityData;
     },
     updateTableRows(state, newTableRows) {
       state.tableData.rows = newTableRows;
@@ -286,8 +289,9 @@ export default createStore({
           $('#spinner-holder').show();
         },
         success: function (response) {
-          // console.log(response);
-          updateGraph(response);
+          console.log(response);
+          updateGraph(response.graph);
+          updatePurityHists(response.purities)
         },
         complete: function () {
           $('.overlay').removeClass('d-flex').hide();
@@ -308,6 +312,10 @@ export default createStore({
       function updateGraph(newGraphData) {
         context.commit('updateGraphData', newGraphData);
         context.commit('changeGraphType', context.state.graphType);
+      }
+
+      function updatePurityHists(newPurityData) {
+        context.commit('updatePurityHists', newPurityData);
       }
     },
     changeDataset(context, newDataset) {

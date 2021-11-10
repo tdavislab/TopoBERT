@@ -357,6 +357,7 @@ export default class ForceGraph {
     this.nodeSizeScale.domain(
       d3.extent(nodeData.map(d => d["membership"]["membership_ids"].length))
     );
+
     this.linkColorScale.domain(d3.extent(linkData.map(d => d.intersection)));
     this.linkWidthScale.domain(d3.extent(linkData.map(d => d["intersection"])));
 

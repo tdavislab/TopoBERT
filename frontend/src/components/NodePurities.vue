@@ -8,13 +8,13 @@
         data-target="#purity-panel"
         v-on:click="purityBtnClicked"
     >
-      Point purities
+      Class purities
     </button>
     <div id="purity-panel" class="modal fade modeless">
       <div class="modal-dialog" role="dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5>Pointwise Purities over Epochs</h5>
+            <h5>Classwise Purities</h5>
             <button
                 type="button"
                 class="close"
@@ -25,7 +25,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <vue3-chart-js ref="purityChartRef" v-bind="{...purityData}"></vue3-chart-js>
+            <!--<vue3-chart-js ref="purityChartRef" v-bind="{...purityData}"></vue3-chart-js>-->
+            <div>Test</div>
           </div>
         </div>
       </div>
