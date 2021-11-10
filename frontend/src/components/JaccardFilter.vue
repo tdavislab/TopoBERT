@@ -36,10 +36,7 @@ export default {
 .param-highlight {
   background: #949494;
   color: white;
-  padding-top: 0.25em;
-  padding-right: 0.5em;
-  padding-left: 0.5em;
-  padding-bottom: 0.25em;
+  padding: 0.25em 0.5em;
   border-radius: 0.25rem;
 }
 </style>
