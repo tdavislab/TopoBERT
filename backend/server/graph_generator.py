@@ -74,7 +74,6 @@ def read_labels(path):
 
     return pd.DataFrame(label_data, columns=['sent_id', 'word_id', 'word', 'label'])
 
-
 def add_node_metadata_ud(graph, data):
     for node_name in graph['nodes']:
         member_list = graph['nodes'][node_name]
