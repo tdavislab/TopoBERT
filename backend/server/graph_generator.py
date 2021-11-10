@@ -1,4 +1,6 @@
 import dataclasses
+
+import kneed
 import numpy as np
 import pandas as pd
 import zipfile
@@ -11,6 +13,7 @@ import os
 import itertools
 
 from sklearn.decomposition import PCA
+from sklearn.neighbors import NearestNeighbors
 from tqdm import tqdm
 from dataclasses import dataclass
 
@@ -129,15 +132,49 @@ def store_as_json(graph, path):
     return js_graph
 
 
+def serialize_graph(graph):
+    nx_graph = km.adapter.to_networkx(graph)
+    js_graph = json_graph.node_link_data(nx_graph)
+
+    for i, node in enumerate(js_graph['nodes']):
+        js_graph['nodes'][i]['name'] = js_graph['nodes'][i]['id']
+        js_graph['nodes'][i]['l2avg'] = js_graph['nodes'][i]['membership']['l2avg']
+
+    for i, link in enumerate(js_graph['links']):
+        id_s = link['source']
+        id_t = link['target']
+        mem1 = [x['membership']['membership_ids'] for x in js_graph['nodes'] if x['id'] == id_s][0]
+        mem2 = [x['membership']['membership_ids'] for x in js_graph['nodes'] if x['id'] == id_t][0]
+        mem1, mem2 = set(mem1), set(mem2)
+        jaccard = len(mem1.intersection(mem2)) / len(mem1.union(mem2))
+        js_graph['links'][i]['intersection'] = jaccard
+
+    return js_graph
+
+
+def elbow_eps(data):
+    nbrs = NearestNeighbors(n_neighbors=2).fit(data)
+    distances, indices = nbrs.kneighbors(data)
+    distances = np.sort(distances, axis=0)[::-1]
+    kneedle = kneed.KneeLocator(distances[:, 1], np.linspace(0, 1, num=len(distances)), curve='convex', direction='decreasing')
+    eps = kneedle.knee * 0.75
+    return eps
+
+
 def create_mapper(file_name, label_file, activation_file, graph_output_file, conf):
-    if os.path.isfile(graph_output_file + file_name.replace('.txt', '.json')):
-        return
+    # if os.path.isfile(graph_output_file + file_name.replace('.txt', '.json')):
+    #     return
 
     labels = read_labels(label_file)
-    activations = read_file_from_zip(activation_file, f'fine_tuning_changes/{file_name}')
-    # labels['l2norm'] = MinMaxScaler().fit_transform(np.expand_dims(np.linalg.norm(activations.to_numpy(), axis=1), 1))
+    if activation_file.endswith('.zip'):
+        activations = read_file_from_zip(activation_file, f'fine_tuning_changes/{file_name}')
+    else:
+        activations = pd.read_csv(activation_file, delim_whitespace=True, header=None)
+
+    activation_norms = np.linalg.norm(activations, axis=1)
     labels['l2norm'] = np.expand_dims(np.linalg.norm(activations.to_numpy(), axis=1), 1)
     mapper = km.KeplerMapper()
+
     if conf.filter_func == 'l1':
         projected_data = np.linalg.norm(activations, ord=1, axis=1).reshape((activations.shape[0], 1))
     elif conf.filter_func == 'l2':
@@ -147,10 +184,11 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
     else:
         raise KeyError('Unexpected filter function')
 
-    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=10, metric=conf.metric),
+    eps = elbow_eps(activations)
+    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric),
                        cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
     add_node_metadata(graph, labels, activations)
 
-    graph = store_as_json(graph, graph_output_file + file_name.replace('.txt', '.json'))
-    return graph
+    # graph = store_as_json(graph, graph_output_file + file_name.replace('.txt', '.json'))
+    return serialize_graph(graph)

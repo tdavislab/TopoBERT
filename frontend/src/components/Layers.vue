@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <span class="d-inline-block">Layers</span>
-    <div v-for="layer in layers" v-bind:key="layer.id" class="layer-container">
-      <div
+  <div style="display: inline-block">
+    <span class="d-inline-block" style="color: white">Select layer</span>
+    <span v-for="layer in layers" v-bind:key="layer.id" class="layer-container">
+      <span
           class="layer-button m-2"
           v-bind:class="{ 'layer-selected': layer.selected }"
           v-on:click="layerClicked(layer.id)"
       >
         {{ layer.id }}
-      </div>
-    </div>
+      </span>
+    </span>
   </div>
 </template>
 
@@ -23,10 +23,12 @@ export default {
   },
   computed: mapState({
     layers: (state) => state.layers,
+    currentLayer: (state) => state.currentLayer,
   }),
   methods: {
     layerClicked(layerId) {
       this.$store.commit("setActiveLayer", layerId);
+      this.$store.dispatch("loadIterationFile", this.$store.state.currentIteration);
     },
   },
 };

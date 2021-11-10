@@ -8,13 +8,13 @@
         data-target="#purity-panel"
         v-on:click="purityBtnClicked"
     >
-      Node purities
+      Point purities
     </button>
     <div id="purity-panel" class="modal fade modeless">
       <div class="modal-dialog" role="dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5>Pointwise Node Purities</h5>
+            <h5>Pointwise Purities over Epochs</h5>
             <button
                 type="button"
                 class="close"

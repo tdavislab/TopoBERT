@@ -100,11 +100,15 @@ export default createStore({
       height: 400,
       options: {
         responsive: false,
+        pan: {
+          enabled: true,
+          mode: 'x',
+        },
       }
     },
     graphType: 'force',
     sentData: sentData,
-    dataset: 'euclidean_l2_50_50',
+    param_str: 'ss-role_euclidean_l2_50_50',
     datasetConfigs: {
       intervals: [50, 100],
       overlaps: [25, 50, 75]
@@ -125,7 +129,7 @@ export default createStore({
     colorScale: colorScale,
     selectedMemberIds: [],
     // nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]).concat(handTunedColorScale['Others'])),
-    labelThreshold: 0
+    labelThreshold: 0,
   },
   getters: {
     getLayers: state => state.layers,
@@ -193,17 +197,33 @@ export default createStore({
     addDataSetConfig(state, newConfig) {
       let {interval, overlap} = newConfig;
       if (interval !== '') {
-        state.datasetConfigs.intervals.push(parseInt(interval));
+        let intervalArr = state.datasetConfigs.intervals;
+        console.log(intervalArr);
+        if (!intervalArr.includes(interval)) {
+          intervalArr.push(parseInt(interval));
+          state.datasetConfigs.intervals.sort(function (a, b) {
+            return a - b;
+          });
+        }
+
+        // state.datasetConfigs.intervals.push(parseInt(interval));
       }
       if (overlap !== '') {
-        state.datasetConfigs.overlaps.push(parseInt(overlap));
+        let overlapArr = state.datasetConfigs.overlaps;
+        if (!overlapArr.includes(overlap)) {
+          overlapArr.push(parseInt(overlap));
+          state.datasetConfigs.overlaps.sort(function (a, b) {
+            return a - b;
+          });
+        }
+        // state.datasetConfigs.overlaps.push(parseInt(overlap));
       }
     },
     changeCurrentIteration(state, newIterationNum) {
       state.currentIteration = newIterationNum
     },
     changeDataset(state, newDataset) {
-      state.dataset = newDataset;
+      state.param_str = newDataset;
     },
     changeJaccard(state, newJaccardVal) {
       state.jaccardFilter = newJaccardVal;
@@ -231,21 +251,54 @@ export default createStore({
       context.commit('changeCurrentIteration', newIterationNum);
       context.commit('resetTableRows');
       context.commit('resetStats');
-      $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph)
-        .done(function () {
-          console.log('Loaded iteration = ', context.state.dataset, context.state.currentIteration);
-        })
-        .fail(function () {
-          $.getJSON(process.env.VUE_APP_ROOT_API + 'get_graph',
-            {dataset: context.state.dataset, iteration: context.state.currentIteration},
-            function (response) {
-              console.log('success', response);
-              $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph);
-            })
-            .fail((response) => {
-              console.log('failure', response)
-            });
-        })
+      // $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph)
+      //   .done(function () {
+      //     console.log('Loaded iteration = ', context.state.param_str, context.state.currentIteration);
+      //   })
+      //   .fail(function () {
+      //     $.getJSON(process.env.VUE_APP_ROOT_API + 'get_graph',
+      //       {dataset: context.state.param_str, iteration: context.state.currentIteration},
+      //       function (response) {
+      //         console.log('success', response);
+      //         $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph);
+      //       })
+      //       .fail((response) => {
+      //         console.log('failure', response)
+      //       });
+      //   })
+
+      // make ajax call to get graph data
+      $.ajax({
+        url: process.env.VUE_APP_ROOT_API + 'get_graph',
+        type: 'GET',
+        data: {
+          params: context.state.param_str,
+          iteration: context.state.currentIteration,
+          layer: context.state.layers.filter(layer => layer.selected)[0].id
+        },
+        beforeSend: function () {
+          $('.overlay').addClass('d-flex').show();
+          $('#spinner-holder').show();
+        },
+        success: function (response) {
+          // console.log(response);
+          updateGraph(response);
+        },
+        complete: function () {
+          $('.overlay').removeClass('d-flex').hide();
+          $('#spinner-holder').hide();
+        },
+        error: function (response) {
+          console.log('failure', response)
+        }
+      });
+
+      // $.aj(process.env.VUE_APP_ROOT_API + 'get_graph',
+      //   {params: context.state.param_str, iteration: context.state.currentIteration},
+      //   function (response) {
+      //     console.log('success', response)
+      //   }
+      // );
 
       function updateGraph(newGraphData) {
         context.commit('updateGraphData', newGraphData);

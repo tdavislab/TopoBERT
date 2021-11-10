@@ -4,6 +4,14 @@
       <Minimap></Minimap>
       <svg id="mapper-graph" v-bind:width="width" v-bind:height="height"></svg>
     </div>
+    <div class="overlay h-100 w-100 justify-content-center align-items-center">
+      <div id="spinner-holder" class="mt-3 text-center" style="display:none">
+        <div id="spinner" class="spinner-border text-light">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -42,5 +50,29 @@ export default {
 #graph {
   margin-top: 0.5rem;
   height: 90vh;
+}
+
+.overlay {
+  background: #000000;
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.5;
+}
+
+@keyframes spinner {
+  from {
+    -moz-transform: scale(1.0);
+    -ms-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+  to {
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+  }
 }
 </style>

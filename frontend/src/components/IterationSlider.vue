@@ -16,7 +16,7 @@
           class="custom-range col-11"
           min="0"
           max="176"
-          step="1"
+          step="5"
           v-model="value"
           v-on:change="iterationChanged"
       />

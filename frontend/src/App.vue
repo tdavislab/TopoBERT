@@ -10,6 +10,8 @@
     >
       <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
       <WordSearch></WordSearch>
+                  <Layers></Layers>
+
       <ColorSchemeDesigner></ColorSchemeDesigner>
     </nav>
 
@@ -19,7 +21,6 @@
         <Graph class="col-8"></Graph>
         <div id="controls" class="col-4">
           <div>
-            <!--<Layers v-bind:layers="layers" v-on:layerClicked="clickLayer" class="col-2"></Layers>-->
             <DatasetSelector></DatasetSelector>
             <AddParamConfig></AddParamConfig>
             <Projection></Projection>

@@ -94,7 +94,6 @@ export default {
   },
   methods: {
     saveConfig() {
-      console.log(this.params);
       this.$store.commit("addDataSetConfig", this.params);
       $("#dismiss-params").click();
     },

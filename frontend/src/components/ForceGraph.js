@@ -282,11 +282,8 @@ export default class ForceGraph {
     // Simulation
     this.simulation = d3
       .forceSimulation(nodeData)
-      .force(
-        "link",
-        d3.forceLink(linkData).id(d => d.id)
-      )
-      .force("charge", d3.forceManyBody().strength(-10))
+      // .force("link", d3.forceLink(linkData).id(d => d.id))
+      .force("charge", d3.forceManyBody().strength(-500))
       .force("center", d3.forceCenter(500, 500))
       .stop();
 

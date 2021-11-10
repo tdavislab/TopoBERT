@@ -2,7 +2,7 @@
   <div id="dataset-selector-div">
     <div class="input-group">
       <div class="input-group-prepend w-30">
-        <label for="param-metric" class="input-group-text w-100">Dataset</label>
+        <label for="dataset-picker" class="input-group-text w-100">Dataset</label>
       </div>
       <select
           id="dataset-picker"
@@ -53,9 +53,7 @@
 
     <div class="input-group">
       <div class="input-group-prepend w-30">
-        <label for="param-intervals" class="input-group-text w-100"
-        >Intervals</label
-        >
+        <label for="param-intervals" class="input-group-text w-100">Intervals</label>
       </div>
       <select
           id="param-intervals"
@@ -77,7 +75,7 @@
     <div class="input-group">
       <div class="input-group-prepend w-30">
         <label for="param-overlap" class="input-group-text w-100"
-        >Overlap</label
+        >Overlap%</label
         >
       </div>
       <select
@@ -142,8 +140,8 @@ export default {
   }),
   methods: {
     changeDataset() {
-      let {metric, filter, intervals, overlap} = this.params;
-      let newDataset = `${metric}_${filter}_${intervals}_${overlap}`;
+      let {dataset, metric, filter, intervals, overlap} = this.params;
+      let newDataset = `${dataset}_${metric}_${filter}_${intervals}_${overlap}`;
       this.$store.dispatch("changeDataset", newDataset);
     },
     paramChanged() {

@@ -67,3 +67,17 @@
 - [ ] Select chain by clicking on edge
 
 
+- [ ] Visualize the dynamics of the test set using mapper graph
+- [ ] Visualize training set first using mapper graph, and then superimpose the test set onto the training
+    - knn with k = 1, and assign the test point to the cluster of the nearest ngbr in training data
+    - knn with k >= 1, collect all vertices in train set with nearest ngbr and assign edges to each with 
+      weight proportional to normalized number of neighbors in the train vertex, number of outgoing edges
+      also take care of points where labels of test and training ngbr do not match
+- [ ] Distribution of histograms of purities instead of global trend
+- [ ] Visualize the dispersion of test set over the mapper graph (assign test point to a node in 
+  the train set mapper graph, break ties arbitrarily), also keep in mind the neighbor labels,
+  as time goes on the node it is assigned to should have similar labels
+- [ ] How does TopoBert help understand the retraining process? And if it can help in the retraining process
+- [ ] Can topobert be used to create a summary of the process of prediction - generate diagnostic reports
+    that explain why a particular node - topology doctor / diagnosis
+  

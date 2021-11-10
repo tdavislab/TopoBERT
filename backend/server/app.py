@@ -3,7 +3,7 @@ import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from graph_generator import create_mapper, Config
+from graph_generator import create_mapper, Config, NumpyEncoder
 
 # configuration
 DEBUG = True
@@ -11,6 +11,7 @@ DEBUG = True
 # instantiate app
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.json_encoder = NumpyEncoder
 
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
@@ -24,23 +25,26 @@ def ping_pong():
 
 @app.route('/get_graph', methods=['GET', 'POST'])
 def get_graph():
-    dataset: str = request.args.get('dataset')
+    params: str = request.args.get('params')
     iteration: int = int(request.args.get('iteration'))
+    layer: int = int(request.args.get('layer'))
 
-    print(dataset, iteration)
     # # Create directory if not already exists
     # os.makedirs(f'../probing-topoact/public/static/mapper_graphs/{dataset}', exist_ok=True)
 
-    metric, filter_func, intervals, overlap = dataset.split('_')
+    dataset, metric, filter_func, intervals, overlap = params.split('_')
 
-    label_file = '../data/Supersense-Role/entities/train.txt'
-    activation_file = '../data/Supersense-Role/SS_fine_tuned.zip'
-    graph_output_file = '../../frontend/public/static/mapper_graphs/' + f'{metric}_{filter_func}_{intervals}_{overlap}/'
+    if dataset == 'ss-role':
+        label_file = '../data/ss-role/entities/train.txt'
+        activation_file = f'../data/ss-role/fine-tuned-bert-based-uncased/train/{iteration}/{layer}.txt'
+        graph_output_file = '../../frontend/public/static/mapper_graphs/' + f'{metric}_{filter_func}_{intervals}_{overlap}/'
+    else:
+        raise ValueError('Dataset not supported')
 
-    graph = create_mapper(str(iteration) + '.txt', label_file, activation_file, graph_output_file,
+    graph = create_mapper('', label_file, activation_file, graph_output_file,
                           Config(metric=metric, filter_func=filter_func, intervals=int(intervals), overlap=float(overlap) / 100))
 
-    return 'success'
+    return jsonify(graph)
 
 
 if __name__ == '__main__':
