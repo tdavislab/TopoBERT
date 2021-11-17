@@ -55,6 +55,7 @@ function dismissClickSelection(clickEvent, context) {
 
 export default createStore({
   state: {
+    showTest: true,
     layers: layerData.layerData,
     graph: [],
     graphData: graphData,
@@ -83,7 +84,7 @@ export default createStore({
         }
       }
     },
-    chartRef: null,
+    projChartRef: null,
     purityChartRef: null,
     purityData: {
       type: "line",
@@ -106,6 +107,55 @@ export default createStore({
         },
       }
     },
+    purityHists: {
+      "p.Accompanier": [],
+      "p.Agent": [],
+      "p.Approximator": [],
+      "p.Beneficiary": [],
+      "p.Causer": [],
+      "p.Characteristic": [],
+      "p.Circumstance": [],
+      "p.Co-Agent": [],
+      "p.Co-Theme": [],
+      "p.ComparisonRef": [],
+      "p.Cost": [],
+      "p.Direction": [],
+      "p.Duration": [],
+      "p.EndTime": [],
+      "p.Experiencer": [],
+      "p.Explanation": [],
+      "p.Extent": [],
+      "p.Frequency": [],
+      "p.Gestalt": [],
+      "p.Goal": [],
+      "p.Identity": [],
+      "p.Instrument": [],
+      "p.Interval": [],
+      "p.Locus": [],
+      "p.Manner": [],
+      "p.Means": [],
+      "p.OrgRole": [],
+      "p.Originator": [],
+      "p.PartPortion": [],
+      "p.Path": [],
+      "p.Possession": [],
+      "p.Possessor": [],
+      "p.Purpose": [],
+      "p.Quantity": [],
+      "p.RateUnit": [],
+      "p.Recipient": [],
+      "p.SocialRel": [],
+      "p.Source": [],
+      "p.Species": [],
+      "p.StartTime": [],
+      "p.Stimulus": [],
+      "p.Stuff": [],
+      "p.Theme": [],
+      "p.Time": [],
+      "p.Topic": [],
+      "p.Whole": []
+    },
+    histCharRef: null,
     graphType: 'force',
     sentData: sentData,
     param_str: 'ss-role_euclidean_l2_50_50',
@@ -270,14 +320,16 @@ export default createStore({
       //       });
       //   })
 
-      console.log({
-        params: context.state.param_str,
-        iteration: context.state.currentIteration,
-        layer: context.state.layers.filter(layer => layer.selected)[0].id,
-      })
       // make ajax call to get graph data
+      let url = ''
+      if (context.state.showTest) {
+        url = process.env.VUE_APP_ROOT_API + 'show_test';
+      } else {
+        url = process.env.VUE_APP_ROOT_API + 'get_graph';
+      }
+
       $.ajax({
-        url: process.env.VUE_APP_ROOT_API + 'get_graph',
+        url: url,
         type: 'GET',
         data: {
           params: context.state.param_str,
@@ -291,7 +343,8 @@ export default createStore({
         success: function (response) {
           console.log(response);
           updateGraph(response.graph);
-          updatePurityHists(response.purities)
+          updatePurityHists(response.purities);
+          console.log(context.state.purityHists)
         },
         complete: function () {
           $('.overlay').removeClass('d-flex').hide();
@@ -301,6 +354,7 @@ export default createStore({
           console.log('failure', response)
         }
       });
+
 
       // $.aj(process.env.VUE_APP_ROOT_API + 'get_graph',
       //   {params: context.state.param_str, iteration: context.state.currentIteration},
@@ -409,13 +463,14 @@ export default createStore({
 
       graph.nodes.on('click', function (clickEvent) {
         let node = d3.select(this);
+        console.log(node)
         updateTable(node, context);
         let node_member_ids = node.datum().membership.membership_ids;
         context.commit('setSelectedMemberIds', node_member_ids);
         let processedData = context.state.projectionData.data.datasets[0].data;
         let proj = context.state.projectionData.data.datasets[0].label;
         context.commit('updateProjectionData', {processedData, proj})
-        context.state.chartRef.update();
+        context.state.projChartRef.update();
         nodeClickDecoration(node, state.graph.nodes, state);
         context.dispatch('drawNodePurities', node_member_ids);
       });
@@ -436,29 +491,57 @@ export default createStore({
       context.commit('updateCurrentProjection', proj);
 
       $('.loader').prop('hidden', null);
-
-      d3.csv(`static/projections/${context.state.currentProjection}/${context.state.currentIteration}.csv`).then(function (data) {
-        let processedData = data.map(d => {
-          return {
-            x: parseFloat(d.x), y: parseFloat(d.y),
-            index: parseInt(d.index), word: d.word, label: d.label,
-          }
-        })
-
-        context.commit('updateProjectionData', {processedData, proj});
-
-        context.state.projectionData.options.plugins.tooltip.callbacks.footer = (toolTipItems) => {
-          return toolTipItems.map(d => `${d.raw.label}-${d.raw.word}`);
+      let url = process.env.VUE_APP_ROOT_API + 'projection';
+      // make ajax request to projection endpoint on the server to compute the projection
+      $.ajax({
+        url: url,
+        type: 'GET',
+        data: {
+          proj_type: proj
+        },
+        beforeSend: function () {
+          $('.loader').prop('hidden', null);
+        },
+        success: function (data) {
+          console.log(data);
+          let processedData = data.projection.map(d => {
+            return {
+              x: parseFloat(d.x), y: parseFloat(d.y),
+              index: parseInt(d.index), word: d.word, label: d.label,
+            }
+          });
+          context.commit('updateProjectionData', {processedData, proj});
+          context.state.projChartRef.update();
+        },
+        error: function (error) {
+          console.log(error);
+        },
+        complete: function () {
+          $('.loader').prop('hidden', true);
         }
-
-        $('.loader').prop('hidden', true);
-        context.state.chartRef.update();
       });
+
+      // d3.csv(`static/projections/${context.state.currentProjection}/${context.state.currentIteration}.csv`).then(function (data) {
+      //   let processedData = data.map(d => {
+      //     return {
+      //       x: parseFloat(d.x), y: parseFloat(d.y),
+      //       index: parseInt(d.index), word: d.word, label: d.label,
+      //     }
+      //   })
+      //
+      //   context.commit('updateProjectionData', {processedData, proj});
+      //
+      //   context.state.projectionData.options.plugins.tooltip.callbacks.footer = (toolTipItems) => {
+      //     return toolTipItems.map(d => `${d.raw.label}-${d.raw.word}`);
+      //   }
+      //
+      //   $('.loader').prop('hidden', true);
+      //   context.state.projChartRef.update();
+      // });
     },
     drawNodePurities(context, pointIds) {
       console.log('Fetching purity update')
       d3.csv('static/mapper_graphs/euclidean_l2_50_50/node_purities.csv').then(function (data) {
-          console.log(data)
           // let pointIds = [0, 1, 2];
           pointIds = pointIds.slice(0, 20)
           // context.state.purityData.data.labels = Array.from({length: 177}, (v, x) => x);

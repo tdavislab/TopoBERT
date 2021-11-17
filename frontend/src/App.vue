@@ -110,4 +110,9 @@ export default {
 #header-text {
   padding-left: 1em;
 }
+
+#controls {
+  max-height: 90vh;
+  overflow: scroll;
+}
 </style>

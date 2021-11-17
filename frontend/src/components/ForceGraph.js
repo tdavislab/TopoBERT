@@ -3,6 +3,7 @@ import logger from "@fortawesome/vue-fontawesome/src/logger";
 
 function generatePiePath(datapoint, nodeSizeScale, numPies = 8) {
   let mData = datapoint.membership.metadata;
+  let dType = datapoint.membership.type;
   let groupedmData = d3.rollup(
     mData,
     v => v.length,
@@ -29,7 +30,8 @@ function generatePiePath(datapoint, nodeSizeScale, numPies = 8) {
       .arc()
       .innerRadius(0)
       .outerRadius(nodeSizeScale(size))(d),
-    group: d.data[0]
+    group: d.data[0],
+    type: dType
   }));
   return chartData;
 }
@@ -356,7 +358,7 @@ export default class ForceGraph {
     // this.nodeColorScale.domain(d3.extent(nodeData.map(d => parseFloat(d["l2avg"]))));
     this.nodeSizeScale.domain(
       d3.extent(nodeData.map(d => d["membership"]["membership_ids"].length))
-    );
+    ).range([10, 30]);
 
     this.linkColorScale.domain(d3.extent(linkData.map(d => d.intersection)));
     this.linkWidthScale.domain(d3.extent(linkData.map(d => d["intersection"])));
@@ -364,12 +366,11 @@ export default class ForceGraph {
     // Simulation
     this.simulation = d3
       .forceSimulation(nodeData)
-      .force(
-        "link",
-        d3.forceLink(linkData).id(d => d.id)
-      )
-      .force("charge", d3.forceManyBody().strength(-10))
+      .force("link", d3.forceLink(linkData).id(d => d.id))
+      .force("charge", d3.forceManyBody().strength(-500))
       .force("center", d3.forceCenter(500, 500))
+      .force("x", d3.forceX().strength(0.2))
+      .force("y", d3.forceY().strength(0.2))
       .stop();
 
     this.simulation.tick(200);
@@ -404,8 +405,9 @@ export default class ForceGraph {
       .data(d => generatePiePath(d, this.nodeSizeScale))
       .join("path")
       .attr("d", d => d.arc)
-      .attr("stroke", "black")
-      .attr("stroke-width", "0.4px")
+      .attr("stroke", d => d.type === "test" ? "black" : "black")
+      .attr("stroke-dasharray", d => d.type === "test" ? "5,5" : "")
+      .attr("stroke-width", d => "2px")
       .attr("fill", d => this.nodeColorScale(d.group))
       .append("title")
       .text(d => d.group);
@@ -480,7 +482,7 @@ export default class ForceGraph {
     if (mode === "uniform") {
       this.nodeSizeScale.range([15, 15]);
     } else if (mode === "size-scaled") {
-      this.nodeSizeScale.range([5, 15]);
+      this.nodeSizeScale.range([10, 30]);
     }
 
     this.nodes

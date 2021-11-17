@@ -44,7 +44,7 @@
           </div>
           <div class="modal-body">
             <vue3-chart-js
-                ref="chartRef"
+                ref="projChartRef"
                 v-bind="{ ...projectionData }"
             ></vue3-chart-js>
             <!--            <canvas id="projection-canvas" width="800" height="800"></canvas>-->
@@ -83,17 +83,17 @@ export default {
     $("#projection-panel").draggable({
       handle: ".modal-header",
     });
-    this.$store.state.chartRef = this.$refs.chartRef;
+    this.$store.state.projChartRef = this.$refs.projChartRef;
   },
   methods: {
     projBtnClicked(event) {
       let proj = this.currentProjection;
-      let chartRef = this.$refs.chartRef;
+      let chartRef = this.$refs.projChartRef;
       this.$store.dispatch("drawProjection", proj);
     },
     projMethodChanged(event) {
       let proj = event.target.value;
-      let chartRef = this.$refs.chartRef;
+      let chartRef = this.$refs.projChartRef;
       this.$store.dispatch("drawProjection", proj);
     },
   },

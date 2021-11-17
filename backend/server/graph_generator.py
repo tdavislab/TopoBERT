@@ -74,6 +74,7 @@ def read_labels(path):
 
     return pd.DataFrame(label_data, columns=['sent_id', 'word_id', 'word', 'label'])
 
+
 def add_node_metadata_ud(graph, data):
     for node_name in graph['nodes']:
         member_list = graph['nodes'][node_name]
@@ -81,7 +82,6 @@ def add_node_metadata_ud(graph, data):
 
         for member_idx in member_list:
             metadata = data.loc[member_idx]
-            print(metadata)
             members_with_metadata.append([str(x) for x in metadata.tolist()[:-1]] + [np.linalg.norm(metadata[-1])])
 
         graph['nodes'][node_name] = {'membership_ids': member_list, 'metadata': members_with_metadata,
@@ -101,7 +101,7 @@ def add_node_metadata(graph, metadata_source, activations):
         metadata = [metadata_source.loc[member_index].tolist() for member_index in member_list]
         graph['nodes'][node_name] = {'membership_ids': member_list, 'metadata': metadata,
                                      'l2avg': np.average(metadata_source.loc[member_list]['l2norm']),
-                                     'x': pca_positions[i][0], 'y': pca_positions[i][1]}
+                                     'x': pca_positions[i][0], 'y': pca_positions[i][1], 'type': 'train'}
 
     return graph
 
@@ -190,4 +190,4 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
     add_node_metadata(graph, labels, activations)
 
     # graph = store_as_json(graph, graph_output_file + file_name.replace('.txt', '.json'))
-    return serialize_graph(graph)
+    return serialize_graph(graph), activations, labels

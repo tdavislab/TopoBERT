@@ -52,6 +52,7 @@ let handTunedColorScale =  {
   'p.OrgRole'       : '#cd3030',
 
   'Others'          : '#989898',
+  'p.Test'          : '#c7c7c7',
 }
 // @formatter:on
 let rainbow = ["#6e40aa", "#7140ab", "#743fac", "#773fad", "#7a3fae", "#7d3faf", "#803eb0", "#833eb0", "#873eb1", "#8a3eb2", "#8d3eb2", "#903db2", "#943db3", "#973db3",
