@@ -117,7 +117,6 @@
 </template>
 
 <script>
-// import {mapState} from "vuex";
 import $ from "jquery";
 import {mapState} from "vuex";
 

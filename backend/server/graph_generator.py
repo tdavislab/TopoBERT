@@ -191,3 +191,27 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
 
     # graph = store_as_json(graph, graph_output_file + file_name.replace('.txt', '.json'))
     return serialize_graph(graph), activations, labels
+
+
+def get_mapper(activations, labels, conf):
+
+    labels['l2norm'] = np.expand_dims(np.linalg.norm(activations.to_numpy(), axis=1), 1)
+    mapper = km.KeplerMapper()
+
+    if conf.filter_func == 'l1':
+        projected_data = np.linalg.norm(activations, ord=1, axis=1).reshape((activations.shape[0], 1))
+    elif conf.filter_func == 'l2':
+        projected_data = mapper.fit_transform(activations, projection='l2norm')
+    elif conf.filter_func == 'knn5':
+        projected_data = mapper.fit_transform(activations, projection='knn_distance_5') / 5
+    else:
+        raise KeyError('Unexpected filter function')
+
+    eps = elbow_eps(activations)
+    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=3),
+                       cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
+
+    add_node_metadata(graph, labels, activations)
+
+    # graph = store_as_json(graph, graph_output_file + file_name.replace('.txt', '.json'))
+    return serialize_graph(graph)

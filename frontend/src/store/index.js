@@ -56,6 +56,7 @@ function dismissClickSelection(clickEvent, context) {
 export default createStore({
   state: {
     showTest: true,
+    dataSplit: 'trainknntest',
     layers: layerData.layerData,
     graph: [],
     graphData: graphData,
@@ -297,13 +298,17 @@ export default createStore({
     resetLabelThreshold(state) {
       state.labelThreshold = 0;
       $('#threshold-slider').val(0);
-    }
+    },
+    setDataSplit(state, newSplit) {
+      state.dataSplit = newSplit;
+    },
   },
   actions: {
     loadIterationFile(context, newIterationNum) {
       context.commit('changeCurrentIteration', newIterationNum);
       context.commit('resetTableRows');
       context.commit('resetStats');
+
       // $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph)
       //   .done(function () {
       //     console.log('Loaded iteration = ', context.state.param_str, context.state.currentIteration);
@@ -321,11 +326,12 @@ export default createStore({
       //   })
 
       // make ajax call to get graph data
-      let url = ''
-      if (context.state.showTest) {
+      // let url = process.env.VUE_APP_ROOT_API + 'graph';
+      let url;
+      if (context.state.dataSplit === 'trainknntest') {
         url = process.env.VUE_APP_ROOT_API + 'show_test';
       } else {
-        url = process.env.VUE_APP_ROOT_API + 'get_graph';
+        url = process.env.VUE_APP_ROOT_API + 'graph';
       }
 
       $.ajax({
@@ -334,17 +340,17 @@ export default createStore({
         data: {
           params: context.state.param_str,
           iteration: context.state.currentIteration,
-          layer: context.state.layers.filter(layer => layer.selected)[0].id
+          layer: context.state.layers.filter(layer => layer.selected)[0].id,
+          datasplit: context.state.dataSplit
         },
         beforeSend: function () {
           $('.overlay').addClass('d-flex').show();
           $('#spinner-holder').show();
         },
         success: function (response) {
-          console.log(response);
           updateGraph(response.graph);
           updatePurityHists(response.purities);
-          console.log(context.state.purityHists)
+          // console.log(context.state.purityHists);
         },
         complete: function () {
           $('.overlay').removeClass('d-flex').hide();
@@ -503,7 +509,6 @@ export default createStore({
           $('.loader').prop('hidden', null);
         },
         success: function (data) {
-          console.log(data);
           let processedData = data.projection.map(d => {
             return {
               x: parseFloat(d.x), y: parseFloat(d.y),
@@ -540,7 +545,6 @@ export default createStore({
       // });
     },
     drawNodePurities(context, pointIds) {
-      console.log('Fetching purity update')
       d3.csv('static/mapper_graphs/euclidean_l2_50_50/node_purities.csv').then(function (data) {
           // let pointIds = [0, 1, 2];
           pointIds = pointIds.slice(0, 20)
@@ -568,7 +572,7 @@ export default createStore({
           // console.log(context.state.purityData)
         }
       );
-    }
+    },
   },
   modules: {}
 })

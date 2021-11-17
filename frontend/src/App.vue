@@ -9,9 +9,9 @@
       "
     >
       <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
+      <TrainTestSelector></TrainTestSelector>
       <WordSearch></WordSearch>
-                  <Layers></Layers>
-
+      <Layers></Layers>
       <ColorSchemeDesigner></ColorSchemeDesigner>
     </nav>
 
@@ -58,10 +58,12 @@ import ColorSchemeDesigner from "./components/ColorSchemeDesigner";
 import AddParamConfig from "./components/AddParamConfig";
 import Projection from "./components/Projection";
 import NodePurities from "./components/NodePurities";
+import TrainTestSelector from "@/components/TrainTestSelector";
 
 export default {
   name: "App",
   components: {
+    TrainTestSelector,
     NodePurities,
     Projection,
     AddParamConfig,
@@ -80,7 +82,7 @@ export default {
   data() {
     return {};
   },
-  mounted: function() {
+  mounted: function () {
     this.$store.dispatch('loadIterationFile', 0);
   },
   methods: {
