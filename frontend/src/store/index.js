@@ -361,14 +361,6 @@ export default createStore({
         }
       });
 
-
-      // $.aj(process.env.VUE_APP_ROOT_API + 'get_graph',
-      //   {params: context.state.param_str, iteration: context.state.currentIteration},
-      //   function (response) {
-      //     console.log('success', response)
-      //   }
-      // );
-
       function updateGraph(newGraphData) {
         context.commit('updateGraphData', newGraphData);
         context.commit('changeGraphType', context.state.graphType);

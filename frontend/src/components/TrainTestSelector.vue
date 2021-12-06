@@ -32,7 +32,6 @@ export default {
     datasplitChanged: function() {
       console.log(this.localDatasplit);
       this.$store.commit('setDataSplit', this.localDatasplit);
-      console.log(this.$store.state.dataSplit);
       this.$store.dispatch('loadIterationFile', this.$store.state.currentIteration);
     },
   },
