@@ -1,40 +1,26 @@
 // store.ts
 import { InjectionKey } from 'vue';
-import {
-  createStore,
-  useStore as baseUseStore,
-  Store,
-  MutationTree,
-  ActionContext,
-  ActionTree,
-  GetterTree,
-} from 'vuex';
-import {
-  State,
-  MutationTypes,
-  ActionTypes,
-  Mutations,
-  GetterTypes,
-} from './types';
+import { createStore, useStore as baseUseStore, Store } from 'vuex';
+import { RootState } from './types';
 
 // define injection key
-export const key: InjectionKey<Store<State>> = Symbol();
+export const key: InjectionKey<Store<RootState>> = Symbol();
 
 // set state
-const state = {
+const state: RootState = {
   count: 0,
 };
 
 const mutations = {
-  increment(state: State) {
+  increment(state: RootState) {
     state.count++;
   },
-  decrement(state: State) {
+  decrement(state: RootState) {
     state.count--;
   },
 };
 
-export const store = createStore<State>({
+export const store = createStore<RootState>({
   state,
   mutations,
   actions: {},

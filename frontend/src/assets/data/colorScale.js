@@ -54,8 +54,58 @@ let handTunedColorScale =  {
   'Others'          : '#989898',
   'p.Test'          : '#c7c7c7',
 }
+
+export const colorScaleDep = {
+ 'acl': '#ffffff',
+ 'acl:relcl': '#ffffff',
+ 'advcl': '#ffffff',
+ 'advmod': '#ffffff',
+ 'amod': '#ffffff',
+ 'appos': '#ffffff',
+ 'aux': '#ffffff',
+ 'aux:pass': '#ffffff',
+ 'case': '#ffffff',
+ 'cc': '#ffffff',
+ 'cc:preconj': '#ffffff',
+ 'ccomp': '#ffffff',
+ 'compound': '#ffffff',
+ 'compound:prt': '#ffffff',
+ 'conj': '#ffffff',
+ 'cop': '#ffffff',
+ 'csubj': '#ffffff',
+ 'csubj:pass': '#ffffff',
+ 'dep': '#ffffff',
+ 'det': '#ffffff',
+ 'det:predet': '#ffffff',
+ 'discourse': '#ffffff',
+ 'dislocated': '#ffffff',
+ 'expl': '#ffffff',
+ 'fixed': '#ffffff',
+ 'flat': '#ffffff',
+ 'goeswith': '#ffffff',
+ 'iobj': '#ffffff',
+ 'mark': '#ffffff',
+ 'nmod': '#ffffff',
+ 'nmod:npmod': '#ffffff',
+ 'nmod:poss': '#ffffff',
+ 'nmod:tmod': '#ffffff',
+ 'nsubj': '#ffffff',
+ 'nsubj:pass': '#ffffff',
+ 'nummod': '#ffffff',
+ 'obj': '#ffffff',
+ 'obl': '#ffffff',
+ 'obl:npmod': '#ffffff',
+ 'obl:tmod': '#ffffff',
+ 'orphan': '#ffffff',
+ 'parataxis': '#ffffff',
+ 'punct': '#ffffff',
+ 'reparandum': '#ffffff',
+ 'vocative': '#ffffff',
+ 'xcomp': '#ffffff',
+ }
 // @formatter:on
-let rainbow = ["#6e40aa", "#7140ab", "#743fac", "#773fad", "#7a3fae", "#7d3faf", "#803eb0", "#833eb0", "#873eb1", "#8a3eb2", "#8d3eb2", "#903db2", "#943db3", "#973db3",
+let rainbow = [
+  "#6e40aa", "#7140ab", "#743fac", "#773fad", "#7a3fae", "#7d3faf", "#803eb0", "#833eb0", "#873eb1", "#8a3eb2", "#8d3eb2", "#903db2", "#943db3", "#973db3",
   "#9a3db3", "#9d3db3", "#a13db3", "#a43db3", "#a73cb3", "#aa3cb2", "#ae3cb2", "#b13cb2", "#b43cb1", "#b73cb0", "#ba3cb0", "#be3caf", "#c13dae", "#c43dad",
   "#c73dac", "#ca3dab", "#cd3daa", "#d03ea9", "#d33ea7", "#d53ea6", "#d83fa4", "#db3fa3", "#de3fa1", "#e040a0", "#e3409e", "#e5419c", "#e8429a", "#ea4298",
   "#ed4396", "#ef4494", "#f14592", "#f34590", "#f5468e", "#f7478c", "#f9488a", "#fb4987", "#fd4a85", "#fe4b83", "#ff4d80", "#ff4e7e", "#ff4f7b", "#ff5079",
@@ -76,9 +126,10 @@ let rainbow = ["#6e40aa", "#7140ab", "#743fac", "#773fad", "#7a3fae", "#7d3faf",
   "#6b44b2", "#6c43af", "#6d41ad", "#6e40aa"]
 
 let rainbowColorScale = {};
-for (let i = 0; i < 47*5; i += 5) {
-  rainbowColorScale[Object.keys(handTunedColorScale)[i/5]] = rainbow[i];
+for (let i = 0; i < 47 * 5; i += 5) {
+  rainbowColorScale[Object.keys(handTunedColorScale)[i / 5]] = rainbow[i];
 }
 
 export let colorScale = handTunedColorScale;
+
 // export let colorScale = rainbowColorScale;

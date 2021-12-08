@@ -63,14 +63,26 @@ def read_file_from_zip(zip_path, file_relative_path):
     return data
 
 
-def read_labels(path):
+def read_labels(path, dataset=None):
     label_data = []
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8') as f:
         for line in f:
-            word_info, word_label = line.strip().split('\t')
-            sent_info, word = word_info.split(':')
-            sent_info = ast.literal_eval(sent_info)
-            label_data.append([sent_info[0], sent_info[1], word, word_label])
+            if dataset in ['ss-func', 'ss-role']:
+                word_info, word_label = line.strip().split('\t')
+                sent_info, word = word_info.split(':')
+                sent_info = ast.literal_eval(sent_info)
+                label_data.append([sent_info[0], sent_info[1], word, word_label])
+            elif dataset == 'dep':
+                word_pair, word_label = line.strip().split('\t')
+                word_pair = word_pair.split('--')
+                if len(word_pair) == 2:
+                    word1, word2 = word_pair
+                elif len(word_pair) == 3:
+                    word1, word2 = word_pair[0], '--'
+                sent_info = [0, 0]
+                label_data.append([sent_info[0], sent_info[1], f'{word1}--{word2}', word_label])
+            else:
+                raise ValueError('Dataset not supported')
 
     return pd.DataFrame(label_data, columns=['sent_id', 'word_id', 'word', 'label'])
 
@@ -194,7 +206,6 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
 
 
 def get_mapper(activations, labels, conf):
-
     labels['l2norm'] = np.expand_dims(np.linalg.norm(activations.to_numpy(), axis=1), 1)
     mapper = km.KeplerMapper()
 

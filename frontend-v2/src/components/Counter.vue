@@ -7,8 +7,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { useStore } from 'vuex';
+  import { useStore } from '../store/store';
   const store = useStore();
+  console.log(store);
 
   function increment() {
     store.commit('increment');

@@ -56,7 +56,7 @@ function dismissClickSelection(clickEvent, context) {
 export default createStore({
   state: {
     showTest: true,
-    dataSplit: 'trainknntest',
+    dataSplit: 'train',
     layers: layerData.layerData,
     graph: [],
     graphData: graphData,
