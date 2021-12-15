@@ -26,3 +26,5 @@ pnpm-debug.log*
 backend/data/
 
 __pycache__/
+
+notebooks/cache/

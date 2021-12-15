@@ -55,7 +55,7 @@ let handTunedColorScale =  {
   'p.Test'          : '#c7c7c7',
 }
 
-export const colorScaleDep = {
+const initDepScale = {
  'acl': '#ffffff',
  'acl:relcl': '#ffffff',
  'advcl': '#ffffff',
@@ -98,7 +98,7 @@ export const colorScaleDep = {
  'obl:tmod': '#ffffff',
  'orphan': '#ffffff',
  'parataxis': '#ffffff',
- 'punct': '#ffffff',
+ 'punct': '#db2626',
  'reparandum': '#ffffff',
  'vocative': '#ffffff',
  'xcomp': '#ffffff',
@@ -130,6 +130,12 @@ for (let i = 0; i < 47 * 5; i += 5) {
   rainbowColorScale[Object.keys(handTunedColorScale)[i / 5]] = rainbow[i];
 }
 
-export let colorScale = handTunedColorScale;
+let rainbowDepScale = {};
+for (let i = 0; i < 46 * 5; i += 5) {
+  rainbowDepScale[Object.keys(initDepScale)[i / 5]] = rainbow[i];
+}
+
+export const colorScale = handTunedColorScale;
+export const colorScaleDep = rainbowDepScale;
 
 // export let colorScale = rainbowColorScale;

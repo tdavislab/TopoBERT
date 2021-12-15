@@ -17,6 +17,8 @@ from sklearn.neighbors import NearestNeighbors
 from tqdm import tqdm
 from dataclasses import dataclass
 
+DBSCAN_MIN_SAMPLES = 3
+
 
 @dataclass
 class Config:
@@ -196,7 +198,7 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
         raise KeyError('Unexpected filter function')
 
     eps = elbow_eps(activations)
-    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=3),
+    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=DBSCAN_MIN_SAMPLES),
                        cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
     add_node_metadata(graph, labels, activations)
@@ -219,7 +221,7 @@ def get_mapper(activations, labels, conf):
         raise KeyError('Unexpected filter function')
 
     eps = elbow_eps(activations)
-    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=3),
+    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=DBSCAN_MIN_SAMPLES),
                        cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
     add_node_metadata(graph, labels, activations)

@@ -4,7 +4,7 @@ import labels from '../assets/data/labels.json'
 import pointLabels from '../assets/data/point_data_labels.json'
 import graphData from '../../public/static/mapper_graphs/euclidean_l2_50_50/0.json';
 import sentData from '../assets/data/sentences.json';
-import {colorScale} from '../assets/data/colorScale.js';
+import {colorScale, colorScaleDep} from '../assets/data/colorScale.js';
 
 import $ from 'jquery';
 import * as d3 from 'd3';
@@ -252,7 +252,6 @@ export default createStore({
       let {interval, overlap} = newConfig;
       if (interval !== '') {
         let intervalArr = state.datasetConfigs.intervals;
-        console.log(intervalArr);
         if (!intervalArr.includes(interval)) {
           intervalArr.push(parseInt(interval));
           state.datasetConfigs.intervals.sort(function (a, b) {
@@ -278,6 +277,12 @@ export default createStore({
     },
     changeDataset(state, newDataset) {
       state.param_str = newDataset;
+      if (newDataset.startsWith('ss-func') || newDataset.startsWith('ss-role')) {
+        state.colorScale = colorScale;
+      } else if (newDataset.startsWith('dep')) {
+        state.colorScale = colorScaleDep;
+        state.labels = labels.labels_dep;
+      }
     },
     changeJaccard(state, newJaccardVal) {
       state.jaccardFilter = newJaccardVal;
@@ -461,7 +466,6 @@ export default createStore({
 
       graph.nodes.on('click', function (clickEvent) {
         let node = d3.select(this);
-        console.log(node)
         updateTable(node, context);
         let node_member_ids = node.datum().membership.membership_ids;
         context.commit('setSelectedMemberIds', node_member_ids);
