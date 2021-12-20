@@ -1,8 +1,10 @@
 <template>
   <div class="counter">{{ store.state.count }}</div>
   <div class="buttons">
-    <button class="btn" @click="decrement()">-</button>
-    <button class="btn" @click="increment()">+</button>
+    <div class="inline-flex">
+      <button @click="decrement()" class="btn-primary rounded-l">-</button>
+      <button @click="increment()" class="btn-primary rounded-r">+</button>
+    </div>
   </div>
 </template>
 

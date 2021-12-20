@@ -28,3 +28,4 @@ backend/data/
 __pycache__/
 
 notebooks/cache/
+notebooks/images/
