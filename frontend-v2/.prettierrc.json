@@ -2,5 +2,5 @@
   "singleQuote": true,
   "semi": true,
   "vueIndentScriptAndStyle": true,
-  "printWidth": 120
+  "printWidth": 150
 }

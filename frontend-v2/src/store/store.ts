@@ -2,7 +2,7 @@
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
 import { RootState } from './types';
-import { params } from './params';
+import { ActionContext } from 'vuex';
 
 // define injection key
 export const key: InjectionKey<Store<RootState>> = Symbol();
@@ -10,7 +10,19 @@ export const key: InjectionKey<Store<RootState>> = Symbol();
 // set state
 const state: RootState = {
   count: 0,
-  layerObj: { layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected: 0 },
+  layerObj: {
+    layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    selected: 0,
+  },
+  datasetList: {
+    datasets: [
+      { name: 'SuperSense Role', value: 'ss-role' },
+      { name: 'SuperSense Function', value: 'ss-func' },
+      { name: 'Part of Speech', value: 'pos' },
+      { name: 'Dependency', value: 'dep' },
+    ],
+    selected: 'ss-role',
+  },
   mapperParams: {
     dataSplit: {
       paramList: [
@@ -61,21 +73,20 @@ const state: RootState = {
   },
 };
 
-console.log(state.mapperParams);
-
 const mutations = {
-  increment(state: RootState) {
-    state.count++;
-  },
-  decrement(state: RootState) {
-    state.count--;
-  },
   setLayer(state: RootState, layer: number) {
     state.layerObj.selected = layer;
   },
 };
 
-const actions = {};
+const actions = {
+  updateGraph(context: ActionContext<RootState, RootState>) {
+    console.table(context.state.mapperParams);
+  },
+  datasetUpdate(context: ActionContext<RootState, RootState>) {
+    console.log(`Updating to ${context.state.datasetList.selected}`);
+  },
+};
 
 const getters = {};
 
