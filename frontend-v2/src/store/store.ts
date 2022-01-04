@@ -2,6 +2,7 @@
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
 import { RootState } from './types';
+import { params } from './params';
 
 // define injection key
 export const key: InjectionKey<Store<RootState>> = Symbol();
@@ -10,7 +11,57 @@ export const key: InjectionKey<Store<RootState>> = Symbol();
 const state: RootState = {
   count: 0,
   layerObj: { layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], selected: 0 },
+  mapperParams: {
+    dataSplit: {
+      paramList: [
+        { name: 'Train', value: 'train' },
+        { name: 'Test', value: 'test' },
+        { name: 'Train ∪ Test', value: 'trainutest' },
+        { name: 'Train + Test (knn)', value: 'trainknntest' },
+      ],
+      selected: 'train',
+    },
+    metric: {
+      paramList: [
+        { name: 'Euclidean', value: 'euclidean' },
+        { name: 'Cosine', value: 'cosine' },
+      ],
+      selected: 'euclidean',
+    },
+    filter: {
+      paramList: [
+        { name: 'L1', value: 'l1' },
+        { name: 'L2', value: 'l2' },
+        { name: 'Average KNN-5', value: 'knn' },
+      ],
+      selected: 'l1',
+    },
+    intervals: {
+      paramList: [
+        { name: '50', value: 50 },
+        { name: '100', value: 100 },
+      ],
+      selected: 50,
+    },
+    overlap: {
+      paramList: [
+        { name: '25', value: 25 },
+        { name: '50', value: 50 },
+        { name: '100', value: 100 },
+      ],
+      selected: 50,
+    },
+    layout: {
+      paramList: [
+        { name: 'Force Directed', value: 'force' },
+        { name: 'PCA', value: 'pca' },
+      ],
+      selected: 'force',
+    },
+  },
 };
+
+console.log(state.mapperParams);
 
 const mutations = {
   increment(state: RootState) {

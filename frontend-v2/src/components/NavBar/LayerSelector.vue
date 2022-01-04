@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { useStore } from '../../store/store';
   import { computed } from 'vue';
+
   const store = useStore();
   const layers = computed(() => store.state.layerObj.layers);
   const selectedLayer = computed(() => store.state.layerObj.selected);
@@ -12,6 +13,7 @@
 
 <template>
   <div>
+    <span class="font-semibold">Layer:</span>
     <div
       v-for="layerId in layers"
       class="layer-btn"

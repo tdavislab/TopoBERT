@@ -1,12 +1,17 @@
 <script setup lang="ts">
-  // import Counter from './components/Counter.vue';
-  import TopBar from './components/TopBar/TopBar.vue';
+  import NavBar from './components/NavBar.vue';
+  import Content from './components/Content.vue';
 </script>
 
 <template>
-  <TopBar> </TopBar>
-  <!-- <h1 class="text-5xl font-bold">Test</h1> -->
-  <!-- <Counter></Counter> -->
+  <NavBar></NavBar>
+  <Content></Content>
 </template>
 
-<style></style>
+<style>
+  #app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
