@@ -1,0 +1,14 @@
+<script lang="ts" setup>
+  import { useStore } from '../../../../store/store';
+
+  const store = useStore();
+</script>
+
+<template>
+  <div class="grid grid-cols-12 p-2" title="Set the epoch for which the graph is shown">
+    <div class="col-span-3">Epoch: {{ store.getters.epochIndex }}</div>
+    <input class="col-span-9" type="range" min="0" :max="store.state.epochs.length - 1" v-model="store.state.currentEpochIndex" />
+  </div>
+</template>
+
+<style lang="postcss" scoped></style>

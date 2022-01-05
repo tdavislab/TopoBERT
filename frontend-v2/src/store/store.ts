@@ -1,7 +1,7 @@
 // store.ts
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
-import { RootState } from './types';
+import { RootState, NodeSize } from './types';
 import { ActionContext } from 'vuex';
 
 // define injection key
@@ -10,6 +10,7 @@ export const key: InjectionKey<Store<RootState>> = Symbol();
 // set state
 const state: RootState = {
   count: 0,
+  currentEpochIndex: 0,
   layerObj: {
     layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     selected: 0,
@@ -71,11 +72,20 @@ const state: RootState = {
       selected: 'force',
     },
   },
+  minLinkStrength: 1,
+  nodeSize: 'constant',
+  epochs: [
+    0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160,
+    165, 170, 175, 176,
+  ],
 };
 
 const mutations = {
   setLayer(state: RootState, layer: number) {
     state.layerObj.selected = layer;
+  },
+  setNodeSize(state: RootState, size: NodeSize) {
+    state.nodeSize = size;
   },
 };
 
@@ -86,9 +96,17 @@ const actions = {
   datasetUpdate(context: ActionContext<RootState, RootState>) {
     console.log(`Updating to ${context.state.datasetList.selected}`);
   },
+  toggleNodeSize(context: ActionContext<RootState, RootState>, updatedNodeSize: NodeSize) {
+    if (updatedNodeSize === context.state.nodeSize) return;
+    context.commit('setNodeSize', updatedNodeSize);
+  },
 };
 
-const getters = {};
+const getters = {
+  epochIndex(state: RootState) {
+    return state.epochs[state.currentEpochIndex];
+  },
+};
 
 export const store = createStore<RootState>({
   state,
