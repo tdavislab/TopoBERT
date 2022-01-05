@@ -6,8 +6,4 @@
   </div>
 </template>
 
-<style lang="postcss" scoped>
-  .graph-container {
-    @apply border rounded;
-  }
-</style>
+<style lang="postcss" scoped></style>
