@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="grid grid-cols-12 p-2" title="Set the epoch for which the graph is shown">
+  <div class="grid grid-cols-12" title="Set the epoch for which the graph is shown">
     <div class="col-span-3">Node Size</div>
     <div class="col-span-6 grid grid-cols-2">
       <label class="cursor-pointer" v-on:click="store.dispatch('toggleNodeSize', 'constant')">

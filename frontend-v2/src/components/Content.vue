@@ -9,7 +9,7 @@
       <div class="col-span-8 h-full border rounded">
         <Graph></Graph>
       </div>
-      <div class="col-span-4 h-full border rounded overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100">
+      <div class="col-span-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100;">
         <SideBar></SideBar>
       </div>
     </div>

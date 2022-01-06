@@ -9,6 +9,9 @@
     "format": "prettier .  --write"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "vue": "^3.2.16",
     "vuex": "^4.0.2"
   },
