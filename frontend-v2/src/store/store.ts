@@ -16,6 +16,7 @@ const state: RootState = {
   layerObj: defaults.defaultLayerObj,
   datasetList: defaults.defaultDatasetList,
   mapperParams: defaults.defaultMapperParams,
+  colorMap: defaults.defaultColorScheme,
   minLinkStrength: 1,
   nodeSize: 'constant',
 };
@@ -26,6 +27,11 @@ const mutations = {
   },
   setNodeSize(state: RootState, size: NodeSize) {
     state.nodeSize = size;
+  },
+  clearLabelSelection(state: RootState) {
+    for (const label in state.colorMap) {
+      state.colorMap[label].selected = false;
+    }
   },
 };
 

@@ -18,6 +18,16 @@ interface ParamList {
   selected: number | string;
 }
 
+// define a color map type consiting of key value pairs
+interface Label {
+  color: string;
+  selected: boolean;
+}
+
+type ColorMap = {
+  [label: string]: Label;
+};
+
 type Epochs = Array<number>;
 
 export type NodeSize = 'constant' | 'scaled';
@@ -40,4 +50,5 @@ export interface RootState {
   epochs: Epochs;
   minLinkStrength: number;
   nodeSize: NodeSize;
+  colorMap: ColorMap;
 }
