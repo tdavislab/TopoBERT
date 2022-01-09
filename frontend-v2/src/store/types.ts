@@ -18,21 +18,54 @@ interface ParamList {
   selected: number | string;
 }
 
-// define a color map type consiting of key value pairs
 interface Label {
   color: string;
   selected: boolean;
 }
 
+interface MTable {
+  header: Array<string>;
+  rows: Array<Array<string>>;
+}
+interface Graph {
+  directed: boolean;
+  multigraph: boolean;
+  nodes: Array<NodeEntity>;
+  links: Array<LinkEntity>;
+}
+
+interface NodeEntity {
+  id: string;
+  name: string;
+  avgFilterValue: number;
+  x: number;
+  y: number;
+  memberPoints: Array<MemberPoints>;
+}
+
+interface MemberPoints {
+  memberId: number;
+  word: string;
+  classLabel: string;
+  sentId?: number;
+  wordId?: number;
+}
+
+interface LinkEntity {
+  source: string;
+  target: string;
+  intersection: number;
+}
+
 type ColorMap = {
-  [label: string]: Label;
+  [classLabel: string]: Label;
 };
 
 type Epochs = Array<number>;
 
 export type NodeSize = 'constant' | 'scaled';
 
-export type MapperParams = {
+type MapperParams = {
   dataSplit: ParamList;
   metric: ParamList;
   filter: ParamList;
@@ -51,4 +84,6 @@ export interface RootState {
   minLinkStrength: number;
   nodeSize: NodeSize;
   colorMap: ColorMap;
+  mTable: MTable;
+  graph: Graph | null;
 }

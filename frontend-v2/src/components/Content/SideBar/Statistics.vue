@@ -5,14 +5,13 @@
 
   function toggleStats() {
     showStats.value = !showStats.value;
-    console.log(showStats);
   }
 </script>
 
 <template>
-  <div class="grid gap-3 border rounded p-3 bg-gray-50 cursor-pointer transition-all" @click="toggleStats()">
+  <div class="grid gap-3 border rounded p-3 bg-gray-50 transition-all">
     <div class="text-xl flex justify-between">
-      <span>
+      <span class="cursor-pointer" @click="toggleStats()">
         <span class="mr-2">Statistics</span>
         <font-awesome-icon :icon="showStats ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>

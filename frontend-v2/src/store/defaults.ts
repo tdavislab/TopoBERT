@@ -114,4 +114,14 @@ export const defaults = {
     Others: { color: '#989898', selected: false },
     'p.Test': { color: '#c7c7c7', selected: false },
   },
+  defaultTable: {
+    header: ['sent_id', 'word_id', 'word', 'label'],
+    rows: [
+      // TODO: Replace with approriate interface
+      ['a', 'b', 'c', 'd'],
+      ['a', 'b', 'c', 'd'],
+      ['a', 'b', 'c', 'd'],
+    ],
+  },
+  defaultGraph: null,
 };

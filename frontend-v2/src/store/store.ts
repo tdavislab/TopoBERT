@@ -1,9 +1,10 @@
 // store.ts
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
-import { RootState, NodeSize } from './types';
-import { ActionContext } from 'vuex';
+import { RootState } from './types';
 import { defaults } from './defaults';
+import { actions } from './actions';
+import { mutations } from './mutations';
 
 // define injection key
 export const key: InjectionKey<Store<RootState>> = Symbol();
@@ -17,35 +18,10 @@ const state: RootState = {
   datasetList: defaults.defaultDatasetList,
   mapperParams: defaults.defaultMapperParams,
   colorMap: defaults.defaultColorScheme,
+  mTable: defaults.defaultTable,
+  graph: defaults.defaultGraph,
   minLinkStrength: 1,
   nodeSize: 'constant',
-};
-
-const mutations = {
-  setLayer(state: RootState, layer: number) {
-    state.layerObj.selected = layer;
-  },
-  setNodeSize(state: RootState, size: NodeSize) {
-    state.nodeSize = size;
-  },
-  clearLabelSelection(state: RootState) {
-    for (const label in state.colorMap) {
-      state.colorMap[label].selected = false;
-    }
-  },
-};
-
-const actions = {
-  updateGraph(context: ActionContext<RootState, RootState>) {
-    console.table(context.state.mapperParams);
-  },
-  datasetUpdate(context: ActionContext<RootState, RootState>) {
-    console.log(`Updating to ${context.state.datasetList.selected}`);
-  },
-  toggleNodeSize(context: ActionContext<RootState, RootState>, updatedNodeSize: NodeSize) {
-    if (updatedNodeSize === context.state.nodeSize) return;
-    context.commit('setNodeSize', updatedNodeSize);
-  },
 };
 
 const getters = {
