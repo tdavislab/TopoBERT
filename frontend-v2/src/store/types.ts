@@ -1,3 +1,5 @@
+import GraphRenderer from '../components/Content/Graph/GraphRender';
+
 interface LayerType {
   layers: Array<number>;
   selected: number;
@@ -27,9 +29,7 @@ interface MTable {
   header: Array<string>;
   rows: Array<Array<string>>;
 }
-interface Graph {
-  directed: boolean;
-  multigraph: boolean;
+export interface Graph {
   nodes: Array<NodeEntity>;
   links: Array<LinkEntity>;
 }
@@ -85,5 +85,6 @@ export interface RootState {
   nodeSize: NodeSize;
   colorMap: ColorMap;
   mTable: MTable;
-  graph: Graph | null;
+  graph: Graph;
+  graphRenderer: GraphRenderer;
 }

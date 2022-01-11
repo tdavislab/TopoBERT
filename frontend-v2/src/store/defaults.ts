@@ -26,7 +26,7 @@ export const defaults = {
         { name: 'L2', value: 'l2' },
         { name: 'Average KNN-5', value: 'knn' },
       ],
-      selected: 'l1',
+      selected: 'l2',
     },
     intervals: {
       paramList: [
@@ -123,5 +123,8 @@ export const defaults = {
       ['a', 'b', 'c', 'd'],
     ],
   },
-  defaultGraph: null,
+  defaultGraph: {
+    nodes: [],
+    links: [],
+  },
 };

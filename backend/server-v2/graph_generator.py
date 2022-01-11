@@ -104,6 +104,15 @@ def add_node_metadata_ud(graph, data):
     return graph
 
 
+def memberPointify(metadata, mindex):
+    metadata = dict(metadata)
+    metadata['memberId'] = mindex
+    metadata['sentId'] = metadata.pop('sent_id')
+    metadata['wordId'] = metadata.pop('word_id')
+    metadata['classLabel'] = metadata.pop('label')
+    return metadata
+
+
 def add_node_metadata(graph, metadata_source, activations):
     # create PCA model first
     nodewise_activations = np.vstack([np.mean(activations.iloc[graph['nodes'][node_name]], axis=0) for node_name in graph['nodes']])
@@ -112,10 +121,16 @@ def add_node_metadata(graph, metadata_source, activations):
     for i, node_name in enumerate(graph['nodes']):
         member_list = graph['nodes'][node_name]
 
-        metadata = [metadata_source.loc[member_index].tolist() for member_index in member_list]
-        graph['nodes'][node_name] = {'membership_ids': member_list, 'metadata': metadata,
-                                     'l2avg': np.average(metadata_source.loc[member_list]['l2norm']),
-                                     'x': pca_positions[i][0], 'y': pca_positions[i][1], 'type': 'train'}
+        metadata = [memberPointify(metadata_source.loc[member_index], member_index) for member_index in member_list]
+        # graph['nodes'][node_name] = {'membership_ids': member_list, 'metadata': metadata,
+        #                              'avgFilterValue': np.average(metadata_source.loc[member_list]['l2norm']),
+        #                              'x': pca_positions[i][0], 'y': pca_positions[i][1], 'type': 'train'}
+
+        graph['nodes'][node_name] = {
+            'memberPoints': metadata,
+            'avgFilterValue': np.average(metadata_source.loc[member_list]['l2norm']),
+            'x': pca_positions[i][0], 'y': pca_positions[i][1], 'type': 'train'
+        }
 
     return graph
 
@@ -150,18 +165,23 @@ def serialize_graph(graph):
     js_graph = json_graph.node_link_data(nx_graph)
 
     for i, node in enumerate(js_graph['nodes']):
-        js_graph['nodes'][i]['name'] = js_graph['nodes'][i]['id']
-        js_graph['nodes'][i]['l2avg'] = js_graph['nodes'][i]['membership']['l2avg']
+        # js_graph['nodes'][i]['name'] = js_graph['nodes'][i]['id']
+        # js_graph['nodes'][i]['avgFilterValue'] = js_graph['nodes'][i]['membership']['avgFilterValue']
+        node_temp = js_graph['nodes'][i]
+        node_temp = {**node_temp, **node_temp['membership']}
+        del node_temp['membership']
+        js_graph['nodes'][i] = node_temp
 
     for i, link in enumerate(js_graph['links']):
         id_s = link['source']
         id_t = link['target']
-        mem1 = [x['membership']['membership_ids'] for x in js_graph['nodes'] if x['id'] == id_s][0]
-        mem2 = [x['membership']['membership_ids'] for x in js_graph['nodes'] if x['id'] == id_t][0]
+        mem1 = [[y['memberId'] for y in x['memberPoints']] for x in js_graph['nodes'] if x['id'] == id_s][0]
+        mem2 = [[y['memberId'] for y in x['memberPoints']] for x in js_graph['nodes'] if x['id'] == id_t][0]
         mem1, mem2 = set(mem1), set(mem2)
         jaccard = len(mem1.intersection(mem2)) / len(mem1.union(mem2))
         js_graph['links'][i]['intersection'] = jaccard
 
+    del js_graph['graph'], js_graph['directed'], js_graph['multigraph']
     return js_graph
 
 

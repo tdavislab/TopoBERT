@@ -12,10 +12,13 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "axios": "^0.24.0",
+    "d3": "^7.3.0",
     "vue": "^3.2.16",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@types/d3": "^7.1.0",
     "@vitejs/plugin-vue": "^1.9.3",
     "autoprefixer": "^10.4.0",
     "eslint": "^8.4.0",
