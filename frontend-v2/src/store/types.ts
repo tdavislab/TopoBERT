@@ -34,7 +34,7 @@ export interface Graph {
   links: Array<LinkEntity>;
 }
 
-interface NodeEntity {
+export interface NodeEntity {
   id: string;
   name: string;
   avgFilterValue: number;
