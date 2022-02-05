@@ -29,3 +29,4 @@ __pycache__/
 
 notebooks/cache/
 notebooks/images/
+backend/server-v2/cache/

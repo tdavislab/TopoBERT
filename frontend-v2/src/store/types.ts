@@ -1,4 +1,4 @@
-import GraphRenderer from '../components/Content/Graph/GraphRender';
+import GraphRenderer from '../components/Content/Renderers/GraphRender';
 
 interface LayerType {
   layers: Array<number>;
@@ -87,4 +87,5 @@ export interface RootState {
   mTable: MTable;
   graph: Graph;
   graphRenderer: GraphRenderer;
+  selectedNodes: NodeEntity[];
 }

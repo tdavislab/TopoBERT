@@ -1,11 +1,9 @@
 <script lang="ts" setup>
   import { computed, onMounted, watch } from 'vue';
   import { useStore } from '../../store/store';
-  import * as d3 from 'd3';
-  import GraphRenderer from './Graph/GraphRender';
+  import GraphMinimap from './GraphMinimap.vue';
 
   const store = useStore();
-  const graph = computed(() => store.state.graph);
 
   onMounted(() => {
     store.dispatch('updateGraph');
@@ -13,8 +11,10 @@
 </script>
 
 <template>
-  <div class="h-full">
-    <svg id="graph-svg" width="100%" height="100%">
+  <div class="h-full grid grid-cols-1">
+    <GraphMinimap></GraphMinimap>
+
+    <svg id="graph-svg" class="row-start-1" width="100%" height="100%">
       <g>
         <g id="link_group"></g>
         <g id="node_group"></g>

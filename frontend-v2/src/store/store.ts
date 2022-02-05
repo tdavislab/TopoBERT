@@ -5,7 +5,8 @@ import { RootState, NodeSize, Graph } from './types';
 import { ActionContext } from 'vuex';
 import { defaults } from './defaults';
 import axios, { AxiosRequestConfig } from 'axios';
-import GraphRenderer from '../components/Content/Graph/GraphRender';
+import GraphRenderer from '../components/Content/Renderers/GraphRender';
+import * as d3 from 'd3';
 
 // define injection key
 export const key: InjectionKey<Store<RootState>> = Symbol();
@@ -22,6 +23,7 @@ const state: RootState = {
   mTable: defaults.defaultTable,
   graph: defaults.defaultGraph,
   graphRenderer: new GraphRenderer(),
+  selectedNodes: [],
   minLinkStrength: 1,
   nodeSize: 'constant',
 };
@@ -71,7 +73,7 @@ const actions = {
 
         const graph = response.data.graph as Graph;
         context.commit('setGraph', graph);
-        context.state.graphRenderer.draw(graph, '#graph-svg');
+        context.state.graphRenderer.draw(graph, '#graph-svg', context.getters.pieColorScale);
       })
       .catch((error) => {
         console.log(error);
@@ -89,6 +91,12 @@ const actions = {
 const getters = {
   epochIndex(state: RootState) {
     return state.epochs[state.currentEpochIndex];
+  },
+  pieColorScale(state: RootState) {
+    return d3
+      .scaleOrdinal()
+      .domain(Object.keys(state.colorMap))
+      .range(Object.values(state.colorMap).map((color) => color.color));
   },
 };
 
