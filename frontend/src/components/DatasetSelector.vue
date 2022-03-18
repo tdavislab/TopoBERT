@@ -11,8 +11,10 @@
           v-on:change="paramChanged()"
       >
         <option disabled value="" selected>Select dataset</option>
-        <option value="ss-role">SuperSense-Role</option>
-        <option value="ss-func">SuperSense-Function</option>
+        <option value="ss-role">Role</option>
+        <option value="ss-func">Function</option>
+        <option value="ss-func-role">Function-RoleBERT</option>
+        <option value="ss-func-pos">Function-PosBERT</option>
         <option value="pos">Part of Speech</option>
         <option value="dep">Dependency</option>
       </select>

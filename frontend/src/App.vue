@@ -24,7 +24,7 @@
             <DatasetSelector></DatasetSelector>
             <AddParamConfig></AddParamConfig>
             <Projection></Projection>
-            <NodePurities></NodePurities>
+            <!-- <NodePurities></NodePurities> -->
             <IterationSlider></IterationSlider>
           </div>
           <JaccardFilter></JaccardFilter>

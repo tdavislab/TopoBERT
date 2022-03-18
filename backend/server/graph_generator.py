@@ -65,11 +65,11 @@ def read_file_from_zip(zip_path, file_relative_path):
     return data
 
 
-def read_labels(path, dataset=None):
+def read_labels(path, dataset='ss-role'):
     label_data = []
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
-            if dataset in ['ss-func', 'ss-role']:
+            if dataset in ['ss-func', 'ss-role', 'ss-func-role', 'ss-func-pos']:
                 word_info, word_label = line.strip().split('\t')
                 sent_info, word = word_info.split(':')
                 sent_info = ast.literal_eval(sent_info)
@@ -113,8 +113,10 @@ def add_node_metadata(graph, metadata_source, activations):
         member_list = graph['nodes'][node_name]
 
         metadata = [metadata_source.loc[member_index].tolist() for member_index in member_list]
+        node_members_activations = np.vstack([activations.iloc[member_index] for member_index in member_list])
         graph['nodes'][node_name] = {'membership_ids': member_list, 'metadata': metadata,
                                      'l2avg': np.average(metadata_source.loc[member_list]['l2norm']),
+                                     'centroid': np.mean(node_members_activations, axis=0),
                                      'x': pca_positions[i][0], 'y': pca_positions[i][1], 'type': 'train'}
 
     return graph
@@ -129,6 +131,7 @@ def store_as_json(graph, path):
         js_graph['nodes'][i]['l2avg'] = js_graph['nodes'][i]['membership']['l2avg']
 
     for i, link in enumerate(js_graph['links']):
+        # compute jaccard intersection for each link
         id_s = link['source']
         id_t = link['target']
         mem1 = [x['membership']['membership_ids'] for x in js_graph['nodes'] if x['id'] == id_s][0]
@@ -136,6 +139,11 @@ def store_as_json(graph, path):
         mem1, mem2 = set(mem1), set(mem2)
         jaccard = len(mem1.intersection(mem2)) / len(mem1.union(mem2))
         js_graph['links'][i]['intersection'] = jaccard
+
+        # compute euclidean distance between centroids of the source and target nodes
+        centroid_s = [x['membership']['centroid'] for x in js_graph['nodes'] if x['id'] == id_s][0]
+        centroid_t = [x['membership']['centroid'] for x in js_graph['nodes'] if x['id'] == id_t][0]
+        js_graph['links'][i]['centroid_dist'] = np.linalg.norm(centroid_s - centroid_t)
 
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
@@ -161,6 +169,11 @@ def serialize_graph(graph):
         mem1, mem2 = set(mem1), set(mem2)
         jaccard = len(mem1.intersection(mem2)) / len(mem1.union(mem2))
         js_graph['links'][i]['intersection'] = jaccard
+
+        # compute euclidean distance between centroids of the source and target nodes
+        centroid_s = [x['membership']['centroid'] for x in js_graph['nodes'] if x['id'] == id_s][0]
+        centroid_t = [x['membership']['centroid'] for x in js_graph['nodes'] if x['id'] == id_t][0]
+        js_graph['links'][i]['centroid_dist'] = np.linalg.norm(centroid_s - centroid_t)
 
     return js_graph
 
