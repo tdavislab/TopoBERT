@@ -195,12 +195,15 @@ def graph_route():
     graph = graph_generator.get_mapper(activations, labels, config)
     if dataset in ['ss-role', 'ss-func']:
         purities, bin_edges = utils.get_purities(graph)
+        hierarchy = utils.get_hierarchy(graph, activations, labels, max_level=20)
+        # print(hierarchies)
+        # hierarchies = None
     else:
-        purities, bin_edges = None, None
+        purities, bin_edges, hierarchy = None, None, None
 
     app.logger.info(f'USER: {dataset} {metric} {filter_func} {intervals} {overlap}')
 
-    return jsonify(graph=graph, purities=purities, bin_edges=bin_edges)
+    return jsonify(graph=graph, purities=purities, bin_edges=bin_edges, hierarchy=hierarchy)
 
 
 if __name__ == '__main__':

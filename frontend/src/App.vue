@@ -24,6 +24,7 @@
             <DatasetSelector></DatasetSelector>
             <AddParamConfig></AddParamConfig>
             <Projection></Projection>
+            <Hierarchy></Hierarchy>
             <!-- <NodePurities></NodePurities> -->
             <IterationSlider></IterationSlider>
           </div>
@@ -59,6 +60,7 @@ import AddParamConfig from "./components/AddParamConfig";
 import Projection from "./components/Projection";
 import NodePurities from "./components/NodePurities";
 import TrainTestSelector from "@/components/TrainTestSelector";
+import Hierarchy from "./components/Hierarchy.vue";
 
 export default {
   name: "App",
@@ -78,7 +80,8 @@ export default {
     Stats,
     Table,
     JaccardFilter,
-  },
+    Hierarchy
+},
   data() {
     return {};
   },

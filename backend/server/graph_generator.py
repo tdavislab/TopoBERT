@@ -17,7 +17,7 @@ from sklearn.neighbors import NearestNeighbors
 from tqdm import tqdm
 from dataclasses import dataclass
 
-DBSCAN_MIN_SAMPLES = 3
+DBSCAN_MIN_SAMPLES = 2
 
 
 @dataclass

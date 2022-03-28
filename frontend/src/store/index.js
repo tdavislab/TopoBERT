@@ -181,6 +181,19 @@ export default createStore({
     selectedMemberIds: [],
     // nodeColorScale: d3.scaleOrdinal().domain(labels.labels.map(d => d.label)).range(labels.labels.map(d => handTunedColorScale[d.label]).concat(handTunedColorScale['Others'])),
     labelThreshold: 0,
+    hierarchyData: {
+      name: 'root',
+      children: [
+        {name: 'child1'},
+        {
+          name: 'child2',
+          children: [
+            {name: 'grandchild1'},
+            {name: 'grandchild2'}
+          ]
+        }
+      ]
+    },
   },
   getters: {
     getLayers: state => state.layers,
@@ -307,28 +320,16 @@ export default createStore({
     setDataSplit(state, newSplit) {
       state.dataSplit = newSplit;
     },
+    updateHierarchyData(state, newHierarchyData) {
+      console.log('newHierarchyData', newHierarchyData);
+      state.hierarchyData = newHierarchyData;
+    },
   },
   actions: {
     loadIterationFile(context, newIterationNum) {
       context.commit('changeCurrentIteration', newIterationNum);
       context.commit('resetTableRows');
       context.commit('resetStats');
-
-      // $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph)
-      //   .done(function () {
-      //     console.log('Loaded iteration = ', context.state.param_str, context.state.currentIteration);
-      //   })
-      //   .fail(function () {
-      //     $.getJSON(process.env.VUE_APP_ROOT_API + 'get_graph',
-      //       {dataset: context.state.param_str, iteration: context.state.currentIteration},
-      //       function (response) {
-      //         console.log('success', response);
-      //         $.getJSON(`static/mapper_graphs/${context.state.dataset}/${context.state.currentIteration}.json`, updateGraph);
-      //       })
-      //       .fail((response) => {
-      //         console.log('failure', response)
-      //       });
-      //   })
 
       // make ajax call to get graph data
       // let url = process.env.VUE_APP_ROOT_API + 'graph';
@@ -353,8 +354,10 @@ export default createStore({
           $('#spinner-holder').show();
         },
         success: function (response) {
+          console.log(response)
           updateGraph(response.graph);
           updatePurityHists(response.purities);
+          updateHierarchy(response.hierarchy);
           // console.log(context.state.purityHists);
         },
         complete: function () {
@@ -373,6 +376,10 @@ export default createStore({
 
       function updatePurityHists(newPurityData) {
         context.commit('updatePurityHists', newPurityData);
+      }
+
+      function updateHierarchy(newHierarchyData) {
+        context.commit('updateHierarchyData', newHierarchyData);
       }
     },
     changeDataset(context, newDataset) {
