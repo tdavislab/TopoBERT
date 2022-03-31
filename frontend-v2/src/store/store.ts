@@ -59,6 +59,11 @@ const mutations = {
   setTrackingMode(state: RootState, mode: boolean) {
     state.trackingMode = mode;
   },
+  setMTable(state: RootState, tableRows: string[][]) {
+    console.log('setMTable', tableRows[0]);
+
+    state.mTable.rows = tableRows;
+  },
 };
 
 const actions = {
@@ -88,13 +93,13 @@ const actions = {
         const graph = response.data.graph as Graph;
         context.commit('setGraph', graph);
         context.state.graphRenderer.draw(graph, '#graph-svg', context.getters.pieColorScale);
-
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
           console.log('Tracking', context.getters.selectedMembers);
           context.state.graphRenderer.highlight(context.getters.membersToNodes);
         }
+        context.dispatch('updateMetadataTable');
       })
       .catch((error) => {
         console.log(error);
@@ -106,6 +111,19 @@ const actions = {
   toggleNodeSize(context: ActionContext<RootState, RootState>, updatedNodeSize: NodeSize) {
     if (updatedNodeSize === context.state.nodeSize) return;
     context.commit('setNodeSize', updatedNodeSize);
+  },
+  updateMetadataTable(context: ActionContext<RootState, RootState>) {
+    if (context.state.selectedNodes.length === 0) {
+      context.commit('setMTable', [[]]);
+      console.log(context.state.mTable);
+    } else {
+      const newMData = context.state.selectedNodes
+        .map((node) => {
+          return node.memberPoints.map((point) => [point.sentId, point.wordId, point.word, point.classLabel]);
+        })
+        .flat();
+      context.commit('setMTable', newMData);
+    }
   },
 };
 

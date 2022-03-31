@@ -3,7 +3,7 @@
   import { useStore } from '../../../../store/store';
 
   const store = useStore();
-  const trackingMode = computed({
+  const trackingMode: any = computed({
     get() {
       return store.state.trackingMode;
     },

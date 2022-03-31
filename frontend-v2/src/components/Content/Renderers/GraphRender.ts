@@ -95,6 +95,8 @@ export default class GraphRenderer {
             return 0;
           }
         });
+
+      store.dispatch('updateMetadataTable');
     });
 
     this.nodeD3 = nodes;

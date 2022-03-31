@@ -8,8 +8,8 @@
 <template>
   <div class="grid gap-4 border rounded p-3 bg-gray-50">
     <IterationSlider></IterationSlider>
-    <JaccardFilter></JaccardFilter>
-    <NodeSizeToggle></NodeSizeToggle>
+    <!-- <JaccardFilter></JaccardFilter> -->
+    <!-- <NodeSizeToggle></NodeSizeToggle> -->
     <TrackingModeCheckbox></TrackingModeCheckbox>
   </div>
 </template>
