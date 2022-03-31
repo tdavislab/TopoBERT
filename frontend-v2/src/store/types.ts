@@ -51,7 +51,7 @@ interface MemberPoints {
   wordId?: number;
 }
 
-interface LinkEntity {
+export interface LinkEntity {
   source: string;
   target: string;
   intersection: number;
@@ -87,5 +87,6 @@ export interface RootState {
   mTable: MTable;
   graph: Graph;
   graphRenderer: GraphRenderer;
+  trackingMode: boolean;
   selectedNodes: NodeEntity[];
 }

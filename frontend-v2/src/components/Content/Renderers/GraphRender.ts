@@ -1,7 +1,8 @@
 import * as d3 from 'd3';
 import { BaseType, Path } from 'd3';
 import { defaults } from '../../../store/defaults';
-import { Graph, NodeEntity } from '../../../store/types';
+import { store } from '../../../store/store';
+import { Graph, NodeEntity, LinkEntity } from '../../../store/types';
 import PieGlyph from './PieGlyphRenderer';
 
 type Points = {
@@ -18,7 +19,9 @@ export default class GraphRenderer {
   linkSizeScale: d3.ScaleLinear<number, number, never>;
   svg: d3.Selection<SVGElement, any, HTMLElement, any>;
   glyphType: 'circle' | 'pie' = 'pie';
-  glyphRender: PieGlyph;
+  glyphRenderer: PieGlyph;
+  nodeD3: d3.Selection<d3.BaseType | SVGGElement, NodeEntity, d3.BaseType, unknown>;
+  linkD3: d3.Selection<d3.BaseType | SVGLineElement, LinkEntity, d3.BaseType, unknown>;
 
   constructor() {
     this.svg = d3.select('#graph-svg');
@@ -26,12 +29,15 @@ export default class GraphRenderer {
     this.nodeSizeScale = d3.scaleLinear().range([15, 50]);
     this.linkColorScale = d3.scaleSequential(d3.interpolatePlasma);
     this.linkSizeScale = d3.scaleLinear().range([1, 10]);
-    this.glyphRender = new PieGlyph(8);
+    this.glyphRenderer = new PieGlyph(8);
+    this.nodeD3 = d3.select('#graph-svg').selectAll('g');
+    this.linkD3 = d3.select('#graph-svg').selectAll('line');
   }
 
   draw(graph: Graph, svg_selector: string, pieColorScale: d3.ScaleOrdinal<string, unknown, never>) {
     const node_group = d3.select('g#node_group');
     const link_group = d3.select('g#link_group');
+    const graph_obj = this;
 
     node_group.selectAll('*').remove();
     link_group.selectAll('*').remove();
@@ -65,7 +71,34 @@ export default class GraphRenderer {
       .selectAll('g')
       .data(graph.nodes)
       .join('g')
-      .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
+      .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
+      .attr('style', 'cursor: pointer;');
+
+    nodes.on('click', function (clickEvent) {
+      const node = d3.select(this);
+      const nodeEntity: NodeEntity = node.datum() as NodeEntity;
+      store.commit('addSelectedNode', nodeEntity);
+
+      const selectedNodeIds = new Set(store.state.selectedNodes.map((node) => node.id));
+
+      nodes.selectAll('.node-outline').remove();
+      nodes
+        .insert('circle', ':first-child')
+        .attr('class', 'node-outline')
+        .attr('stroke', 'grey')
+        .attr('stroke-width', '5px')
+        .attr('fill', 'grey')
+        .attr('r', (d) => {
+          if (selectedNodeIds.has(d.id)) {
+            return graph_obj.nodeSizeScale(d.memberPoints.length) + 10;
+          } else {
+            return 0;
+          }
+        });
+    });
+
+    this.nodeD3 = nodes;
+    this.linkD3 = links;
 
     this.drag(simulation)(<any>nodes);
 
@@ -79,11 +112,11 @@ export default class GraphRenderer {
     } else if (this.glyphType === 'pie') {
       nodes
         .selectAll('path')
-        .data((d) => this.glyphRender.generatePath(d, this.nodeSizeScale(d.memberPoints.length)))
+        .data((d) => this.glyphRenderer.generatePath(d, this.nodeSizeScale(d.memberPoints.length)))
         .join('path')
         .attr('d', (d) => d.arc)
         .attr('stroke', 'black')
-        .attr('stroke-width', '1px')
+        .attr('stroke-width', '2px')
         .attr('fill', (d) => pieColorScale(d.classLabel))
         .append('title')
         .text((d) => d.classLabel);
@@ -126,5 +159,24 @@ export default class GraphRenderer {
     }
 
     return d3.drag<SVGGElement, NodeEntity>().on('start', dragstarted).on('drag', dragged).on('end', dragended);
+  }
+
+  highlight(nodes: NodeEntity[]) {
+    this.nodeD3.selectAll('.node-outline').remove();
+    const selectedNodeIds = new Set(nodes.map((node) => node.id));
+
+    this.nodeD3
+      .insert('circle', ':first-child')
+      .attr('class', 'node-outline')
+      .attr('stroke', 'grey')
+      .attr('stroke-width', '5px')
+      .attr('fill', 'grey')
+      .attr('r', (d) => {
+        if (selectedNodeIds.has(d.id)) {
+          return this.nodeSizeScale(d.memberPoints.length) + 10;
+        } else {
+          return 0;
+        }
+      });
   }
 }

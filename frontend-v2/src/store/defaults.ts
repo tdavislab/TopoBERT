@@ -53,7 +53,7 @@ export const defaults = {
   },
   defaultLayerObj: {
     layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    selected: 0,
+    selected: 12,
   },
   defaultDatasetList: {
     datasets: [
@@ -127,4 +127,5 @@ export const defaults = {
     nodes: [],
     links: [],
   },
+  defaultTrackingMode: false,
 };

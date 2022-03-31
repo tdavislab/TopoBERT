@@ -190,6 +190,8 @@ export default createStore({
       ]
     },
     nodeSelectionMode: 'single',
+    selectedNodes: [],
+    selectedPointIds: [],
   },
   getters: {
     getLayers: state => state.layers,
@@ -323,7 +325,12 @@ export default createStore({
     setNodeSelectionMode(state, newMode) {
       state.nodeSelectionMode = newMode;
     },
-
+    addSelectedNodes(state, newNodes) {
+      state.selectedNodes.push(...newNodes);
+    },
+    resetSelectedNodes(state) {
+      state.selectedNodes = [];
+    },
   },
   actions: {
     loadIterationFile(context, newIterationNum) {

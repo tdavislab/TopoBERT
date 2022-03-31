@@ -2,6 +2,7 @@
   import IterationSlider from './GraphControls/IterationSlider.vue';
   import JaccardFilter from './GraphControls/JaccardFilter.vue';
   import NodeSizeToggle from './GraphControls/NodeSizeToggle.vue';
+  import TrackingModeCheckbox from './GraphControls/TrackingModeCheckbox.vue';
 </script>
 
 <template>
@@ -9,6 +10,7 @@
     <IterationSlider></IterationSlider>
     <JaccardFilter></JaccardFilter>
     <NodeSizeToggle></NodeSizeToggle>
+    <TrackingModeCheckbox></TrackingModeCheckbox>
   </div>
 </template>
 
