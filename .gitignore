@@ -27,6 +27,6 @@ backend/data/
 
 __pycache__/
 
-notebooks/cache/
+notebooks/cache*/
 notebooks/images/
 backend/server-v2/cache/
