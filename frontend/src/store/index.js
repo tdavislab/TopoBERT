@@ -25,11 +25,6 @@ function updateTable(node, context) {
 }
 
 function nodeClickDecoration(clickedNode, allNodes, state) {
-  // allNodes.attr('stroke-width', '1px');
-  // clickedNode.attr('stroke-width', '3px');
-  // allNodes.selectAll('path').attr('stroke-width', '0.4px');
-  // clickedNode.selectAll('path').attr('stroke-width', '1.5px');
-
   allNodes.selectAll('.outline').remove();
   clickedNode.insert('circle', ':first-child')
     .attr('class', 'outline')
@@ -194,6 +189,7 @@ export default createStore({
         }
       ]
     },
+    nodeSelectionMode: 'single',
   },
   getters: {
     getLayers: state => state.layers,
@@ -324,6 +320,10 @@ export default createStore({
       console.log('newHierarchyData', newHierarchyData);
       state.hierarchyData = newHierarchyData;
     },
+    setNodeSelectionMode(state, newMode) {
+      state.nodeSelectionMode = newMode;
+    },
+
   },
   actions: {
     loadIterationFile(context, newIterationNum) {

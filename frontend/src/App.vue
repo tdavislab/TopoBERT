@@ -1,13 +1,6 @@
 <template>
   <div>
-    <nav
-        id="header"
-        class="
-        navbar navbar-static-top navbar-dark
-        bg-dark
-        justify-content-between
-      "
-    >
+    <nav id="header" class="navbar navbar-static-top navbar-dark bg-dark justify-content-between">
       <h1 id="header-text" class="navbar-brand">TopoBERT</h1>
       <TrainTestSelector></TrainTestSelector>
       <WordSearch></WordSearch>
@@ -20,14 +13,13 @@
       <div class="row">
         <Graph class="col-8"></Graph>
         <div id="controls" class="col-4">
-          <div>
-            <DatasetSelector></DatasetSelector>
-            <AddParamConfig></AddParamConfig>
-            <Projection></Projection>
-            <Hierarchy></Hierarchy>
-            <!-- <NodePurities></NodePurities> -->
-            <IterationSlider></IterationSlider>
-          </div>
+          <DatasetSelector></DatasetSelector>
+          <AddParamConfig></AddParamConfig>
+          <Projection></Projection>
+          <Hierarchy></Hierarchy>
+          <!-- <NodePurities></NodePurities> -->
+          <IterationSlider></IterationSlider>
+          <NodeSelection></NodeSelection>
           <JaccardFilter></JaccardFilter>
           <NodeSizeToggle></NodeSizeToggle>
           <Stats></Stats>
@@ -61,10 +53,12 @@ import Projection from "./components/Projection";
 import NodePurities from "./components/NodePurities";
 import TrainTestSelector from "@/components/TrainTestSelector";
 import Hierarchy from "./components/Hierarchy.vue";
+import NodeSelection from "@/components/NodeSelection";
 
 export default {
   name: "App",
   components: {
+    NodeSelection,
     TrainTestSelector,
     NodePurities,
     Projection,
@@ -81,7 +75,7 @@ export default {
     Table,
     JaccardFilter,
     Hierarchy
-},
+  },
   data() {
     return {};
   },

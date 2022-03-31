@@ -2,7 +2,7 @@
   <form>
     <fieldset class="form-group border rounded px-4 py-2 mb-2">
       <div class="row">
-        <legend class="col-form-label col-sm-3 pt-0">Node Size</legend>
+        <div class="col-form-label col-sm-3 pt-0">Node Size</div>
         <div class="col-sm-9">
           <div class="custom-control custom-radio">
             <input
