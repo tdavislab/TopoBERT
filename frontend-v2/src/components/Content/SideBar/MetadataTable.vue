@@ -4,8 +4,20 @@
 
   let showTable = ref(false);
   const metadataTable = computed(() => {
-    return store.state.mTable;
+    let sortedRows = store.state.mTable.rows.sort((a, b) => {
+      if (a[3] < b[3]) {
+        return -1;
+      }
+      if (a[3] > b[3]) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return { header: store.state.mTable.header, rows: sortedRows };
   });
+
+  console.log(metadataTable.value);
 
   function toggleTable() {
     showTable.value = !showTable.value;
@@ -25,8 +37,6 @@
     }
     return '#ffffff';
   }
-
-  console.log(store.state.colorMap['p.Agent']);
 </script>
 
 <template>

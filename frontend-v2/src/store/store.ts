@@ -60,8 +60,6 @@ const mutations = {
     state.trackingMode = mode;
   },
   setMTable(state: RootState, tableRows: string[][]) {
-    console.log('setMTable', tableRows[0]);
-
     state.mTable.rows = tableRows;
   },
 };
@@ -96,7 +94,6 @@ const actions = {
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
-          console.log('Tracking', context.getters.selectedMembers);
           context.state.graphRenderer.highlight(context.getters.membersToNodes);
         }
         context.dispatch('updateMetadataTable');
@@ -115,7 +112,6 @@ const actions = {
   updateMetadataTable(context: ActionContext<RootState, RootState>) {
     if (context.state.selectedNodes.length === 0) {
       context.commit('setMTable', [[]]);
-      console.log(context.state.mTable);
     } else {
       const newMData = context.state.selectedNodes
         .map((node) => {
@@ -182,5 +178,5 @@ export function useStore() {
 }
 
 // TODO:
-// 1. Show information about selected member IDs in table
+// 1. [DONE] Show information about selected member IDs in table
 // 2. Fix minimap

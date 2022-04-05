@@ -4,6 +4,7 @@
 
   const store = useStore();
   const showMinimap = computed(() => store.state.selectedNodes.length > 0);
+  const nodeData = computed(() => store.state.selectedNodes);
 </script>
 
 <template>

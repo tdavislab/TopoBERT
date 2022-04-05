@@ -12,7 +12,7 @@
 
 <template>
   <div class="h-full grid grid-cols-1">
-    <GraphMinimap></GraphMinimap>
+    <!-- <GraphMinimap></GraphMinimap> -->
 
     <svg id="graph-svg" class="row-start-1" width="100%" height="100%">
       <g>

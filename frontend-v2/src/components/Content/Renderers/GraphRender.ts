@@ -85,12 +85,12 @@ export default class GraphRenderer {
       nodes
         .insert('circle', ':first-child')
         .attr('class', 'node-outline')
-        .attr('stroke', 'grey')
+        .attr('stroke', 'red')
         .attr('stroke-width', '5px')
-        .attr('fill', 'grey')
+        .attr('fill', 'red')
         .attr('r', (d) => {
           if (selectedNodeIds.has(d.id)) {
-            return graph_obj.nodeSizeScale(d.memberPoints.length) + 10;
+            return graph_obj.nodeSizeScale(d.memberPoints.length) + 20;
           } else {
             return 0;
           }
@@ -170,12 +170,12 @@ export default class GraphRenderer {
     this.nodeD3
       .insert('circle', ':first-child')
       .attr('class', 'node-outline')
-      .attr('stroke', 'grey')
+      .attr('stroke', 'red')
       .attr('stroke-width', '5px')
-      .attr('fill', 'grey')
+      .attr('fill', 'red')
       .attr('r', (d) => {
         if (selectedNodeIds.has(d.id)) {
-          return this.nodeSizeScale(d.memberPoints.length) + 10;
+          return this.nodeSizeScale(d.memberPoints.length) + 20;
         } else {
           return 0;
         }
