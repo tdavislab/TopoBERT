@@ -9,7 +9,7 @@ type PieData = {
 };
 
 type Path = {
-  arc: d3.Arc;
+  arc: any;
   classLabel: string;
 };
 
@@ -45,13 +45,13 @@ export default class PieGlyph {
     });
 
     const pieGenerator = d3
-      .pie()
+      .pie<PieData>()
       .value((d) => d.count)
       .sort(null)(pieData);
 
-    const piePath: Path = pieGenerator.map((d) => {
+    const piePath = pieGenerator.map((d) => {
       return {
-        arc: d3.arc().innerRadius(0).outerRadius(nodeSize)(d),
+        arc: d3.arc().innerRadius(0).outerRadius(nodeSize)(<any>d),
         classLabel: d.data.classLabel,
       };
     });

@@ -94,7 +94,7 @@ const actions = {
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
-          context.state.graphRenderer.highlight2(context.getters.membersToNodes);
+          context.state.graphRenderer.highlight(context.getters.membersToNodes);
         }
         context.dispatch('updateMetadataTable');
       })
@@ -129,7 +129,7 @@ const getters = {
   },
   pieColorScale(state: RootState) {
     return d3
-      .scaleOrdinal()
+      .scaleOrdinal<string, string>()
       .domain(Object.keys(state.colorMap))
       .range(Object.values(state.colorMap).map((color) => color.color));
   },

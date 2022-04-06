@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { BaseType, Path } from 'd3';
+import { BaseType, Path, PieArcDatum } from 'd3';
 import { defaults } from '../../../store/defaults';
 import { store } from '../../../store/store';
 import { Graph, NodeEntity, LinkEntity } from '../../../store/types';
@@ -95,7 +95,7 @@ export default class GraphRenderer {
       //       return 0;
       //     }
       //   });
-      graph_obj.highlight2(store.state.selectedNodes);
+      graph_obj.highlight(store.state.selectedNodes);
 
       store.dispatch('updateMetadataTable');
     });
@@ -120,7 +120,7 @@ export default class GraphRenderer {
         .attr('d', (d) => d.arc)
         .attr('stroke', 'black')
         .attr('stroke-width', '2px')
-        .attr('fill', (d) => pieColorScale(d.classLabel))
+        .attr('fill', (d): any => pieColorScale(d.classLabel))
         .append('title')
         .text((d) => d.classLabel);
     }
