@@ -82,19 +82,20 @@ export default class GraphRenderer {
       const selectedNodeIds = new Set(store.state.selectedNodes.map((node) => node.id));
 
       nodes.selectAll('.node-outline').remove();
-      nodes
-        .insert('circle', ':first-child')
-        .attr('class', 'node-outline')
-        .attr('stroke', 'red')
-        .attr('stroke-width', '5px')
-        .attr('fill', 'red')
-        .attr('r', (d) => {
-          if (selectedNodeIds.has(d.id)) {
-            return graph_obj.nodeSizeScale(d.memberPoints.length) + 20;
-          } else {
-            return 0;
-          }
-        });
+      // nodes
+      //   .insert('circle', ':first-child')
+      //   .attr('class', 'node-outline')
+      //   .attr('stroke', 'red')
+      //   .attr('stroke-width', '5px')
+      //   .attr('fill', 'red')
+      //   .attr('r', (d) => {
+      //     if (selectedNodeIds.has(d.id)) {
+      //       return graph_obj.nodeSizeScale(d.memberPoints.length) + 20;
+      //     } else {
+      //       return 0;
+      //     }
+      //   });
+      graph_obj.highlight2(store.state.selectedNodes);
 
       store.dispatch('updateMetadataTable');
     });
@@ -180,5 +181,17 @@ export default class GraphRenderer {
           return 0;
         }
       });
+  }
+
+  highlight2(nodes: NodeEntity[]) {
+    const selectedNodeIds = new Set(nodes.map((node) => node.id));
+
+    this.nodeD3.attr('opacity', (d) => {
+      if (selectedNodeIds.has(d.id)) {
+        return 1;
+      } else {
+        return 0.2;
+      }
+    });
   }
 }

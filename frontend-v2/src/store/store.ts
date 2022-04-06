@@ -94,7 +94,7 @@ const actions = {
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
-          context.state.graphRenderer.highlight(context.getters.membersToNodes);
+          context.state.graphRenderer.highlight2(context.getters.membersToNodes);
         }
         context.dispatch('updateMetadataTable');
       })
