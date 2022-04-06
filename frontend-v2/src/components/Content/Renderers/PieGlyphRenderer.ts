@@ -57,26 +57,19 @@ export default class PieGlyph {
     });
 
     return piePath;
-    // console.table(groupedData);
-    // console.table(topVals);
+  }
 
-    // console.log(topVals);
+  generatePathAggregate(nodeDataList: NodeEntity[], nodeSize: number) {
+    // merge nodeDataList into a single NodeEntity and then call generatePath on it
+    const nodeData: NodeEntity = {
+      id: 'aggregatedNode',
+      name: 'aggregatedNode',
+      avgFilterValue: nodeDataList.map((x) => x.avgFilterValue).reduce((x, y) => x + y, 0) / nodeDataList.length,
+      x: 0,
+      y: 0,
+      memberPoints: nodeDataList.map((ne) => ne.memberPoints).flat(),
+    };
 
-    // const pie = d3.pie().value((d: [string, number]) => d[1]);
-
-    // let pie = d3
-    //   .pie()
-    //   .value((d) => d[1])
-    //   .sort(null)(topVals);
-
-    // let chartData: PieData[] = pie.map((d) => {
-    //   console.log(d);
-    //   return {
-    //     arc: d3.arc().innerRadius(0).outerRadius(nodeSize)(d),
-    //     group: d.data,
-    //     //   type: dType,
-    //   };
-    // });
-    // return chartData;
+    return this.generatePath(nodeData, nodeSize);
   }
 }

@@ -17,8 +17,6 @@
     return { header: store.state.mTable.header, rows: sortedRows };
   });
 
-  console.log(metadataTable.value);
-
   function toggleTable() {
     showTable.value = !showTable.value;
   }

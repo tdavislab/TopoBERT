@@ -72,27 +72,6 @@ export default {
           .append("title")
           .text((d) => `${d.group} (${d.count})`);
 
-      // Legend
-      // d3.select('#minimap-svg')
-      //     .selectAll('text')
-      //     .data(chartData)
-      //     .join('text')
-      //     // .attr('text-anchor', 'middle')
-      //     .attr('font-size', '5px')
-      //     .attr("x", d => {
-      //       let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
-      //       return d.x = Math.cos(a) * radius;
-      //     })
-      //     .attr("y", d => {
-      //       let a = d.pie.startAngle + (d.pie.endAngle - d.pie.startAngle) / 2 - Math.PI / 2;
-      //       return d.y = Math.sin(a) * radius;
-      //     })
-      //     .attr('text-anchor', function (d) {
-      //       if (d.x >= 0) return 'start';
-      //       if (d.x < 0) return 'end';
-      //     })
-      //     .text(d => `${d.group} (${d.count})`);
-
       let numLegend = chartData.length;
 
       function position(i, numLegend) {
