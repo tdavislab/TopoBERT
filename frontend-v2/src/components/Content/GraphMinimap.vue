@@ -35,30 +35,45 @@
 </script>
 
 <template>
-  <svg id="minimap-svg" class="absolute border rounded shadow bg-white" :class="showMinimap ? 'visible' : 'invisible'">
-    <g transform="translate(75, 75)">
-      <g id="pieGlyph">
-        <path v-for="path in pieArcs" :d="path.arc || ''" :fill="pieColorScale(path.classLabel)" stroke="black" stroke-width="1px">
-          <title>{{ path.classLabel }}</title>
-        </path>
+  <div class="absolute m-5 bottom-0" style="width: 350px" :class="showMinimap ? 'visible' : 'invisible'">
+    <button class="absolute right-0 m-2" @click="store.commit('resetSelectedNodes')">Reset</button>
+    <svg id="minimap-svg" class="border rounded shadow bg-white" width="350" height="150">
+      <g transform="translate(75, 75)">
+        <g id="pieGlyph">
+          <path v-for="path in pieArcs" :d="path.arc || ''" :fill="pieColorScale(path.classLabel)" stroke="black" stroke-width="1px">
+            <title>{{ path.classLabel }}</title>
+          </path>
+        </g>
+        <g id="legend" :transform="legendTransform">
+          <rect
+            v-for="(path, index) in pieArcs"
+            :x="75 - 25"
+            :y="index * 15"
+            width="15px"
+            height="15px"
+            :fill="pieColorScale(path.classLabel)"
+            stroke="black"
+            stroke-width="1px"
+          ></rect>
+          <text v-for="(path, index) in pieArcs" :x="75" :y="index * 15 + 12" font-size="12px">
+            {{ path.classLabel }}
+          </text>
+        </g>
       </g>
-      <g id="legend" :transform="legendTransform">
-        <rect
-          v-for="(path, index) in pieArcs"
-          :x="75 - 25"
-          :y="index * 15"
-          width="15px"
-          height="15px"
-          :fill="pieColorScale(path.classLabel)"
-          stroke="black"
-          stroke-width="1px"
-        ></rect>
-        <text v-for="(path, index) in pieArcs" :x="75" :y="index * 15 + 12" font-size="12px">
-          {{ path.classLabel }}
-        </text>
-      </g>
-    </g>
-  </svg>
+    </svg>
+  </div>
 </template>
 
-<style lang="postcss" scoped></style>
+<style lang="postcss" scoped>
+  button {
+    @apply font-semibold text-gray-50 bg-indigo-500 p-2 rounded hover:bg-indigo-600 transition-all;
+  }
+
+  :deep() label {
+    @apply bg-gray-200 rounded-l text-gray-600 p-2;
+  }
+
+  :deep() select {
+    @apply text-gray-600 p-2 bg-gray-50 rounded-r  hover:bg-gray-100 focus:outline focus:outline-2 focus:outline-blue-300;
+  }
+</style>

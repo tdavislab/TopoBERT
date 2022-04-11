@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useStore } from '../../../store/store';
   import { computed, ref } from 'vue';
-
+  import { Label } from '../../../store/types';
   const store = useStore();
   const colorMap = store.state.colorMap;
 
@@ -14,6 +14,13 @@
 
   function borderColor(color: string) {
     return { border: '5px solid ' + color };
+  }
+
+  function filterClickHandler(labelInfo: Label) {
+    labelInfo.selected = !labelInfo.selected;
+
+    // compute a selection of nodes in the graph based on the label selection
+    store.dispatch('highlightFilteredNodes');
   }
 
   function clearLabelSelection() {
@@ -42,7 +49,7 @@
         class="label-tag"
         :style="borderColor(labelInfo.color)"
         :class="{ 'label-selected': labelInfo.selected }"
-        @click="labelInfo.selected = !labelInfo.selected"
+        @click="filterClickHandler(labelInfo)"
       >
         {{ labelName }}
       </div>
@@ -52,7 +59,7 @@
 
 <style lang="postcss" scoped>
   .label-tag {
-    @apply inline-block cursor-pointer m-1 text-sm font-semibold p-2 rounded-lg border-4 hover:bg-gray-200 transition-all;
+    @apply inline-block cursor-pointer m-1 text-sm font-semibold p-2 rounded-lg border-4 hover:bg-gray-400 transition-all;
   }
   .label-selected {
     @apply bg-gray-400;

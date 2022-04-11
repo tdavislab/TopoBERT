@@ -1,4 +1,3 @@
-// store.ts
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
 import { RootState, NodeSize, Graph, NodeEntity } from './types';
@@ -43,6 +42,7 @@ const mutations = {
     for (const label in state.colorMap) {
       state.colorMap[label].selected = false;
     }
+    state.graphRenderer.clearHighlight();
   },
   addSelectedNode(state: RootState, node: NodeEntity) {
     // if already selected, remove
@@ -55,6 +55,7 @@ const mutations = {
   },
   resetSelectedNodes(state: RootState) {
     state.selectedNodes = [];
+    state.graphRenderer.clearHighlight();
   },
   setTrackingMode(state: RootState, mode: boolean) {
     state.trackingMode = mode;
@@ -121,6 +122,22 @@ const actions = {
       context.commit('setMTable', newMData);
     }
   },
+  highlightFilteredNodes(context: ActionContext<RootState, RootState>) {
+    const filteredLabels = Object.keys(context.state.colorMap).filter((label) => context.state.colorMap[label].selected === true);
+
+    if (filteredLabels.length === 0) {
+      context.commit('clearLabelSelection');
+    } else {
+      const filteredLabelsSet = new Set(filteredLabels);
+
+      function filterCriterion(node: NodeEntity) {
+        return node.memberPoints.some((point) => filteredLabelsSet.has(point.classLabel));
+      }
+
+      const filteredNodes = context.state.graph.nodes.filter(filterCriterion);
+      context.state.graphRenderer.highlight2(filteredNodes);
+    }
+  },
 };
 
 const getters = {
@@ -176,7 +193,3 @@ export const store = createStore<RootState>({
 export function useStore() {
   return baseUseStore(key);
 }
-
-// TODO:
-// 1. [DONE] Show information about selected member IDs in table
-// 2. Fix minimap

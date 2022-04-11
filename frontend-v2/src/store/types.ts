@@ -20,7 +20,7 @@ interface ParamList {
   selected: number | string;
 }
 
-interface Label {
+export interface Label {
   color: string;
   selected: boolean;
 }

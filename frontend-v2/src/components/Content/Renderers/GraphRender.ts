@@ -194,4 +194,9 @@ export default class GraphRenderer {
       }
     });
   }
+
+  clearHighlight() {
+    this.nodeD3.selectAll('.node-outline').remove();
+    this.nodeD3.attr('opacity', 1);
+  }
 }
