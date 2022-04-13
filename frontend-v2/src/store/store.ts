@@ -95,7 +95,7 @@ const actions = {
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
-          context.state.graphRenderer.highlight(context.getters.membersToNodes);
+          context.state.graphRenderer.selectionHighlight(context.getters.membersToNodes);
         }
         context.dispatch('updateMetadataTable');
       })
@@ -122,7 +122,7 @@ const actions = {
       context.commit('setMTable', newMData);
     }
   },
-  highlightFilteredNodes(context: ActionContext<RootState, RootState>) {
+  highlightFilteredLabelNodes(context: ActionContext<RootState, RootState>) {
     const filteredLabels = Object.keys(context.state.colorMap).filter((label) => context.state.colorMap[label].selected === true);
 
     if (filteredLabels.length === 0) {
@@ -135,8 +135,12 @@ const actions = {
       }
 
       const filteredNodes = context.state.graph.nodes.filter(filterCriterion);
-      context.state.graphRenderer.highlight2(filteredNodes);
+      context.state.graphRenderer.filterHighlight(filteredNodes);
     }
+  },
+  highlightWordNodes(context: ActionContext<RootState, RootState>, wordSet: Set<string>) {
+    const filteredNodes = context.state.graph.nodes.filter((node) => node.memberPoints.some((point) => wordSet.has(point.word)));
+    context.state.graphRenderer.filterHighlight(filteredNodes);
   },
 };
 

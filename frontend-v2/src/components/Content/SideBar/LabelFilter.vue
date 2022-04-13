@@ -20,7 +20,7 @@
     labelInfo.selected = !labelInfo.selected;
 
     // compute a selection of nodes in the graph based on the label selection
-    store.dispatch('highlightFilteredNodes');
+    store.dispatch('highlightFilteredLabelNodes');
   }
 
   function clearLabelSelection() {
@@ -59,9 +59,9 @@
 
 <style lang="postcss" scoped>
   .label-tag {
-    @apply inline-block cursor-pointer m-1 text-sm font-semibold p-2 rounded-lg border-4 hover:bg-gray-400 transition-all;
+    @apply inline-block cursor-pointer m-1 text-sm font-semibold p-2 rounded-lg border-4 hover:bg-slate-500 hover:shadow-lg transition-all;
   }
   .label-selected {
-    @apply bg-gray-400;
+    @apply bg-slate-500 text-white;
   }
 </style>

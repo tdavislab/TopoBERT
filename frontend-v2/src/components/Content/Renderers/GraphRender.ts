@@ -95,7 +95,7 @@ export default class GraphRenderer {
       //       return 0;
       //     }
       //   });
-      graph_obj.highlight(store.state.selectedNodes);
+      graph_obj.selectionHighlight(store.state.selectedNodes);
 
       store.dispatch('updateMetadataTable');
     });
@@ -164,16 +164,42 @@ export default class GraphRenderer {
     return d3.drag<SVGGElement, NodeEntity>().on('start', dragstarted).on('drag', dragged).on('end', dragended);
   }
 
-  highlight(nodes: NodeEntity[]) {
+  selectionHighlight(nodes: NodeEntity[]) {
     this.nodeD3.selectAll('.node-outline').remove();
     const selectedNodeIds = new Set(nodes.map((node) => node.id));
+
+    // this.nodeD3
+    //   .insert('circle', ':first-child')
+    //   .attr('class', 'node-outline')
+    //   .attr('stroke', 'red')
+    //   .attr('stroke-width', '5px')
+    //   .attr('fill', 'red')
+    //   .attr('r', (d) => {
+    //     if (selectedNodeIds.has(d.id)) {
+    //       return this.nodeSizeScale(d.memberPoints.length) + 40;
+    //     } else {
+    //       return 0;
+    //     }
+    //   });
 
     this.nodeD3
       .insert('circle', ':first-child')
       .attr('class', 'node-outline')
-      .attr('stroke', 'red')
-      .attr('stroke-width', '5px')
-      .attr('fill', 'red')
+      .attr('stroke', '#de2612')
+      .attr('stroke-width', (d) => {
+        if (selectedNodeIds.has(d.id)) {
+          return '15px';
+        } else {
+          return '0px';
+        }
+      })
+      .attr('fill', (d) => {
+        if (selectedNodeIds.has(d.id)) {
+          return 'none';
+        } else {
+          return 'none';
+        }
+      })
       .attr('r', (d) => {
         if (selectedNodeIds.has(d.id)) {
           return this.nodeSizeScale(d.memberPoints.length) + 20;
@@ -181,9 +207,13 @@ export default class GraphRenderer {
           return 0;
         }
       });
+    // .attr('width', (d) => this.nodeSizeScale(d.memberPoints.length) * 2.5)
+    // .attr('height', (d) => this.nodeSizeScale(d.memberPoints.length) * 2.5)
+    // .attr('x', (d) => -this.nodeSizeScale(d.memberPoints.length) * 1.25)
+    // .attr('y', (d) => -this.nodeSizeScale(d.memberPoints.length) * 1.25);
   }
 
-  highlight2(nodes: NodeEntity[]) {
+  filterHighlight(nodes: NodeEntity[]) {
     const selectedNodeIds = new Set(nodes.map((node) => node.id));
 
     this.nodeD3.attr('opacity', (d) => {
@@ -193,10 +223,13 @@ export default class GraphRenderer {
         return 0.2;
       }
     });
+
+    this.linkD3.attr('opacity', 0.2);
   }
 
   clearHighlight() {
     this.nodeD3.selectAll('.node-outline').remove();
     this.nodeD3.attr('opacity', 1);
+    this.linkD3.attr('opacity', 1);
   }
 }
