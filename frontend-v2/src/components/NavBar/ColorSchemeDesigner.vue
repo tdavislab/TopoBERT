@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { useStore } from '../../store/store';
   import Picker from 'vanilla-picker';
 
@@ -14,6 +14,24 @@
     showModal.value = false;
     store.dispatch('updateGraph');
   }
+
+  onMounted(() => {
+    Object.keys(store.state.colorMap).forEach((label, index) => {
+      const parent = <HTMLElement>document.querySelector(`#label-${label.replace('.', '\\.')}`);
+      console.log(parent);
+
+      const picker = new Picker({
+        parent: parent,
+        color: store.state.colorMap[label].color,
+        // popup: 'bottom',
+        // alpha: true,
+        // onDone: (color) => {
+        //   store.state.colorMap[index] = color.rgbaString;
+        //   store.dispatch('updateGraph');
+        // },
+      });
+    });
+  });
 </script>
 
 <template>
@@ -27,15 +45,16 @@
 
       <span class="hidden align-middle sm:h-screen">&#8203;</span>
       <div
-        class="inline-block text-black rounded-lg text-left overflow-hidden shadow-xl transform transition-all my-8 align-middle max-w-lg w-full"
+        class="inline-block text-black rounded-lg text-left shadow-xl transform transition-all my-8 align-middle max-w-lg w-full"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline"
       >
-        <div class="bg-white p-4 grid grid-cols-2">
+        <div class="bg-white p-4" :style="{ gridTemplateRows: Object.keys(store.state.colorMap).length, gridAutoFlow: 'column' }">
           <div v-for="(color, label) in store.state.colorMap" class="grid grid-cols-3">
             <div class="col-span-2">{{ label }}</div>
-            <input type="color" v-model="color.color" />
+            <!-- <input type="color" v-model="color.color" /> -->
+            <a href="#" :id="'label-' + label" :style="{ backgroundColor: color.color }"></a>
           </div>
         </div>
         <div class="bg-gray-200 p-4 text-right">

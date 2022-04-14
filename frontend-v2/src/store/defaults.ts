@@ -112,7 +112,7 @@ export const defaults = {
     'p.SocialRel': { color: '#d86042', selected: false },
     'p.OrgRole': { color: '#cd3030', selected: false },
     Others: { color: '#989898', selected: false },
-    'p.Test': { color: '#c7c7c7', selected: false },
+    // 'p.Test': { color: '#c7c7c7', selected: false },
   },
   defaultTable: {
     header: ['sent_id', 'word_id', 'word', 'label'],
