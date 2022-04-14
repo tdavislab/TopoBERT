@@ -36,8 +36,6 @@ export default class GraphRenderer {
   }
 
   draw(graph: Graph, svg_selector: string, pieColorScale: d3.ScaleOrdinal<string, unknown, never>) {
-    console.log('graph', this);
-
     const node_group = d3.select('g#node_group');
     const link_group = d3.select('g#link_group');
     const graph_obj = this;
