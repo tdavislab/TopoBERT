@@ -165,14 +165,6 @@ const getters = {
       const intersection = new Set([...setA].filter((x) => setB.has(x)));
       return Array.from(intersection);
     }
-    console.log(
-      state.graph.nodes.map((node) =>
-        intersect(
-          node.memberPoints.map((point) => point.memberId),
-          getters.nodeToMembers
-        )
-      )
-    );
 
     let filteredNodes = state.graph.nodes.filter(
       (node) =>
@@ -181,8 +173,7 @@ const getters = {
           node.memberPoints.map((point) => point.memberId)
         ).length > 0
     );
-    console.log('membersToNodes', getters.nodeToMembers);
-    console.log('filteredNodes', filteredNodes);
+
     return filteredNodes;
   },
 };

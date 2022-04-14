@@ -38,6 +38,8 @@ export interface NodeEntity {
   id: string;
   name: string;
   avgFilterValue: number;
+  x_pca: number;
+  y_pca: number;
   x: number;
   y: number;
   memberPoints: Array<MemberPoints>;

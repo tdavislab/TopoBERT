@@ -22,6 +22,7 @@ export default class GraphRenderer {
   glyphRenderer: PieGlyph;
   nodeD3: d3.Selection<d3.BaseType | SVGGElement, NodeEntity, d3.BaseType, unknown>;
   linkD3: d3.Selection<d3.BaseType | SVGLineElement, LinkEntity, d3.BaseType, unknown>;
+  simulation!: d3.Simulation<NodeEntity, undefined>;
 
   constructor() {
     this.svg = d3.select('#graph-svg');
@@ -35,6 +36,8 @@ export default class GraphRenderer {
   }
 
   draw(graph: Graph, svg_selector: string, pieColorScale: d3.ScaleOrdinal<string, unknown, never>) {
+    console.log('graph', this);
+
     const node_group = d3.select('g#node_group');
     const link_group = d3.select('g#link_group');
     const graph_obj = this;
@@ -60,6 +63,8 @@ export default class GraphRenderer {
     simulation.tick(200);
     simulation.restart();
 
+    this.simulation = simulation;
+
     const links = link_group
       .selectAll('line')
       .data(graph.links)
@@ -71,7 +76,7 @@ export default class GraphRenderer {
       .selectAll('g')
       .data(graph.nodes)
       .join('g')
-      .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
+      .attr('transform', (d) => 'translate(' + d.x_pca + ',' + d.y_pca + ')')
       .attr('style', 'cursor: pointer;');
 
     nodes.on('click', function (clickEvent) {
@@ -207,10 +212,6 @@ export default class GraphRenderer {
           return 0;
         }
       });
-    // .attr('width', (d) => this.nodeSizeScale(d.memberPoints.length) * 2.5)
-    // .attr('height', (d) => this.nodeSizeScale(d.memberPoints.length) * 2.5)
-    // .attr('x', (d) => -this.nodeSizeScale(d.memberPoints.length) * 1.25)
-    // .attr('y', (d) => -this.nodeSizeScale(d.memberPoints.length) * 1.25);
   }
 
   filterHighlight(nodes: NodeEntity[]) {
@@ -231,5 +232,38 @@ export default class GraphRenderer {
     this.nodeD3.selectAll('.node-outline').remove();
     this.nodeD3.attr('opacity', 1);
     this.linkD3.attr('opacity', 1);
+  }
+
+  convertToPCALayout() {
+    const nodeData = this.nodeD3.data();
+
+    this.linkD3.transition().duration(500).attr('opacity', 0);
+
+    this.nodeD3
+      .transition()
+      .delay(250)
+      .duration(1000)
+      .attr('transform', (d, i) => {
+        const x = nodeData[i].x_pca * 100;
+        const y = nodeData[i].y_pca * 100;
+
+        return 'translate(' + x + ',' + y + ')';
+      });
+  }
+
+  convertToForceLayout() {
+    const nodeData = this.nodeD3.data();
+
+    this.nodeD3
+      .transition()
+      .duration(1000)
+      .attr('transform', (d, i) => {
+        const x = nodeData[i].x;
+        const y = nodeData[i].y;
+
+        return 'translate(' + x + ',' + y + ')';
+      });
+
+    this.linkD3.transition().delay(750).duration(500).attr('opacity', 1);
   }
 }

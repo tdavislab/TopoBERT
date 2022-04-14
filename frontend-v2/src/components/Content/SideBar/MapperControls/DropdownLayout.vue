@@ -4,12 +4,22 @@
 
   const store = useStore();
   const mapperParams = computed(() => store.state.mapperParams);
+
+  function changeLayout() {
+    // get the current layout
+    const layout = mapperParams.value.layout.selected;
+    if (layout === 'pca') {
+      store.state.graphRenderer.convertToPCALayout();
+    } else if (layout === 'force') {
+      store.state.graphRenderer.convertToForceLayout();
+    }
+  }
 </script>
 
 <template>
   <div id="param-layout-div" class="grid grid-cols-3">
     <label for="layout-select">Layout</label>
-    <select name="layout-select" id="layout-select" class="col-span-2" v-model="mapperParams.layout.selected">
+    <select name="layout-select" id="layout-select" class="col-span-2" v-model="mapperParams.layout.selected" @change="changeLayout">
       <option disabled>Select layout</option>
       <option v-for="layout in mapperParams.layout.paramList" :value="layout.value">
         {{ layout.name }}

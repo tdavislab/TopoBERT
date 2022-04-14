@@ -65,6 +65,8 @@ export default class PieGlyph {
       id: 'aggregatedNode',
       name: 'aggregatedNode',
       avgFilterValue: nodeDataList.map((x) => x.avgFilterValue).reduce((x, y) => x + y, 0) / nodeDataList.length,
+      x_pca: 0,
+      y_pca: 0,
       x: 0,
       y: 0,
       memberPoints: nodeDataList.map((ne) => ne.memberPoints).flat(),

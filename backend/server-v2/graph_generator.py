@@ -129,7 +129,7 @@ def add_node_metadata(graph, metadata_source, activations):
         graph['nodes'][node_name] = {
             'memberPoints': metadata,
             'avgFilterValue': np.average(metadata_source.loc[member_list]['l2norm']),
-            'x': pca_positions[i][0], 'y': pca_positions[i][1], 'type': 'train'
+            'x_pca': pca_positions[i][0], 'y_pca': pca_positions[i][1], 'type': 'train'
         }
 
     return graph
