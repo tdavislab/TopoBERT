@@ -92,6 +92,7 @@ const actions = {
         const graph = response.data.graph as Graph;
         context.commit('setGraph', graph);
         context.state.graphRenderer.draw(graph, '#graph-svg', context.getters.pieColorScale);
+        context.state.mapperParams.layout.selected = 'force';
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
