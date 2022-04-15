@@ -128,4 +128,5 @@ export const defaults = {
     links: [],
   },
   defaultTrackingMode: false,
+  defaultBubbleGlyph: false,
 };

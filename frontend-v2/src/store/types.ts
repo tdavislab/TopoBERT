@@ -42,10 +42,11 @@ export interface NodeEntity {
   y_pca: number;
   x: number;
   y: number;
+  fx?: number | null;
+  fy?: number | null;
   memberPoints: Array<MemberPoints>;
 }
-
-interface MemberPoints {
+export interface MemberPoints {
   memberId: number;
   word: string;
   classLabel: string;
@@ -90,5 +91,6 @@ export interface RootState {
   graph: Graph;
   graphRenderer: GraphRenderer;
   trackingMode: boolean;
+  bubbleGlyph: boolean;
   selectedNodes: NodeEntity[];
 }

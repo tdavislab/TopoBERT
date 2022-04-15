@@ -3,6 +3,7 @@
   import JaccardFilter from './GraphControls/JaccardFilter.vue';
   import NodeSizeToggle from './GraphControls/NodeSizeToggle.vue';
   import TrackingModeCheckbox from './GraphControls/TrackingModeCheckbox.vue';
+  import BubbleGlyphCheckbox from './GraphControls/BubbleGlyphCheckbox.vue';
 </script>
 
 <template>
@@ -11,6 +12,7 @@
     <!-- <JaccardFilter></JaccardFilter> -->
     <!-- <NodeSizeToggle></NodeSizeToggle> -->
     <TrackingModeCheckbox></TrackingModeCheckbox>
+    <BubbleGlyphCheckbox></BubbleGlyphCheckbox>
   </div>
 </template>
 

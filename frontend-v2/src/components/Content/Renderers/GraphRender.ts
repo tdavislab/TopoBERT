@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
-import { BaseType, Path, PieArcDatum } from 'd3';
+import { BaseType, HierarchyPointNode, Path, PieArcDatum } from 'd3';
 import { defaults } from '../../../store/defaults';
 import { store } from '../../../store/store';
-import { Graph, NodeEntity, LinkEntity } from '../../../store/types';
+import { Graph, NodeEntity, LinkEntity, MemberPoints } from '../../../store/types';
 import PieGlyph from './PieGlyphRenderer';
 
 type Points = {
@@ -74,7 +74,7 @@ export default class GraphRenderer {
       .selectAll('g')
       .data(graph.nodes)
       .join('g')
-      .attr('transform', (d) => 'translate(' + d.x_pca + ',' + d.y_pca + ')')
+      .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
       .attr('style', 'cursor: pointer;');
 
     nodes.on('click', function (clickEvent) {
@@ -117,6 +117,8 @@ export default class GraphRenderer {
         .attr('stroke-width', '2px');
     } else if (this.glyphType === 'pie') {
       nodes
+        .append('g')
+        .attr('class', 'force-glyph')
         .selectAll('path')
         .data((d) => this.glyphRenderer.generatePath(d, this.nodeSizeScale(d.memberPoints.length)))
         .join('path')
@@ -139,6 +141,36 @@ export default class GraphRenderer {
     });
 
     d3.zoom().scaleExtent([0.2, 10]).on('zoom', zoomed)(d3.select(svg_selector));
+
+    // const nodeBubbleGlyph = d3
+    //   .select('g#node_group')
+    //   .selectAll('g')
+    //   .selectAll('g.bubble-glyph')
+    //   .data(graph.nodes)
+    //   .join('g')
+    //   .attr('class', 'bubble-glyph');
+    // console.log(nodeBubbleGlyph);
+
+    // const nodeEncirclers = nodeGroups.selectAll('g.bubble-glyph').data(nodes.data()).join('g').classed('bubble', true);
+
+    // circle pack for each nodeEncircler
+    // nodeBubbleGlyph
+    //   .append('g')
+    //   .attr('transform', (d) => `translate(-${this.nodeSizeScale(d.memberPoints.length) / 2}, -${this.nodeSizeScale(d.memberPoints.length) / 2})`)
+    //   .selectAll('circle.bubble-element')
+    //   .data((d) => pack(d.memberPoints, this.nodeSizeScale(d.memberPoints.length)))
+    //   .join('circle')
+    //   .attr('class', 'bubble-element')
+    //   .attr('fill', (d) => (d.children ? 'white' : store.state.colorMap[d.data.classLabel].color))
+    //   .attr('transform', (d, i) => 'translate(' + d.x + ',' + d.y + ')')
+    //   .attr('r', (d) => d.r)
+    //   .attr('stroke', 'black')
+    //   .attr('stroke-width', '1px')
+    //   .attr('stroke-opacity', 0.3)
+    //   .append('title')
+    //   .text((d) => `${d.data.word}-${d.data.classLabel}`);
+
+    console.log(this);
 
     function zoomed(event: any) {
       d3.select(svg_selector).select('g').attr('transform', event.transform);
@@ -232,36 +264,86 @@ export default class GraphRenderer {
     this.linkD3.attr('opacity', 1);
   }
 
-  convertToPCALayout() {
+  convertToLayout(layout: String | Number) {
     const nodeData = this.nodeD3.data();
 
-    this.linkD3.transition().duration(500).attr('opacity', 0);
+    if (layout === 'pca') {
+      this.simulation.restart();
+      this.linkD3.transition().duration(500).attr('opacity', 0);
 
-    this.nodeD3
-      .transition()
-      .delay(250)
-      .duration(1000)
-      .attr('transform', (d, i) => {
-        const x = nodeData[i].x_pca * 100;
-        const y = nodeData[i].y_pca * 100;
+      this.nodeD3
+        .transition()
+        .delay(250)
+        .duration(1000)
+        .attr('transform', (d, i) => {
+          const x = nodeData[i].x_pca * 100;
+          const y = nodeData[i].y_pca * 100;
 
-        return 'translate(' + x + ',' + y + ')';
-      });
+          return 'translate(' + x + ',' + y + ')';
+        })
+        .on('end', () => {
+          this.simulation.nodes().forEach((node, idx) => {
+            node.fx = node.x_pca * 100;
+            node.fy = node.y_pca * 100;
+          });
+        });
+    } else if (layout === 'force') {
+      const nodeData = this.nodeD3.data();
+
+      this.nodeD3
+        .transition()
+        .duration(1000)
+        .attr('transform', (d, i) => {
+          const x = nodeData[i].x;
+          const y = nodeData[i].y;
+
+          return 'translate(' + x + ',' + y + ')';
+        })
+        .on('end', () => {
+          this.simulation.nodes().forEach((node) => {
+            node.fx = null;
+            node.fy = null;
+          });
+          this.simulation.restart();
+        });
+      this.linkD3.transition().delay(750).duration(500).attr('opacity', 1);
+    }
   }
 
-  convertToForceLayout() {
-    const nodeData = this.nodeD3.data();
+  bubbleGlyph(visible: Boolean) {
+    if (visible) {
+      d3.selectAll('g.force-glyph').attr('visibility', 'hidden');
 
-    this.nodeD3
-      .transition()
-      .duration(1000)
-      .attr('transform', (d, i) => {
-        const x = nodeData[i].x;
-        const y = nodeData[i].y;
+      this.nodeD3
+        .append('g')
+        .attr('class', 'bubble-glyph')
+        .attr('transform', (d) => `translate(-${this.nodeSizeScale(d.memberPoints.length) / 2}, -${this.nodeSizeScale(d.memberPoints.length) / 2})`)
+        .selectAll('circle')
+        .data((d) => pack(d.memberPoints, this.nodeSizeScale(d.memberPoints.length)))
+        .join('circle')
+        .attr('class', 'bubble-element')
+        .attr('fill', (d) => (d.children ? 'white' : store.state.colorMap[d.data.classLabel].color))
+        .attr('transform', (d, i) => 'translate(' + d.x + ',' + d.y + ')')
+        .attr('r', (d) => d.r)
+        .attr('stroke', 'black')
+        .attr('stroke-width', '1px')
+        .attr('stroke-opacity', 0.3)
+        .append('title')
+        .text((d) => `${d.data.word}-${d.data.classLabel}`);
+    } else {
+      d3.selectAll('g.force-glyph').attr('visibility', 'visible');
+      d3.selectAll('g.bubble-glyph').remove();
+    }
 
-        return 'translate(' + x + ',' + y + ')';
-      });
+    function pack(memberPoints: MemberPoints[], size: number) {
+      const root = d3.hierarchy({ name: 'root', children: memberPoints });
+      const pack = d3
+        .pack()
+        .size([size, size])
+        .padding(0)
+        .radius((d) => 5);
 
-    this.linkD3.transition().delay(750).duration(500).attr('opacity', 1);
+      return pack(root).descendants();
+    }
   }
 }

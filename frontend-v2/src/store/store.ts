@@ -6,6 +6,7 @@ import { defaults } from './defaults';
 import axios, { AxiosRequestConfig } from 'axios';
 import GraphRenderer from '../components/Content/Renderers/GraphRender';
 import * as d3 from 'd3';
+import { stackOffsetSilhouette } from 'd3';
 
 // define injection key
 export const key: InjectionKey<Store<RootState>> = Symbol();
@@ -23,6 +24,7 @@ const state: RootState = {
   graph: defaults.defaultGraph,
   graphRenderer: new GraphRenderer(),
   trackingMode: defaults.defaultTrackingMode,
+  bubbleGlyph: defaults.defaultBubbleGlyph,
   selectedNodes: [],
   minLinkStrength: 1,
   nodeSize: 'constant',
@@ -60,6 +62,10 @@ const mutations = {
   setTrackingMode(state: RootState, mode: boolean) {
     state.trackingMode = mode;
   },
+  setBubbleGlyph(state: RootState, mode: boolean) {
+    state.bubbleGlyph = mode;
+    state.graphRenderer.bubbleGlyph(mode);
+  },
   setMTable(state: RootState, tableRows: string[][]) {
     state.mTable.rows = tableRows;
   },
@@ -92,7 +98,7 @@ const actions = {
         const graph = response.data.graph as Graph;
         context.commit('setGraph', graph);
         context.state.graphRenderer.draw(graph, '#graph-svg', context.getters.pieColorScale);
-        context.state.mapperParams.layout.selected = 'force';
+        context.state.graphRenderer.convertToLayout(context.state.mapperParams.layout.selected);
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {

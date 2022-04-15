@@ -7,12 +7,9 @@
 
   function changeLayout() {
     // get the current layout
+
     const layout = mapperParams.value.layout.selected;
-    if (layout === 'pca') {
-      store.state.graphRenderer.convertToPCALayout();
-    } else if (layout === 'force') {
-      store.state.graphRenderer.convertToForceLayout();
-    }
+    store.state.graphRenderer.convertToLayout(layout);
   }
 </script>
 
