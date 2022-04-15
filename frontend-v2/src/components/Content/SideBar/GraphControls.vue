@@ -4,6 +4,7 @@
   import NodeSizeToggle from './GraphControls/NodeSizeToggle.vue';
   import TrackingModeCheckbox from './GraphControls/TrackingModeCheckbox.vue';
   import BubbleGlyphCheckbox from './GraphControls/BubbleGlyphCheckbox.vue';
+  import TransitionEffectCheckbox from './GraphControls/TransitionEffectCheckbox.vue';
 </script>
 
 <template>
@@ -13,6 +14,7 @@
     <!-- <NodeSizeToggle></NodeSizeToggle> -->
     <TrackingModeCheckbox></TrackingModeCheckbox>
     <BubbleGlyphCheckbox></BubbleGlyphCheckbox>
+    <TransitionEffectCheckbox></TransitionEffectCheckbox>
   </div>
 </template>
 

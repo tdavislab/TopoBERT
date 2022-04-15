@@ -129,4 +129,5 @@ export const defaults = {
   },
   defaultTrackingMode: false,
   defaultBubbleGlyph: false,
+  defaultTransitionEffect: false,
 };

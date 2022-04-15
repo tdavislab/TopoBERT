@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import { BaseType, HierarchyPointNode, Path, PieArcDatum } from 'd3';
+import { BaseType, HierarchyPointNode, Path, PieArcDatum, utcParse } from 'd3';
+import { onUpdated } from 'vue';
 import { defaults } from '../../../store/defaults';
 import { store } from '../../../store/store';
 import { Graph, NodeEntity, LinkEntity, MemberPoints } from '../../../store/types';
@@ -23,6 +24,8 @@ export default class GraphRenderer {
   nodeD3: d3.Selection<d3.BaseType | SVGGElement, NodeEntity, d3.BaseType, unknown>;
   linkD3: d3.Selection<d3.BaseType | SVGLineElement, LinkEntity, d3.BaseType, unknown>;
   simulation!: d3.Simulation<NodeEntity, undefined>;
+  pieColorScale!: d3.ScaleOrdinal<string, unknown, never>;
+  graphData!: Graph;
 
   constructor() {
     this.svg = d3.select('#graph-svg');
@@ -36,8 +39,15 @@ export default class GraphRenderer {
   }
 
   draw(graph: Graph, svg_selector: string, pieColorScale: d3.ScaleOrdinal<string, unknown, never>) {
-    const node_group = d3.select('g#node_group');
-    const link_group = d3.select('g#link_group');
+    console.log('drawing graph');
+
+    this.graphData = graph;
+    this.svg = d3.select(svg_selector);
+    this.pieColorScale = pieColorScale;
+
+    let node_group = this.svg.select('g g.node_group');
+    const link_group = this.svg.select('g g.link_group');
+
     const graph_obj = this;
 
     node_group.selectAll('*').remove();
@@ -53,7 +63,7 @@ export default class GraphRenderer {
         d3.forceLink(graph.links).id((d: any) => d.id)
       )
       .force('charge', d3.forceManyBody().strength(-1000))
-      .force('center', d3.forceCenter(500, 500))
+      .force('center', d3.forceCenter(2000, 1250))
       .force('x', d3.forceX())
       .force('y', d3.forceY())
       .stop();
@@ -74,6 +84,7 @@ export default class GraphRenderer {
       .selectAll('g')
       .data(graph.nodes)
       .join('g')
+      .classed('node-element', true)
       .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
       .attr('style', 'cursor: pointer;');
 
@@ -85,19 +96,7 @@ export default class GraphRenderer {
       const selectedNodeIds = new Set(store.state.selectedNodes.map((node) => node.id));
 
       nodes.selectAll('.node-outline').remove();
-      // nodes
-      //   .insert('circle', ':first-child')
-      //   .attr('class', 'node-outline')
-      //   .attr('stroke', 'red')
-      //   .attr('stroke-width', '5px')
-      //   .attr('fill', 'red')
-      //   .attr('r', (d) => {
-      //     if (selectedNodeIds.has(d.id)) {
-      //       return graph_obj.nodeSizeScale(d.memberPoints.length) + 20;
-      //     } else {
-      //       return 0;
-      //     }
-      //   });
+
       graph_obj.selectionHighlight(store.state.selectedNodes);
 
       store.dispatch('updateMetadataTable');
@@ -142,38 +141,10 @@ export default class GraphRenderer {
 
     d3.zoom().scaleExtent([0.2, 10]).on('zoom', zoomed)(d3.select(svg_selector));
 
-    // const nodeBubbleGlyph = d3
-    //   .select('g#node_group')
-    //   .selectAll('g')
-    //   .selectAll('g.bubble-glyph')
-    //   .data(graph.nodes)
-    //   .join('g')
-    //   .attr('class', 'bubble-glyph');
-    // console.log(nodeBubbleGlyph);
-
-    // const nodeEncirclers = nodeGroups.selectAll('g.bubble-glyph').data(nodes.data()).join('g').classed('bubble', true);
-
-    // circle pack for each nodeEncircler
-    // nodeBubbleGlyph
-    //   .append('g')
-    //   .attr('transform', (d) => `translate(-${this.nodeSizeScale(d.memberPoints.length) / 2}, -${this.nodeSizeScale(d.memberPoints.length) / 2})`)
-    //   .selectAll('circle.bubble-element')
-    //   .data((d) => pack(d.memberPoints, this.nodeSizeScale(d.memberPoints.length)))
-    //   .join('circle')
-    //   .attr('class', 'bubble-element')
-    //   .attr('fill', (d) => (d.children ? 'white' : store.state.colorMap[d.data.classLabel].color))
-    //   .attr('transform', (d, i) => 'translate(' + d.x + ',' + d.y + ')')
-    //   .attr('r', (d) => d.r)
-    //   .attr('stroke', 'black')
-    //   .attr('stroke-width', '1px')
-    //   .attr('stroke-opacity', 0.3)
-    //   .append('title')
-    //   .text((d) => `${d.data.word}-${d.data.classLabel}`);
-
-    console.log(this);
+    console.log({ graph: this, d3: d3 });
 
     function zoomed(event: any) {
-      d3.select(svg_selector).select('g').attr('transform', event.transform);
+      graph_obj.svg.select('g').attr('transform', event.transform);
     }
   }
 
@@ -268,7 +239,7 @@ export default class GraphRenderer {
     const nodeData = this.nodeD3.data();
 
     if (layout === 'pca') {
-      this.simulation.restart();
+      // this.simulation.restart();
       this.linkD3.transition().duration(500).attr('opacity', 0);
 
       this.nodeD3
@@ -304,7 +275,7 @@ export default class GraphRenderer {
             node.fx = null;
             node.fy = null;
           });
-          this.simulation.restart();
+          // this.simulation.restart();
         });
       this.linkD3.transition().delay(750).duration(500).attr('opacity', 1);
     }
@@ -312,7 +283,7 @@ export default class GraphRenderer {
 
   bubbleGlyph(visible: Boolean) {
     if (visible) {
-      d3.selectAll('g.force-glyph').attr('visibility', 'hidden');
+      this.svg.selectAll('g.force-glyph').attr('visibility', 'hidden');
 
       this.nodeD3
         .append('g')
@@ -323,6 +294,7 @@ export default class GraphRenderer {
         .join('circle')
         .attr('class', 'bubble-element')
         .attr('fill', (d) => (d.children ? 'white' : store.state.colorMap[d.data.classLabel].color))
+        .attr('class', (d) => (d.children ? 'bubble-boundary' : 'bubble-element'))
         .attr('transform', (d, i) => 'translate(' + d.x + ',' + d.y + ')')
         .attr('r', (d) => d.r)
         .attr('stroke', 'black')
@@ -331,8 +303,8 @@ export default class GraphRenderer {
         .append('title')
         .text((d) => `${d.data.word}-${d.data.classLabel}`);
     } else {
-      d3.selectAll('g.force-glyph').attr('visibility', 'visible');
-      d3.selectAll('g.bubble-glyph').remove();
+      this.svg.selectAll('g.force-glyph').attr('visibility', 'visible');
+      this.svg.selectAll('g.bubble-glyph').remove();
     }
 
     function pack(memberPoints: MemberPoints[], size: number) {
@@ -345,5 +317,224 @@ export default class GraphRenderer {
 
       return pack(root).descendants();
     }
+  }
+
+  transitionToNewGraph(newGraph: Graph) {
+    // convert previous graph data from node view to point view
+    const pointData = d3
+      .selectAll('.bubble-element')
+      .data()
+      .map((d: any) => d.data);
+
+    // augment point data with location info
+    const svgCoords = this.svg.node().getBoundingClientRect();
+    const coords: any[] = [];
+
+    this.nodeD3.selectAll('.bubble-element').each(function (d, i) {
+      const bbox = this!.getBoundingClientRect();
+      const x = bbox.x - svgCoords.x + bbox.width / 2;
+      const y = bbox.y - svgCoords.y + bbox.height / 2;
+      coords.push({ x, y, r: d.r });
+    });
+
+    this.svg.select('g').selectAll('*').remove();
+    // reset translation but keep zoom level
+    const transform = this.svg.select('g').attr('transform');
+    if (transform) {
+      const scale = transform.split('scale(')[1].split(')')[0].split(',')[0];
+      this.svg.select('g').attr('transform', '');
+    }
+    const pointGroup = this.svg.select('g').append('g').attr('class', 'point-group');
+
+    // add circles to svg
+    pointGroup
+      .selectAll('circle')
+      .data(pointData)
+      .join('circle')
+      .attr('class', 'point-element')
+      .attr('fill', (d) => store.state.colorMap[d.classLabel].color)
+      .attr('r', (d, i) => coords[i].r)
+      .attr('cx', (d, i) => coords[i].x)
+      .attr('cy', (d, i) => coords[i].y)
+      .attr('stroke', 'black')
+      .attr('stroke-width', '1px')
+      .attr('stroke-opacity', 0.3);
+
+    // draw new graph on new-graph svg
+    // d3.select('#graph-svg').classed('hidden', true);
+    this.draw(newGraph, '#new-svg', this.pieColorScale);
+    this.bubbleGlyph(true);
+    d3.select('#new-svg').classed('hidden', false);
+    this.svg.attr('opacity', 0);
+
+    // compute pointData and coords for new graph
+    const newPointData = this.svg
+      .selectAll('.bubble-element')
+      .data()
+      .map((d: any) => d.data);
+
+    const newSvgCoords = this.svg.node().getBoundingClientRect();
+    const newCoords: any[] = [];
+
+    // d3.select('#new-svg').classed('hidden', false);
+    this.nodeD3.selectAll('.bubble-element').each(function (d, i) {
+      const bbox = this!.getBoundingClientRect();
+      const x = bbox.x - newSvgCoords.x + bbox.width / 2;
+      const y = bbox.y - newSvgCoords.y + bbox.height / 2;
+      newCoords.push({ x, y, r: d.r });
+    });
+    d3.select('#new-svg').classed('hidden', true);
+
+    console.log(newCoords);
+
+    this.svg.select('g').selectAll('*').remove();
+    // reset translation but keep zoom level
+    const newtransform = this.svg.select('g').attr('transform');
+    if (newtransform) {
+      const newScale = newtransform.split('scale(')[1].split(')')[0].split(',')[0];
+      this.svg.select('g').attr('transform', '');
+    }
+    const newPointGroup = this.svg.select('g').append('g').attr('class', 'point-group');
+
+    // add circles to svg
+    pointGroup
+      .selectAll('circle')
+      .data(newPointData)
+      .join(
+        (enter) =>
+          enter
+            .append('circle')
+            .attr('fill', (d) => store.state.colorMap[d.classLabel].color)
+            .attr('r', (d, i) => 0)
+            .attr('cx', (d, i) => newCoords[i].x)
+            .attr('cy', (d, i) => newCoords[i].y)
+            .call((g) =>
+              g
+                .transition()
+                .delay(5000)
+                .duration(5000)
+                .ease(d3.easePolyIn)
+                .attr('r', (d, i) => newCoords[i].r)
+            ),
+        (update) =>
+          update.call((g) =>
+            g
+              .transition()
+              .delay((d, i) => (i / 10) * 5)
+              .duration(5000)
+              .attr('cx', (d, i) => newCoords[i].x)
+              .attr('cy', (d, i) => newCoords[i].y)
+          ),
+        (exit) => exit.transition().duration(5000).attr('opacity', 0).remove()
+      )
+      .attr('stroke', 'black')
+      .attr('stroke-width', '1px')
+      .attr('stroke-opacity', 0.3);
+  }
+
+  transitionToNewGraph2(newGraph: Graph) {
+    console.log('transition to new graph');
+
+    // stop simulation
+    const nodes = this.nodeD3;
+    const links = this.linkD3;
+
+    // this.linkD3.data(newGraph.links).join(
+    //   (enter) => enter.append('line').attr('opacity', 0).transition().duration(1500).attr('opacity', 0.5).selection(),
+    //   (update) => update.transition().duration(1500).attr('opacity', 1).selection(),
+    //   (exit) => exit.transition().duration(1500).attr('opacity', 0).remove().selection()
+    // );
+    this.linkD3.remove();
+
+    const svg_coords = this.svg.node().getBoundingClientRect();
+    console.log(svg_coords);
+
+    this.nodeD3.selectAll('.force-glyph').remove();
+    d3.selectAll('.bubble-element').each(function () {
+      // get screen space coords
+      const bbox = this!.getBoundingClientRect();
+      // console.log(this.getBBox());
+
+      d3.select('#graph-svg .node_group')
+        .append(() => this)
+        .attr('transform', `translate(${bbox.x - svg_coords.x + bbox.width / 2}, ${bbox.y - svg_coords.y + bbox.height / 2})`);
+    });
+
+    d3.selectAll('.node-element').remove();
+
+    const origSvg = this.svg;
+    const origSvgGTranmsform = origSvg.select('g').attr('transform');
+
+    // create a new hidden svg to temporarily store the new nodes
+    const newSvg = d3.select('#new-svg').attr('opacity', 0);
+
+    // apply previous transform to new svg
+    origSvg
+      .attr('opacity', 1)
+      .transition()
+      .duration(1000)
+      .attr('opacity', 0.1)
+      .on('end', () => {
+        origSvg.classed('hidden', true);
+        this.draw(newGraph, '#new-svg', this.pieColorScale);
+        newSvg.select('g').attr('transform', origSvgGTranmsform);
+
+        this.bubbleGlyph(true);
+        // add delay to allow for new nodes to be drawn
+        setTimeout(() => {
+          newSvg.classed('hidden', false).transition().duration(1000).attr('opacity', 1);
+        }, 1000);
+      });
+    // .on('end', () => {
+    //   const svg_id = origSvg.attr('id');
+    //   origSvg.classed('hidden', true);
+    //   //     newSvg.classed('hidden', false);
+    //   //     // draw the new graph in the hidden svg
+    //   //     try {
+    //   //       this.draw(newGraph, '#new-svg', this.pieColorScale);
+    //   //       this.bubbleGlyph(true);
+    //   //     } catch (error) {
+    //   //       console.log(error);
+    //   //     }
+    //   //     newSvg
+    //   //       .transition()
+    //   //       .duration(1000)
+    //   //       .attr('opacity', 1)
+    //   //       .on('end', () => {
+    //   //         newSvg.attr('id', svg_id);
+    //   //         origSvg.remove();
+    //   //       });
+    // });
+
+    // // compute new graph
+    // const simulation = d3
+    //   .forceSimulation(newGraph.nodes)
+    //   .force(
+    //     'link',
+    //     d3.forceLink(newGraph.links).id((d: any) => d.id)
+    //   )
+    //   .force('charge', d3.forceManyBody().strength(-1000))
+    //   .force('center', d3.forceCenter(500, 500))
+    //   .force('x', d3.forceX())
+    //   .force('y', d3.forceY())
+    //   .stop();
+
+    // simulation.on('tick', () => {
+    //   nodes.attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')');
+
+    //   links
+    //     .attr('x1', (d) => (d as unknown as { source: Points }).source.x)
+    //     .attr('y1', (d) => (d as unknown as { source: Points }).source.y)
+    //     .attr('x2', (d) => (d as unknown as { target: Points }).target.x)
+    //     .attr('y2', (d) => (d as unknown as { target: Points }).target.y);
+    // });
+
+    // simulation.tick(200);
+    // simulation.restart();
+
+    // this.simulation = simulation;
+    // const transition_obj = this.svg.transition().duration(500);
+
+    // this.nodeD3.data(newGraph.nodes).join('g');
   }
 }

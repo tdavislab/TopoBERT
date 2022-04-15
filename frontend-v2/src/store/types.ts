@@ -92,5 +92,6 @@ export interface RootState {
   graphRenderer: GraphRenderer;
   trackingMode: boolean;
   bubbleGlyph: boolean;
+  transitionEffect: boolean;
   selectedNodes: NodeEntity[];
 }

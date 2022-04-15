@@ -25,6 +25,7 @@ const state: RootState = {
   graphRenderer: new GraphRenderer(),
   trackingMode: defaults.defaultTrackingMode,
   bubbleGlyph: defaults.defaultBubbleGlyph,
+  transitionEffect: defaults.defaultTransitionEffect,
   selectedNodes: [],
   minLinkStrength: 1,
   nodeSize: 'constant',
@@ -66,6 +67,9 @@ const mutations = {
     state.bubbleGlyph = mode;
     state.graphRenderer.bubbleGlyph(mode);
   },
+  setTransitionEffect(state: RootState, mode: boolean) {
+    state.transitionEffect = mode;
+  },
   setMTable(state: RootState, tableRows: string[][]) {
     state.mTable.rows = tableRows;
   },
@@ -97,8 +101,13 @@ const actions = {
       .then((response) => {
         const graph = response.data.graph as Graph;
         context.commit('setGraph', graph);
-        context.state.graphRenderer.draw(graph, '#graph-svg', context.getters.pieColorScale);
-        context.state.graphRenderer.convertToLayout(context.state.mapperParams.layout.selected);
+        if (context.state.transitionEffect) {
+          context.state.graphRenderer.transitionToNewGraph(graph);
+        } else {
+          context.state.graphRenderer.draw(graph, '#graph-svg', context.getters.pieColorScale);
+          context.state.graphRenderer.convertToLayout(context.state.mapperParams.layout.selected);
+          context.state.graphRenderer.bubbleGlyph(context.state.bubbleGlyph);
+        }
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
