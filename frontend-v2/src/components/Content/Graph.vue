@@ -12,6 +12,13 @@
 
 <template>
   <div id="svg-container" class="h-full grid grid-cols-1">
+    <svg id="new-svg" width="100%" height="100%" class="h-0 absolute w-0">
+      <g>
+        <g class="link_group"></g>
+        <g class="node_group"></g>
+      </g>
+    </svg>
+
     <svg id="graph-svg" width="100%" height="100%" viewBox="0 0 4000 2500">
       <g>
         <g class="link_group"></g>
@@ -19,12 +26,6 @@
       </g>
     </svg>
 
-    <svg id="new-svg" width="100%" height="100%" class="hidden" viewPort="0 0 4000 2500">
-      <g>
-        <g class="link_group"></g>
-        <g class="node_group"></g>
-      </g>
-    </svg>
     <GraphMinimap></GraphMinimap>
   </div>
 </template>

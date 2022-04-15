@@ -39,8 +39,6 @@ export default class GraphRenderer {
   }
 
   draw(graph: Graph, svg_selector: string, pieColorScale: d3.ScaleOrdinal<string, unknown, never>) {
-    console.log('drawing graph');
-
     this.graphData = graph;
     this.svg = d3.select(svg_selector);
     this.pieColorScale = pieColorScale;
@@ -308,7 +306,27 @@ export default class GraphRenderer {
     }
 
     function pack(memberPoints: MemberPoints[], size: number) {
-      const root = d3.hierarchy({ name: 'root', children: memberPoints });
+      const labelCounts: { [key: string]: number } = {};
+
+      memberPoints.forEach((memberPoint) => {
+        if (labelCounts[memberPoint.classLabel] === undefined) {
+          labelCounts[memberPoint.classLabel] = 1;
+        } else {
+          labelCounts[memberPoint.classLabel] += 1;
+        }
+      });
+      const sortedMemberPoints = memberPoints.sort((a, b) => {
+        return -(labelCounts[a.classLabel] - labelCounts[b.classLabel]);
+      });
+
+      const root = d3.hierarchy({
+        name: 'root',
+        // children: memberPoints.sort((a, b) => {
+        //   return a.classLabel > b.classLabel ? 1 : -1;
+        // }),
+        children: sortedMemberPoints,
+      });
+
       const pack = d3
         .pack()
         .size([size, size])
@@ -337,13 +355,8 @@ export default class GraphRenderer {
       coords.push({ x, y, r: d.r });
     });
 
-    this.svg.select('g').selectAll('*').remove();
-    // reset translation but keep zoom level
-    const transform = this.svg.select('g').attr('transform');
-    if (transform) {
-      const scale = transform.split('scale(')[1].split(')')[0].split(',')[0];
-      this.svg.select('g').attr('transform', '');
-    }
+    this.svg.select('g > g.node_group').selectAll('*').remove();
+    this.svg.select('g > g.link_group').selectAll('*').remove();
     const pointGroup = this.svg.select('g').append('g').attr('class', 'point-group');
 
     // add circles to svg
@@ -360,14 +373,9 @@ export default class GraphRenderer {
       .attr('stroke-width', '1px')
       .attr('stroke-opacity', 0.3);
 
-    // draw new graph on new-graph svg
-    // d3.select('#graph-svg').classed('hidden', true);
     this.draw(newGraph, '#new-svg', this.pieColorScale);
     this.bubbleGlyph(true);
-    d3.select('#new-svg').classed('hidden', false);
-    this.svg.attr('opacity', 0);
 
-    // compute pointData and coords for new graph
     const newPointData = this.svg
       .selectAll('.bubble-element')
       .data()
@@ -376,27 +384,23 @@ export default class GraphRenderer {
     const newSvgCoords = this.svg.node().getBoundingClientRect();
     const newCoords: any[] = [];
 
-    // d3.select('#new-svg').classed('hidden', false);
     this.nodeD3.selectAll('.bubble-element').each(function (d, i) {
       const bbox = this!.getBoundingClientRect();
       const x = bbox.x - newSvgCoords.x + bbox.width / 2;
       const y = bbox.y - newSvgCoords.y + bbox.height / 2;
       newCoords.push({ x, y, r: d.r });
     });
-    d3.select('#new-svg').classed('hidden', true);
-
-    console.log(newCoords);
 
     this.svg.select('g').selectAll('*').remove();
-    // reset translation but keep zoom level
-    const newtransform = this.svg.select('g').attr('transform');
-    if (newtransform) {
-      const newScale = newtransform.split('scale(')[1].split(')')[0].split(',')[0];
-      this.svg.select('g').attr('transform', '');
-    }
     const newPointGroup = this.svg.select('g').append('g').attr('class', 'point-group');
 
-    // add circles to svg
+    const labelRanks = Object.keys(store.state.colorMap).map((key, i) => {
+      return { key, rank: i };
+    });
+    // create object labelRankMap
+    const labelRankMap = Object.fromEntries(labelRanks.map((labelRank) => [labelRank.key, labelRank.rank]));
+    console.log(labelRankMap);
+
     pointGroup
       .selectAll('circle')
       .data(newPointData)
@@ -411,17 +415,18 @@ export default class GraphRenderer {
             .call((g) =>
               g
                 .transition()
-                .delay(5000)
-                .duration(5000)
+                .delay(0)
+                .duration(2000)
                 .ease(d3.easePolyIn)
                 .attr('r', (d, i) => newCoords[i].r)
             ),
         (update) =>
           update.call((g) =>
             g
+              .attr('fill', (d) => store.state.colorMap[d.classLabel].color)
               .transition()
-              .delay((d, i) => (i / 10) * 5)
-              .duration(5000)
+              .delay((d, i) => labelRankMap[d.classLabel] * 500)
+              .duration(2000)
               .attr('cx', (d, i) => newCoords[i].x)
               .attr('cy', (d, i) => newCoords[i].y)
           ),
