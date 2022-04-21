@@ -20,13 +20,13 @@ export default class PieGlyph {
     this.maxSegments = maxSegments;
   }
 
-  generatePath(nodeData: NodeEntity, nodeSize: number) {
+  generatePath(nodeData: NodeEntity, nodeSize: number, key: 'classLabel' | 'predLabel' = 'classLabel') {
     const memberPoints = nodeData.memberPoints;
 
     const groupedData = d3.rollup(
       memberPoints,
       (v) => v.length,
-      (d) => d.classLabel
+      (d) => d[key]
     );
 
     const numOthers = [...groupedData.entries()]
@@ -52,7 +52,8 @@ export default class PieGlyph {
     const piePath = pieGenerator.map((d) => {
       return {
         arc: d3.arc().innerRadius(0).outerRadius(nodeSize)(<any>d),
-        classLabel: d.data.classLabel,
+        classLabel: d.data[key],
+        type: nodeData.type,
       };
     });
 

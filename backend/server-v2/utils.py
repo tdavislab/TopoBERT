@@ -7,6 +7,15 @@ from sklearn.decomposition import PCA
 from MulticoreTSNE import MulticoreTSNE as TSNE
 from umap import UMAP
 
+label_list = [
+    'p.Circumstance', 'p.Time', 'p.StartTime', 'p.EndTime', 'p.Frequency', 'p.Duration', 'p.Interval', 'p.Locus', 'p.Goal', 'p.Source',
+    'p.Path', 'p.Direction', 'p.Extent', 'p.Means', 'p.Manner', 'p.Explanation', 'p.Purpose', 'p.Causer', 'p.Agent', 'p.Co-Agent',
+    'p.Theme', 'p.Co-Theme', 'p.Topic', 'p.Stimulus', 'p.Experiencer', 'p.Originator', 'p.Recipient', 'p.Cost', 'p.Beneficiary',
+    'p.Instrument', 'p.Identity', 'p.Species', 'p.Gestalt', 'p.Possessor', 'p.Whole', 'p.Characteristic', 'p.Possession',
+    'p.PartPortion', 'p.Stuff', 'p.Accompanier', 'p.ComparisonRef', 'p.RateUnit', 'p.Quantity', 'p.Approximator', 'p.SocialRel',
+    'p.OrgRole'
+]
+
 
 def get_purities(graph):
     """
@@ -38,14 +47,6 @@ def get_purities(graph):
 
         return chartjs_hist
 
-    label_list = [
-        'p.Circumstance', 'p.Time', 'p.StartTime', 'p.EndTime', 'p.Frequency', 'p.Duration', 'p.Interval', 'p.Locus', 'p.Goal', 'p.Source',
-        'p.Path', 'p.Direction', 'p.Extent', 'p.Means', 'p.Manner', 'p.Explanation', 'p.Purpose', 'p.Causer', 'p.Agent', 'p.Co-Agent',
-        'p.Theme', 'p.Co-Theme', 'p.Topic', 'p.Stimulus', 'p.Experiencer', 'p.Originator', 'p.Recipient', 'p.Cost', 'p.Beneficiary',
-        'p.Instrument', 'p.Identity', 'p.Species', 'p.Gestalt', 'p.Possessor', 'p.Whole', 'p.Characteristic', 'p.Possession',
-        'p.PartPortion', 'p.Stuff', 'p.Accompanier', 'p.ComparisonRef', 'p.RateUnit', 'p.Quantity', 'p.Approximator', 'p.SocialRel',
-        'p.OrgRole']
-
     purity_over_nodes = dict([(label, []) for label in label_list])
 
     for node in graph['nodes']:
@@ -65,7 +66,9 @@ def get_train_index_node_id(graph, train_index):
     Function that returns the node id of the node with the given index in the training set.
     """
     for node in graph['nodes']:
-        if train_index in node['membership']['membership_ids']:
+        memberIndices = [member['memberId'] for member in node['memberPoints']]
+
+        if train_index in memberIndices:
             return node['id']
 
     return None
@@ -84,19 +87,28 @@ def fetch_test_metadata(test_label, test_ids):
     return metadata
 
 
-def add_test_nodes(graph, activation_train, activation_test, test_label_file):
-    activation_train_df = pd.read_csv(activation_train, delim_whitespace=True, header=None)
-    activation_test_df = pd.read_csv(activation_test, delim_whitespace=True, header=None)
-    test_label = read_labels(test_label_file)
+def add_test_nodes(graph, activation_train_df, activation_test_df, label_train, label_test, pred_labels):
+
+    def memberPointify(metadata, mindex):
+        metadata = dict(metadata)
+        metadata['memberId'] = mindex
+        metadata['sentId'] = metadata.pop('sent_id')
+        metadata['wordId'] = metadata.pop('word_id')
+        metadata['classLabel'] = metadata.pop('label')
+        metadata['predLabel'] = pred_labels.iloc[mindex]
+        return metadata
 
     # fit nearest neighbors model on activations_train
     nbrs = NearestNeighbors(n_neighbors=1).fit(activation_train_df)
     # get distances and indices of nearest neighbors on activations_test
     indices = nbrs.kneighbors(activation_test_df, return_distance=False)
 
+    attachment_distributions = dict([(label, []) for label in label_list])
+
     graph_to_test_points = defaultdict(list)
 
     for i, train_index in enumerate(indices):
+        attachment_distributions[label_test.loc[i]['label']].append(label_train.loc[train_index[0]]['label'])
         node_id = get_train_index_node_id(graph, train_index)
         if node_id:
             graph_to_test_points[node_id].append(i)
@@ -104,25 +116,13 @@ def add_test_nodes(graph, activation_train, activation_test, test_label_file):
     for i, node_id in enumerate(graph_to_test_points):
         test_node_name = 'test_node_' + str(i)
         graph['nodes'].append({
-            'id': test_node_name,
-            'name': test_node_name,
-            'l2avg': 0,
-            'membership': {
-                'membership_ids': graph_to_test_points[node_id],
-                'metadata': fetch_test_metadata(test_label, graph_to_test_points[node_id]),
-                'l2avg': 0,
-                'x': 0,
-                'y': 0,
-                'type': 'test'
-            }
+            'id': test_node_name, 'name': test_node_name, 'avgFilterValue': 0,
+            'memberPoints': [memberPointify(label_test.loc[member_index], member_index) for member_index in graph_to_test_points[node_id]],
+            'x_pca': -1, 'y_pca': -1, 'type': 'test'
         })
-        graph['links'].append({
-            'source': node_id,
-            'target': test_node_name,
-            'intersection': 0.5
-        })
+        graph['links'].append({'source': node_id, 'target': test_node_name, 'intersection': 0.5})
 
-    return graph
+    return graph, {label: Counter(distributions) for label, distributions in attachment_distributions.items()}
 
 
 def compute_projection(activations, labels, datatypes, method):

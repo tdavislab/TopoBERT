@@ -123,6 +123,7 @@ export default class GraphRenderer {
         .attr('d', (d) => d.arc)
         .attr('stroke', 'black')
         .attr('stroke-width', '2px')
+        .attr('stroke-dasharray', (d) => (d.type === 'test' ? '5,5' : ''))
         .attr('fill', (d): any => pieColorScale(d.classLabel))
         .append('title')
         .text((d) => d.classLabel);

@@ -5,6 +5,7 @@
   import LabelFilter from './SideBar/LabelFilter.vue';
   import MetadataTable from './SideBar/MetadataTable.vue';
   import Projection from './SideBar/Projection.vue';
+  import Attachment from './SideBar/Attachment.vue';
 </script>
 
 <template>
@@ -13,6 +14,7 @@
     <GraphControls> </GraphControls>
     <Statistics></Statistics>
     <Projection></Projection>
+    <Attachment></Attachment>
     <LabelFilter></LabelFilter>
     <MetadataTable></MetadataTable>
   </div>

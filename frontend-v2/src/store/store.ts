@@ -1,13 +1,13 @@
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
-import { RootState, NodeSize, Graph, NodeEntity, ProjectionData } from './types';
+import { RootState, NodeSize, Graph, NodeEntity, ProjectionData, Attachment } from './types';
 import { ActionContext } from 'vuex';
 import { defaults } from './defaults';
 import axios, { AxiosRequestConfig } from 'axios';
 import GraphRenderer from '../components/Content/Renderers/GraphRender';
 import ProjectionRenderer from '../components/Content/Renderers/ProjectionRenderer';
+import AttachmentRenderer from '../components/Content/Renderers/AttachmentRenderer';
 import * as d3 from 'd3';
-import { stackOffsetSilhouette } from 'd3';
 
 // define injection key
 export const key: InjectionKey<Store<RootState>> = Symbol();
@@ -26,6 +26,7 @@ const state: RootState = {
   projectionData: defaults.defaultProjectionData,
   graphRenderer: new GraphRenderer(),
   projectionRenderer: new ProjectionRenderer(),
+  attachmentRenderer: new AttachmentRenderer(),
   trackingMode: defaults.defaultTrackingMode,
   bubbleGlyph: defaults.defaultBubbleGlyph,
   transitionEffect: defaults.defaultTransitionEffect,
@@ -106,8 +107,11 @@ const actions = {
     axios
       .get(url, options)
       .then((response) => {
+        console.log(response.data);
+
         const graph = response.data.graph as Graph;
         const projectionData = response.data.projection as ProjectionData;
+        const attachments = response.data.attachments as Attachment;
 
         context.commit('setGraph', graph);
         context.commit('setProjectionData', projectionData);
@@ -126,6 +130,11 @@ const actions = {
           context.commit('resetSelectedNodes');
         } else {
           context.state.graphRenderer.selectionHighlight(context.getters.membersToNodes);
+        }
+
+        if (attachments) {
+          console.log('found attachments', attachments);
+          context.state.attachmentRenderer.draw(attachments);
         }
 
         context.dispatch('updateMetadataTable');

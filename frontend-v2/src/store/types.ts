@@ -1,3 +1,4 @@
+import AttachmentRenderer from '../components/Content/Renderers/AttachmentRenderer';
 import GraphRenderer from '../components/Content/Renderers/GraphRender';
 import ProjectionRenderer from '../components/Content/Renderers/ProjectionRenderer';
 
@@ -56,6 +57,7 @@ export interface NodeEntity {
   fx?: number | null;
   fy?: number | null;
   memberPoints: Array<MemberPoints>;
+  type: 'train' | 'test';
 }
 export interface MemberPoints {
   memberId: number;
@@ -74,6 +76,14 @@ export interface LinkEntity {
 export type ColorMap = {
   [classLabel: string]: Label;
 };
+
+export type AttachmentDist {
+  [classLabel: string]: number;
+}
+
+export type Attachment {
+  [classLabel: string]: AttachmentDist;
+}
 
 export type Epochs = Array<number>;
 
@@ -103,6 +113,7 @@ export interface RootState {
   projectionData: ProjectionData;
   graphRenderer: GraphRenderer;
   projectionRenderer: ProjectionRenderer;
+  attachmentRenderer: AttachmentRenderer;
   trackingMode: boolean;
   bubbleGlyph: boolean;
   transitionEffect: boolean;

@@ -1,4 +1,6 @@
+from cmath import log
 import os
+from pprint import pprint
 from diskcache import Cache
 
 from flask import Flask, jsonify, request
@@ -37,7 +39,6 @@ dictConfig({
 DEBUG = True
 CACHING = True
 cache = Cache('./cache/')
-cache.expire()
 
 
 # instantiate app
@@ -73,8 +74,8 @@ def mgraph():
 
     if CACHING and cache_key in cache:
         app.logger.info(f'Cache hit for {cache_key}')
-        graph, projection = cache[cache_key]
-        return jsonify(graph=graph, projection=projection)
+        graph, projection, attachments = cache[cache_key]
+        return jsonify(graph=graph, projection=projection, attachments=attachments)
 
     app.logger.info(f'Request params = {dataset} {epoch} {layer} {data_split} {metric} {filter_func} {overlap} {intervals}')
 
@@ -111,16 +112,33 @@ def mgraph():
         label_test = graph_generator.read_labels(label_test, dataset=dataset)
         activations = pd.concat([activation_train, activation_test])
         labels = pd.concat([label_train, label_test])
+    elif data_split == 'trainknntest':
+        activation_train = pd.read_csv(activation_train_file, delim_whitespace=True, header=None)
+        activation_test = pd.read_csv(activation_test_file, delim_whitespace=True, header=None)
+        label_train = graph_generator.read_labels(label_train, dataset=dataset)
+        label_test = graph_generator.read_labels(label_test, dataset=dataset)
+        label_test_pred = pd.read_csv('../data/ss-role/fine_tuning_batch_preds.csv')
     else:
         raise ValueError(f'Datasplit="{data_split}" not supported')
 
-    app.activations = activations
-    app.labels = labels
+    attachments = None
 
-    graph = graph_generator.get_mapper(activations, labels, config)
-    projection = utils.compute_projection(activations, labels, ['train'] * len(activations), 'PCA')
+    if data_split == 'trainknntest':
+        graph = graph_generator.get_mapper(activation_train, label_train, config)
+        graph, attachments = utils.add_test_nodes(graph, activation_train, activation_test,
+                                                  label_train, label_test, label_test_pred[str(epoch)])
+        projection = utils.compute_projection(activation_train, label_train, ['train'] * len(activation_train), 'PCA')
+        app.activations = activation_train
+        app.labels = label_train
+    else:
+        graph = graph_generator.get_mapper(activations, labels, config)
+        app.activations = activations
+        app.labels = labels
+        projection = utils.compute_projection(activations, labels, ['train'] * len(activations), 'PCA')
 
-    cache[cache_key] = [graph, projection]
+    # pprint(graph)
+
+    cache[cache_key] = [graph, projection, attachments]
 
     # if dataset in ['ss-role', 'ss-func']:
     #     purities, bin_edges = utils.get_purities(graph)
@@ -128,7 +146,7 @@ def mgraph():
     #     purities, bin_edges = None, None
 
     # return jsonify(graph=graph, purities=purities, bin_edges=bin_edges)
-    return jsonify(graph=graph, projection=projection)
+    return jsonify(graph=graph, projection=projection, attachments=attachments)
 
 
 @app.route('/get_graph', methods=['GET', 'POST'])

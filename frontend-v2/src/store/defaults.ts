@@ -11,7 +11,7 @@ export const defaults = {
         { name: 'Train ∪ Test', value: 'trainutest' },
         { name: 'Train + Test (knn)', value: 'trainknntest' },
       ],
-      selected: 'train',
+      selected: 'trainknntest',
     },
     metric: {
       paramList: [
