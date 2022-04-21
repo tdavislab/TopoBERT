@@ -1,10 +1,11 @@
 import { InjectionKey } from 'vue';
 import { createStore, useStore as baseUseStore, Store } from 'vuex';
-import { RootState, NodeSize, Graph, NodeEntity } from './types';
+import { RootState, NodeSize, Graph, NodeEntity, ProjectionData } from './types';
 import { ActionContext } from 'vuex';
 import { defaults } from './defaults';
 import axios, { AxiosRequestConfig } from 'axios';
 import GraphRenderer from '../components/Content/Renderers/GraphRender';
+import ProjectionRenderer from '../components/Content/Renderers/ProjectionRenderer';
 import * as d3 from 'd3';
 import { stackOffsetSilhouette } from 'd3';
 
@@ -22,7 +23,9 @@ const state: RootState = {
   colorMap: defaults.defaultColorScheme,
   mTable: defaults.defaultTable,
   graph: defaults.defaultGraph,
+  projectionData: defaults.defaultProjectionData,
   graphRenderer: new GraphRenderer(),
+  projectionRenderer: new ProjectionRenderer(),
   trackingMode: defaults.defaultTrackingMode,
   bubbleGlyph: defaults.defaultBubbleGlyph,
   transitionEffect: defaults.defaultTransitionEffect,
@@ -41,11 +44,15 @@ const mutations = {
   setGraph(state: RootState, graph: Graph) {
     state.graph = graph;
   },
+  setProjectionData(state: RootState, projectionData: ProjectionData) {
+    state.projectionData = projectionData;
+  },
   clearLabelSelection(state: RootState) {
     for (const label in state.colorMap) {
       state.colorMap[label].selected = false;
     }
     state.graphRenderer.clearHighlight();
+    state.projectionRenderer.clearHighlight();
   },
   addSelectedNode(state: RootState, node: NodeEntity) {
     // if already selected, remove
@@ -100,7 +107,13 @@ const actions = {
       .get(url, options)
       .then((response) => {
         const graph = response.data.graph as Graph;
+        const projectionData = response.data.projection as ProjectionData;
+
         context.commit('setGraph', graph);
+        context.commit('setProjectionData', projectionData);
+
+        context.state.projectionRenderer.draw(projectionData);
+
         if (context.state.transitionEffect) {
           context.state.graphRenderer.transitionToNewGraph(graph);
         } else {
@@ -108,11 +121,13 @@ const actions = {
           context.state.graphRenderer.convertToLayout(context.state.mapperParams.layout.selected);
           context.state.graphRenderer.bubbleGlyph(context.state.bubbleGlyph);
         }
+
         if (context.state.trackingMode === false) {
           context.commit('resetSelectedNodes');
         } else {
           context.state.graphRenderer.selectionHighlight(context.getters.membersToNodes);
         }
+
         context.dispatch('updateMetadataTable');
       })
       .catch((error) => {
@@ -143,6 +158,7 @@ const actions = {
 
     if (filteredLabels.length === 0) {
       context.commit('clearLabelSelection');
+      context.state.projectionRenderer.clearHighlight();
     } else {
       const filteredLabelsSet = new Set(filteredLabels);
 
@@ -152,6 +168,7 @@ const actions = {
 
       const filteredNodes = context.state.graph.nodes.filter(filterCriterion);
       context.state.graphRenderer.filterHighlight(filteredNodes);
+      context.state.projectionRenderer.filterLabels(filteredLabelsSet);
     }
   },
   highlightWordNodes(context: ActionContext<RootState, RootState>, wordSet: Set<string>) {

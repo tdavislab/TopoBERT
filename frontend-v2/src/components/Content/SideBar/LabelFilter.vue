@@ -2,6 +2,7 @@
   import { useStore } from '../../../store/store';
   import { computed, ref } from 'vue';
   import { Label } from '../../../store/types';
+
   const store = useStore();
   const colorMap = store.state.colorMap;
 

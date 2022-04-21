@@ -127,6 +127,7 @@ export const defaults = {
     nodes: [],
     links: [],
   },
+  defaultProjectionData: [],
   defaultTrackingMode: false,
   defaultBubbleGlyph: false,
   defaultTransitionEffect: false,

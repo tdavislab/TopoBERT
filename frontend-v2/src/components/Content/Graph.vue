@@ -12,15 +12,15 @@
 
 <template>
   <div id="svg-container" class="h-full grid grid-cols-1">
-    <svg id="new-svg" width="100%" height="100%" class="h-0 absolute w-0">
-      <g>
+    <svg id="new-svg" width="100%" height="100%" class="h-0 absolute w-0" viewBox="-2000 -1250 4000 2500">
+      <g id="new-svg-g">
         <g class="link_group"></g>
         <g class="node_group"></g>
       </g>
     </svg>
 
-    <svg id="graph-svg" width="100%" height="100%" viewBox="0 0 4000 2500">
-      <g>
+    <svg id="graph-svg" width="100%" height="100%" viewBox="-2000 -1250 4000 2500">
+      <g id="graph-svg-g">
         <g class="link_group"></g>
         <g class="node_group"></g>
       </g>

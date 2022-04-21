@@ -4,6 +4,7 @@
   import Statistics from './SideBar/Statistics.vue';
   import LabelFilter from './SideBar/LabelFilter.vue';
   import MetadataTable from './SideBar/MetadataTable.vue';
+  import Projection from './SideBar/Projection.vue';
 </script>
 
 <template>
@@ -11,6 +12,7 @@
     <MapperControls></MapperControls>
     <GraphControls> </GraphControls>
     <Statistics></Statistics>
+    <Projection></Projection>
     <LabelFilter></LabelFilter>
     <MetadataTable></MetadataTable>
   </div>

@@ -12,10 +12,32 @@ import utils
 import pandas as pd
 import numpy as np
 
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s %(levelname)s: %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
+    }
+})
+
+
 # configuration
 DEBUG = True
 CACHING = True
 cache = Cache('./cache/')
+cache.expire()
 
 
 # instantiate app
@@ -50,11 +72,11 @@ def mgraph():
     cache_key = f'{dataset}_{epoch}_{layer}_{data_split}_{metric}_{filter_func}_{overlap}_{intervals}'
 
     if CACHING and cache_key in cache:
-        print('Serving from cache')
-        graph = cache[cache_key]
-        return jsonify(graph=graph)
+        app.logger.info(f'Cache hit for {cache_key}')
+        graph, projection = cache[cache_key]
+        return jsonify(graph=graph, projection=projection)
 
-    print(f'{dataset} {epoch} {layer} {data_split} {metric} {filter_func} {overlap} {intervals}')
+    app.logger.info(f'Request params = {dataset} {epoch} {layer} {data_split} {metric} {filter_func} {overlap} {intervals}')
 
     config = graph_generator.Config(metric=metric, filter_func=filter_func, intervals=intervals, overlap=overlap)
 
@@ -96,14 +118,17 @@ def mgraph():
     app.labels = labels
 
     graph = graph_generator.get_mapper(activations, labels, config)
-    cache[cache_key] = graph
+    projection = utils.compute_projection(activations, labels, ['train'] * len(activations), 'PCA')
+
+    cache[cache_key] = [graph, projection]
+
     # if dataset in ['ss-role', 'ss-func']:
     #     purities, bin_edges = utils.get_purities(graph)
     # else:
     #     purities, bin_edges = None, None
 
     # return jsonify(graph=graph, purities=purities, bin_edges=bin_edges)
-    return jsonify(graph=graph)
+    return jsonify(graph=graph, projection=projection)
 
 
 @app.route('/get_graph', methods=['GET', 'POST'])
@@ -138,9 +163,9 @@ def get_graph():
     else:
         raise ValueError('Dataset not supported')
 
-    graph, activations, labels = graph_generator.create_mapper('', label_file, activation_file, graph_output_file,
-                                                               graph_generator.Config(metric=metric, filter_func=filter_func, intervals=intervals,
-                                                                                      overlap=overlap))
+    graph, activations, labels = graph_generator.create_mapper(
+        '', label_file, activation_file, graph_output_file, graph_generator.Config(
+            metric=metric, filter_func=filter_func, intervals=intervals, overlap=overlap))
 
     app.graph_data, app.activations, app.labels = graph, activations, labels
 
@@ -174,9 +199,9 @@ def show_test():
     else:
         raise ValueError('Dataset not supported')
 
-    graph, activations, labels = graph_generator.create_mapper('', label_file, activation_train, graph_output_file,
-                                                               graph_generator.Config(metric=metric, filter_func=filter_func, intervals=intervals,
-                                                                                      overlap=overlap))
+    graph, activations, labels = graph_generator.create_mapper(
+        '', label_file, activation_train, graph_output_file, graph_generator.Config(
+            metric=metric, filter_func=filter_func, intervals=intervals, overlap=overlap))
     app.graph_data, app.activations, app.labels = graph, activations, labels
 
     purities, bin_edges = utils.get_purities(graph)

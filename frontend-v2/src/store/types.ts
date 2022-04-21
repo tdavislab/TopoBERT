@@ -1,21 +1,22 @@
 import GraphRenderer from '../components/Content/Renderers/GraphRender';
+import ProjectionRenderer from '../components/Content/Renderers/ProjectionRenderer';
 
-interface LayerType {
+export interface LayerType {
   layers: Array<number>;
   selected: number;
 }
 
-interface Parameter {
+export interface Parameter {
   name: string;
   value: number | string;
 }
 
-interface DatasetList {
+export interface DatasetList {
   datasets: Array<Parameter>;
   selected: string;
 }
 
-interface ParamList {
+export interface ParamList {
   paramList: Array<Parameter>;
   selected: number | string;
 }
@@ -25,13 +26,23 @@ export interface Label {
   selected: boolean;
 }
 
-interface MTable {
+export interface MTable {
   header: Array<string>;
   rows: Array<Array<string>>;
 }
 export interface Graph {
   nodes: Array<NodeEntity>;
   links: Array<LinkEntity>;
+}
+
+export type ProjectionData = Array<ProjectionRow>;
+export interface ProjectionRow {
+  x: number;
+  y: number;
+  label: string;
+  word: string;
+  datatype: string;
+  index: number;
 }
 
 export interface NodeEntity {
@@ -60,15 +71,15 @@ export interface LinkEntity {
   intersection: number;
 }
 
-type ColorMap = {
+export type ColorMap = {
   [classLabel: string]: Label;
 };
 
-type Epochs = Array<number>;
+export type Epochs = Array<number>;
 
 export type NodeSize = 'constant' | 'scaled';
 
-type MapperParams = {
+export type MapperParams = {
   dataSplit: ParamList;
   metric: ParamList;
   filter: ParamList;
@@ -89,7 +100,9 @@ export interface RootState {
   colorMap: ColorMap;
   mTable: MTable;
   graph: Graph;
+  projectionData: ProjectionData;
   graphRenderer: GraphRenderer;
+  projectionRenderer: ProjectionRenderer;
   trackingMode: boolean;
   bubbleGlyph: boolean;
   transitionEffect: boolean;

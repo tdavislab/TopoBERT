@@ -14,9 +14,9 @@
 </script>
 
 <template>
-  <div class="grid grid-cols-12" title="Set tracking mode">
-    <div class="col-span-3">Tracking</div>
-    <input class="col-span-1" type="checkbox" v-model="trackingMode" />
+  <div class="grid grid-cols-2" title="Set tracking mode">
+    <label for="transition-checkbox">Tracking</label>
+    <input id="transition-checkbox" type="checkbox" v-model="trackingMode" />
   </div>
 </template>
 

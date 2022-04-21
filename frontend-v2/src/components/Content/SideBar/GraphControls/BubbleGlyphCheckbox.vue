@@ -14,9 +14,9 @@
 </script>
 
 <template>
-  <div class="grid grid-cols-12" title="Set tracking mode">
-    <div class="col-span-3">Bubble Glyph</div>
-    <input class="col-span-1" type="checkbox" v-model="bubbleGlyphMode" />
+  <div class="grid grid-cols-2" title="Set tracking mode">
+    <label for="bubble-checkbox">Bubble Glyph</label>
+    <input id="bubble-checkbox" type="checkbox" v-model="bubbleGlyphMode" />
   </div>
 </template>
 

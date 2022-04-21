@@ -26,6 +26,7 @@ export default class GraphRenderer {
   simulation!: d3.Simulation<NodeEntity, undefined>;
   pieColorScale!: d3.ScaleOrdinal<string, unknown, never>;
   graphData!: Graph;
+  zoomObj!: void;
 
   constructor() {
     this.svg = d3.select('#graph-svg');
@@ -61,7 +62,7 @@ export default class GraphRenderer {
         d3.forceLink(graph.links).id((d: any) => d.id)
       )
       .force('charge', d3.forceManyBody().strength(-1000))
-      .force('center', d3.forceCenter(2000, 1250))
+      .force('center', d3.forceCenter(0, 0))
       .force('x', d3.forceX())
       .force('y', d3.forceY())
       .stop();
@@ -137,9 +138,7 @@ export default class GraphRenderer {
         .attr('y2', (d) => (d as unknown as { target: Points }).target.y);
     });
 
-    d3.zoom().scaleExtent([0.2, 10]).on('zoom', zoomed)(d3.select(svg_selector));
-
-    console.log({ graph: this, d3: d3 });
+    this.zoomObj = d3.zoom().scaleExtent([0.2, 10]).on('zoom', zoomed)(d3.select(svg_selector));
 
     function zoomed(event: any) {
       graph_obj.svg.select('g').attr('transform', event.transform);
@@ -243,7 +242,7 @@ export default class GraphRenderer {
       this.nodeD3
         .transition()
         .delay(250)
-        .duration(1000)
+        .duration(5000)
         .attr('transform', (d, i) => {
           const x = nodeData[i].x_pca * 100;
           const y = nodeData[i].y_pca * 100;
@@ -261,7 +260,7 @@ export default class GraphRenderer {
 
       this.nodeD3
         .transition()
-        .duration(1000)
+        .duration(5000)
         .attr('transform', (d, i) => {
           const x = nodeData[i].x;
           const y = nodeData[i].y;
@@ -275,7 +274,7 @@ export default class GraphRenderer {
           });
           // this.simulation.restart();
         });
-      this.linkD3.transition().delay(750).duration(500).attr('opacity', 1);
+      this.linkD3.transition().delay(5000).duration(500).attr('opacity', 1);
     }
   }
 
@@ -338,6 +337,18 @@ export default class GraphRenderer {
   }
 
   transitionToNewGraph(newGraph: Graph) {
+    const docSVG = document.getElementById('graph-svg');
+    const gDocSVG = document.getElementById('graph-svg-g');
+    const dummyPoint = docSVG.createSVGPoint();
+
+    function convertToSVGSpace1(element: any, x: number, y: number) {
+      dummyPoint.x = x;
+      dummyPoint.y = y;
+      return dummyPoint.matrixTransform(element.getScreenCTM().inverse());
+    }
+
+    console.log(convertToSVGSpace1(gDocSVG, 0, 0));
+
     // convert previous graph data from node view to point view
     const pointData = d3
       .selectAll('.bubble-element')
@@ -350,10 +361,14 @@ export default class GraphRenderer {
 
     this.nodeD3.selectAll('.bubble-element').each(function (d, i) {
       const bbox = this!.getBoundingClientRect();
-      const x = bbox.x - svgCoords.x + bbox.width / 2;
-      const y = bbox.y - svgCoords.y + bbox.height / 2;
+      const adjusted_x = bbox.x - bbox.width / 2;
+      const adjusted_y = bbox.y - bbox.height / 2;
+      const { x, y } = convertToSVGSpace1(gDocSVG, adjusted_x, adjusted_y);
       coords.push({ x, y, r: d.r });
     });
+
+    // console.log(svgCoords);
+    // console.log(coords[0]);
 
     this.svg.select('g > g.node_group').selectAll('*').remove();
     this.svg.select('g > g.link_group').selectAll('*').remove();
@@ -376,6 +391,18 @@ export default class GraphRenderer {
     this.draw(newGraph, '#new-svg', this.pieColorScale);
     this.bubbleGlyph(true);
 
+    d3.select('#new-svg').classed('w-0', false).classed('h-0', false);
+
+    const newdocSVG = document.getElementById('new-svg');
+    const newgDocSVG = document.getElementById('new-svg-g');
+    const newdummyPoint = newdocSVG.createSVGPoint();
+
+    function convertToSVGSpace2(element: any, x: number, y: number) {
+      newdummyPoint.x = x;
+      newdummyPoint.y = y;
+      return newdummyPoint.matrixTransform(element.getScreenCTM().inverse());
+    }
+
     const newPointData = this.svg
       .selectAll('.bubble-element')
       .data()
@@ -386,10 +413,13 @@ export default class GraphRenderer {
 
     this.nodeD3.selectAll('.bubble-element').each(function (d, i) {
       const bbox = this!.getBoundingClientRect();
-      const x = bbox.x - newSvgCoords.x + bbox.width / 2;
-      const y = bbox.y - newSvgCoords.y + bbox.height / 2;
+      const adjusted_x = bbox.x - bbox.width / 2;
+      const adjusted_y = bbox.y - bbox.height / 2;
+      const { x, y } = convertToSVGSpace2(newgDocSVG, adjusted_x, adjusted_y);
       newCoords.push({ x, y, r: d.r });
     });
+
+    d3.select('#new-svg').classed('w-0', true).classed('h-0', true);
 
     this.svg.select('g').selectAll('*').remove();
     const newPointGroup = this.svg.select('g').append('g').attr('class', 'point-group');
@@ -397,7 +427,7 @@ export default class GraphRenderer {
     const labelRanks = Object.keys(store.state.colorMap).map((key, i) => {
       return { key, rank: i };
     });
-    // create object labelRankMap
+
     const labelRankMap = Object.fromEntries(labelRanks.map((labelRank) => [labelRank.key, labelRank.rank]));
     console.log(labelRankMap);
 
@@ -416,7 +446,7 @@ export default class GraphRenderer {
               g
                 .transition()
                 .delay(0)
-                .duration(2000)
+                .duration(500)
                 .ease(d3.easePolyIn)
                 .attr('r', (d, i) => newCoords[i].r)
             ),
@@ -426,15 +456,23 @@ export default class GraphRenderer {
               .attr('fill', (d) => store.state.colorMap[d.classLabel].color)
               .transition()
               .delay((d, i) => labelRankMap[d.classLabel] * 500)
-              .duration(2000)
+              .duration(500)
               .attr('cx', (d, i) => newCoords[i].x)
               .attr('cy', (d, i) => newCoords[i].y)
+              .end()
+              .then(() => {
+                this.draw(newGraph, '#graph-svg', this.pieColorScale);
+                this.svg.select('g.point-group').remove();
+                this.bubbleGlyph(true);
+              })
           ),
         (exit) => exit.transition().duration(5000).attr('opacity', 0).remove()
       )
       .attr('stroke', 'black')
       .attr('stroke-width', '1px')
       .attr('stroke-opacity', 0.3);
+
+    d3.select('#new-svg').classed('hidden', true);
   }
 
   transitionToNewGraph2(newGraph: Graph) {
