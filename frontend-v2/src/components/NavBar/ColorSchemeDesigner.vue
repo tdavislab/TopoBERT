@@ -22,12 +22,12 @@
       const picker = new Picker({
         parent: parent,
         color: store.state.colorMap[label].color,
-        // popup: 'bottom',
+        popup: 'top',
         // alpha: true,
-        // onDone: (color) => {
-        //   store.state.colorMap[index] = color.rgbaString;
-        //   store.dispatch('updateGraph');
-        // },
+        onDone: (color) => {
+          store.state.colorMap[label].color = color.rgbaString;
+          store.dispatch('updateGraph');
+        },
       });
     });
   });
