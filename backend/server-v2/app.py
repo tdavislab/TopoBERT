@@ -37,7 +37,7 @@ dictConfig({
 
 # configuration
 DEBUG = True
-CACHING = True
+CACHING = False
 cache = Cache('./cache/')
 
 
