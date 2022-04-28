@@ -6,7 +6,7 @@
   const store = useStore();
 
   onMounted(() => {
-    store.dispatch('updateGraph').then(() => {});
+    store.dispatch('updateGraph');
   });
 </script>
 

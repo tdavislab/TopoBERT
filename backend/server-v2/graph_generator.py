@@ -1,4 +1,7 @@
+from calendar import leapdays
+from collections import defaultdict
 import dataclasses
+from email.policy import default
 
 import kneed
 import numpy as np
@@ -7,6 +10,8 @@ import zipfile
 import ast
 import kmapper as km
 from sklearn.cluster import DBSCAN
+from scipy.spatial.distance import pdist, squareform
+from sklearn.neighbors import KDTree
 from networkx.readwrite import json_graph
 import json
 import os
@@ -54,6 +59,58 @@ class NumpyEncoder(json.JSONEncoder):
             return None
 
         return json.JSONEncoder.default(self, obj)
+
+
+class BallMapper:
+    def __init__(self) -> None:
+        pass
+
+    def map(self, data: pd.DataFrame, epsilon: float):
+        """
+        Maps the data to a ball graph.
+
+        Parameters
+        ---------
+        data: pd.DataFrame
+            The data to map.
+        epsilon: float
+            The radius of the ball.
+        """
+        graph = {}
+
+        coverage = [False] * len(data)
+        nodes = dict()
+        edges = set()
+
+        # compute a KD-tree for fast radius search
+        tree = KDTree(data, leaf_size=5)
+
+        # iterate over all points
+        for i in tqdm(range(len(data))):
+            if not coverage[i]:
+                # find all points in the ball
+                neighbors = tree.query_radius([data.iloc[i]], r=epsilon)[0]
+
+                # add the point to the graph
+                nodes[i] = set(neighbors.tolist())
+
+                # mark all points in the ball as covered
+                for j in neighbors:
+                    coverage[j] = True
+
+                # mark the point as covered
+                coverage[i] = True
+
+        # iterate over all nodes
+        for i in nodes:
+            for j in nodes:
+                if i != j and nodes[i].intersection(nodes[j]):
+                    edges.add(tuple(sorted((i, j))))
+
+        graph['nodes'] = {k: list(v) for k, v in nodes.items()}
+        graph['links'] = {i: [j] for i, j in edges}
+
+        return graph
 
 
 def read_file_from_zip(zip_path, file_relative_path):
@@ -116,6 +173,7 @@ def memberPointify(metadata, mindex):
 def add_node_metadata(graph, metadata_source, activations):
     # create PCA model first
     nodewise_activations = np.vstack([np.mean(activations.iloc[graph['nodes'][node_name]], axis=0) for node_name in graph['nodes']])
+    print(nodewise_activations.shape)
     pca_positions = PCA(n_components=2).fit_transform(nodewise_activations)
 
     for i, node_name in enumerate(graph['nodes']):
@@ -190,7 +248,7 @@ def elbow_eps(data):
     distances, indices = nbrs.kneighbors(data)
     distances = np.sort(distances, axis=0)[::-1]
     kneedle = kneed.KneeLocator(distances[:, 1], np.linspace(0, 1, num=len(distances)), curve='convex', direction='decreasing')
-    eps = kneedle.knee * 0.75
+    eps = kneedle.knee
     return eps
 
 
@@ -230,20 +288,25 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
 def get_mapper(activations, labels, conf):
     labels['l2norm'] = np.expand_dims(np.linalg.norm(activations.to_numpy(), axis=1), 1)
     mapper = km.KeplerMapper()
-
-    if conf.filter_func == 'l1':
-        projected_data = np.linalg.norm(activations, ord=1, axis=1).reshape((activations.shape[0], 1))
-    elif conf.filter_func == 'l2':
-        projected_data = mapper.fit_transform(activations, projection='l2norm')
-    elif conf.filter_func == 'knn5':
-        projected_data = mapper.fit_transform(activations, projection='knn_distance_5') / 5
-    else:
-        raise KeyError('Unexpected filter function')
-
     eps = elbow_eps(activations)
-    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=DBSCAN_MIN_SAMPLES),
-                       cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
+    if conf.filter_func == 'ballmapper':
+        bmapper = BallMapper()
+        graph = bmapper.map(activations, epsilon=eps)
+    else:
+        if conf.filter_func == 'l1':
+            projected_data = np.linalg.norm(activations, ord=1, axis=1).reshape((activations.shape[0], 1))
+        elif conf.filter_func == 'l2':
+            projected_data = mapper.fit_transform(activations, projection='l2norm')
+        elif conf.filter_func == 'knn5':
+            projected_data = mapper.fit_transform(activations, projection='knn_distance_5') / 5
+        else:
+            raise KeyError('Unexpected filter function')
+
+        graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps * 0.75, metric=conf.metric,
+                           min_samples=DBSCAN_MIN_SAMPLES), cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
+
+    print(f'Generated graph with {len(graph["nodes"])} nodes and {len(graph["links"])} edges')
     add_node_metadata(graph, labels, activations)
 
     # graph = store_as_json(graph, graph_output_file + file_name.replace('.txt', '.json'))

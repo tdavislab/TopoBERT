@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import { max } from 'd3';
 import { store } from '../../../store/store';
 import { Attachment } from '../../../store/types';
 
@@ -60,17 +59,6 @@ export default class AttachmentRenderer {
       .attr('width', 15)
       .attr('height', 15)
       .attr('fill', (d) => store.state.colorMap[d].color);
-
-    // this.targets = this.attachment_g
-    //   .selectAll('.targets')
-    //   .data(targets)
-    //   .join('rect')
-    //   .attr('class', 'targets')
-    //   .attr('x', (d, i) => i * 17)
-    //   .attr('y', 80)
-    //   .attr('width', 12)
-    //   .attr('height', 12)
-    //   .attr('fill', (d) => store.state.colorMap[d].color);
 
     function findTarget(source: string) {
       const tentativeTargets = attachmentData[source];

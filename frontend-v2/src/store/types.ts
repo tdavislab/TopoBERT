@@ -60,6 +60,7 @@ export interface NodeEntity {
   type: 'train' | 'test';
 }
 export interface MemberPoints {
+  l2norm: number;
   memberId: number;
   word: string;
   classLabel: string;
@@ -77,13 +78,13 @@ export type ColorMap = {
   [classLabel: string]: Label;
 };
 
-export type AttachmentDist {
+export type AttachmentDist = {
   [classLabel: string]: number;
-}
+};
 
-export type Attachment {
+export type Attachment = {
   [classLabel: string]: AttachmentDist;
-}
+};
 
 export type Epochs = Array<number>;
 

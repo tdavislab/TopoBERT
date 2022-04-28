@@ -11,7 +11,7 @@ export const defaults = {
         { name: 'Train ∪ Test', value: 'trainutest' },
         { name: 'Train + Test (knn)', value: 'trainknntest' },
       ],
-      selected: 'trainknntest',
+      selected: 'train',
     },
     metric: {
       paramList: [
@@ -25,6 +25,7 @@ export const defaults = {
         { name: 'L1', value: 'l1' },
         { name: 'L2', value: 'l2' },
         { name: 'Average KNN-5', value: 'knn' },
+        { name: 'BallMapper', value: 'ballmapper' },
       ],
       selected: 'l2',
     },
