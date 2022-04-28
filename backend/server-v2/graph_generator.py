@@ -126,7 +126,7 @@ def read_labels(path, dataset=None):
     label_data = []
     with open(path, 'r', encoding='utf-8') as f:
         for line in f:
-            if dataset in ['ss-func', 'ss-role']:
+            if dataset in ['ss-func', 'ss-role', 'roberta', 'berttiny']:
                 word_info, word_label = line.strip().split('\t')
                 sent_info, word = word_info.split(':')
                 sent_info = ast.literal_eval(sent_info)

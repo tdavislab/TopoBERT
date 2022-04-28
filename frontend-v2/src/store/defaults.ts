@@ -62,6 +62,8 @@ export const defaults = {
       { name: 'SuperSense Function', value: 'ss-func' },
       { name: 'Part of Speech', value: 'pos' },
       { name: 'Dependency', value: 'dep' },
+      { name: 'RoBERTa - SS Role', value: 'roberta' },
+      { name: 'BERTTiny -  SS Role', value: 'berttiny' },
     ],
     selected: 'ss-role',
   },

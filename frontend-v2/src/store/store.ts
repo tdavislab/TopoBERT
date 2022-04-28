@@ -144,6 +144,19 @@ const actions = {
       });
   },
   datasetUpdate(context: ActionContext<RootState, RootState>) {
+    if (context.state.datasetList.selected === 'berttiny') {
+      context.state.epochs = [
+        0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345, 360, 375, 390, 405, 420, 435,
+        450, 465, 480, 495, 510, 525, 540, 555, 570, 585, 589,
+      ];
+      context.state.layerObj = {
+        layers: [0, 1, 2],
+        selected: 2,
+      };
+    } else {
+      context.state.epochs = defaults.defaultEpochs;
+      context.state.layerObj = defaults.defaultLayerObj;
+    }
     console.log(`Updating to ${context.state.datasetList.selected}`);
   },
   toggleNodeSize(context: ActionContext<RootState, RootState>, updatedNodeSize: NodeSize) {
