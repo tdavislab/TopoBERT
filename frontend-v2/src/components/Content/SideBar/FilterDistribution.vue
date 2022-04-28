@@ -35,4 +35,8 @@
   </div>
 </template>
 
-<style lang="postcss" scoped></style>
+<style lang="postcss" scoped>
+  .tick > text {
+    font-size: 16px;
+  }
+</style>

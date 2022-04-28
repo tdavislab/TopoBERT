@@ -246,19 +246,22 @@ function BeeswarmChart(
   //     .attr("viewBox", [0, 0, width, height])
   //     .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
-  svg
+  const xAxisGroup = svg
     .append('g')
     .attr('transform', `translate(0,${height - marginBottom})`)
-    .call(xAxis)
-    .call((g) =>
-      g
-        .append('text')
-        .attr('x', width)
-        .attr('y', marginBottom - 4)
-        .attr('fill', 'currentColor')
-        .attr('text-anchor', 'end')
-        .text(xLabel)
-    );
+    .call(xAxis);
+
+  xAxisGroup.selectAll('.tick text').attr('font-size', '16px');
+
+  xAxisGroup.call((g) =>
+    g
+      .append('text')
+      .attr('x', width)
+      .attr('y', marginBottom - 4)
+      .attr('fill', 'currentColor')
+      .attr('text-anchor', 'end')
+      .text(xLabel)
+  );
 
   const dot = svg
     .append('g')
