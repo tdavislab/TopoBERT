@@ -68,6 +68,7 @@ export default class GraphRenderer {
       .stop();
 
     simulation.tick(200);
+    // simulation.alphaDecay(1);
     simulation.restart();
 
     this.simulation = simulation;

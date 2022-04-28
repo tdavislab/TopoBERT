@@ -83,7 +83,7 @@ class BallMapper:
         edges = set()
 
         # compute a KD-tree for fast radius search
-        tree = KDTree(data, leaf_size=5)
+        tree = KDTree(data, leaf_size=60)
 
         # iterate over all points
         for i in tqdm(range(len(data))):
