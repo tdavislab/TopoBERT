@@ -37,7 +37,7 @@ dictConfig({
 
 # configuration
 DEBUG = True
-CACHING = False
+CACHING = True
 cache = Cache('./cache/')
 
 
@@ -94,8 +94,8 @@ def mgraph():
     elif dataset == 'dep':
         activation_train_file = f'../data/dep/fine-tuned-bert-base-uncased/train/{epoch}/{layer}.txt'
         activation_test_file = f'../data/dep/fine-tuned-bert-base-uncased/test/{epoch}/{layer}.txt'
-        label_train = '../data/dep/entities/train.txt'
-        label_test = '../data/dep/entities/test.txt'
+        label_train = '../data/dep/entities/train_aug.txt'
+        label_test = '../data/dep/entities/test_aug.txt'
     elif dataset == 'roberta':
         activation_train_file = f'../data/roberta/train/{epoch}/{layer}.txt'
         activation_test_file = f'../data/roberta/test/{epoch}/{layer}.txt'

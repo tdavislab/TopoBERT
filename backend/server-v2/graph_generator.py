@@ -132,18 +132,33 @@ def read_labels(path, dataset=None):
                 sent_info = ast.literal_eval(sent_info)
                 label_data.append([sent_info[0], sent_info[1], word, word_label])
             elif dataset == 'dep':
-                word_pair, word_label = line.strip().split('\t')
+                sent_id, token_id, word_pair, word_label = line.strip().split('\t')
                 word_pair = word_pair.split('--')
                 if len(word_pair) == 2:
                     word1, word2 = word_pair
                 elif len(word_pair) == 3:
                     word1, word2 = word_pair[0], '--'
-                sent_info = [0, 0]
-                label_data.append([sent_info[0], sent_info[1], f'{word1}--{word2}', word_label])
+                # sent_info = [0, 0]
+                label_data.append([sent_id, token_id, f'{word1}--{word2}', word_label])
             else:
                 raise ValueError('Dataset not supported')
 
-    return pd.DataFrame(label_data, columns=['sent_id', 'word_id', 'word', 'label'])
+    labels = pd.DataFrame(label_data, columns=['sent_id', 'word_id', 'word', 'label'])
+
+    datasplit = 'train' if ('train' in path) else 'test'
+
+    if dataset in ['ss-func', 'ss-role', 'roberta', 'berttiny']:
+        with open(f'../data/ss-role/sentences/{datasplit}.json', 'r') as sent_file:
+            sent_data = json.load(sent_file)
+
+        labels['sentence'] = labels['sent_id'].apply(lambda x: sent_data[str(x)])
+    elif dataset == 'dep':
+        with open(f'../data/dep/sentences/sent_{datasplit}.json', 'r') as sent_file:
+            sent_data = json.load(sent_file)
+
+        labels['sentence'] = labels['sent_id'].apply(lambda x: sent_data[str(x)])
+
+    return labels
 
 
 def add_node_metadata_ud(graph, data):
@@ -167,6 +182,7 @@ def memberPointify(metadata, mindex):
     metadata['sentId'] = metadata.pop('sent_id')
     metadata['wordId'] = metadata.pop('word_id')
     metadata['classLabel'] = metadata.pop('label')
+    metadata['sentence'] = metadata.pop('sentence')
     return metadata
 
 

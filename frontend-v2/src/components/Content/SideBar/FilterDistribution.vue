@@ -5,7 +5,7 @@
 
   const store = useStore();
 
-  let showFilterDistribution = ref(true);
+  let showFilterDistribution = ref(false);
 
   const filterDistRenderer = new FilterDistRenderer();
   const selectedNodes = computed(() => store.state.selectedNodes);

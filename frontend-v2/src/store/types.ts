@@ -66,6 +66,7 @@ export interface MemberPoints {
   classLabel: string;
   sentId?: number;
   wordId?: number;
+  sentence?: string;
 }
 
 export interface LinkEntity {

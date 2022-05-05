@@ -113,6 +113,8 @@ const actions = {
         const projectionData = response.data.projection as ProjectionData;
         const attachments = response.data.attachments as Attachment;
 
+        console.log(projectionData, context.state.colorMap);
+
         context.commit('setGraph', graph);
         context.commit('setProjectionData', projectionData);
 
@@ -144,6 +146,7 @@ const actions = {
       });
   },
   datasetUpdate(context: ActionContext<RootState, RootState>) {
+    context.state.colorMap = defaults.defaultColorScheme;
     if (context.state.datasetList.selected === 'berttiny') {
       context.state.epochs = [
         0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345, 360, 375, 390, 405, 420, 435,
@@ -157,6 +160,14 @@ const actions = {
       context.state.epochs = defaults.defaultEpochs;
       context.state.layerObj = defaults.defaultLayerObj;
     }
+    if (context.state.datasetList.selected === 'dep') {
+      context.state.epochs = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 74];
+      context.state.colorMap = new Proxy(defaults.defaultColorSchemeDep, {
+        get: function (target, name) {
+          return target.hasOwnProperty(name) ? target[name] : '#cccccc';
+        },
+      });
+    }
     console.log(`Updating to ${context.state.datasetList.selected}`);
   },
   toggleNodeSize(context: ActionContext<RootState, RootState>, updatedNodeSize: NodeSize) {
@@ -169,7 +180,7 @@ const actions = {
     } else {
       const newMData = context.state.selectedNodes
         .map((node) => {
-          return node.memberPoints.map((point) => [point.sentId, point.wordId, point.word, point.classLabel]);
+          return node.memberPoints.map((point) => [point.sentId, point.wordId, point.word, point.classLabel, point.sentence]);
         })
         .flat();
       context.commit('setMTable', newMData);

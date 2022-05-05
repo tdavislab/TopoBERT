@@ -36,24 +36,47 @@
 <template>
   <div><button @click="toggleModal()">Change Color Scheme</button></div>
 
-  <div v-show="showModal" class="fixed z-10 overflow-y-auto top-0 w-full left-0" id="modal">
-    <div class="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+  <!-- <div v-show="showModal" class="fixed z-10 top-0 w-full left-0" id="modal">
+    <div class="flex items-center justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed inset-0 transition-opacity">
         <div class="absolute inset-0 bg-gray-900 opacity-75" @click="toggleModal"></div>
       </div>
 
       <span class="hidden align-middle sm:h-screen">&#8203;</span>
       <div class="inline-block text-black rounded-lg text-left shadow-xl transform transition-all my-8 align-middle max-w-lg w-full" role="dialog">
-        <div class="bg-white p-4" :style="{ gridTemplateRows: Object.keys(store.state.colorMap).length, gridAutoFlow: 'column' }">
-          <div v-for="(color, label) in store.state.colorMap" class="grid grid-cols-3">
+        <div class="bg-white p-4">
+          <span v-for="(color, label) in { ...store.state.colorMap }" class="grid grid-cols-3">
             <div class="col-span-2">{{ label }}</div>
-            <!-- <input type="color" v-model="color.color" /> -->
+            <input type="color" v-model="color.color" />
             <a href="#" :id="'label-' + label" :style="{ backgroundColor: color.color }"></a>
-          </div>
+          </span>
         </div>
         <div class="bg-gray-200 p-4 text-right">
           <button type="button" @click="saveNewColorScheme()">Save</button>
         </div>
+      </div>
+    </div>
+  </div> -->
+  <div id="modal" v-show="showModal" class="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
+    <div class="relative top-10 bottom-10 mx-auto shadow-lg rounded-md bg-white max-w-md">
+      <!-- Modal header -->
+      <!-- <div class="flex justify-between items-center bg-green-500 text-white text-xl rounded-t-md px-4 py-2">
+        <h3>Modal header</h3>
+        <button onclick="toggleModal()">x</button>
+      </div> -->
+
+      <!-- Modal body -->
+      <div class="bg-white text-black p-4">
+        <span v-for="(color, label) in { ...store.state.colorMap }" class="grid grid-cols-3">
+          <div class="col-span-2">{{ label }}</div>
+          <input type="color" v-model="color.color" />
+          <!-- <a href="#" :id="'label-' + label" :style="{ backgroundColor: color.color }"></a> -->
+        </span>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="px-4 py-2 border-t border-t-gray-500 flex justify-end items-center space-x-4">
+        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition" @click="saveNewColorScheme()">Close</button>
       </div>
     </div>
   </div>

@@ -46,7 +46,7 @@
 
     <div v-show="showLabelFilter">
       <div
-        v-for="(labelInfo, labelName) in colorMap"
+        v-for="(labelInfo, labelName) in { ...store.state.colorMap }"
         class="label-tag"
         :style="borderColor(labelInfo.color)"
         :class="{ 'label-selected': labelInfo.selected }"

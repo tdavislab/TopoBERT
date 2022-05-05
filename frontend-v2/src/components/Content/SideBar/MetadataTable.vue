@@ -35,6 +35,30 @@
     }
     return '#ffffff';
   }
+
+  function renderCell(row: string[], idx: number) {
+    if (idx !== 4) {
+      return row[idx];
+    } else {
+      const word_idx = parseInt(row[1]) - 1;
+      const sentence = row[4];
+      // underline word at word_idx in sentence
+      const sentence_split = sentence.split(' ');
+      const sentence_split_len = sentence_split.length;
+      let sentence_split_str = '';
+      for (let i = 0; i < sentence_split_len; i++) {
+        if (i === word_idx) {
+          sentence_split_str += `<span class="font-bold" style="text-decoration: underline">${sentence_split[i]}</span>`;
+        } else {
+          sentence_split_str += sentence_split[i];
+        }
+        if (i !== sentence_split_len - 1) {
+          sentence_split_str += ' ';
+        }
+      }
+      return sentence_split_str;
+    }
+  }
 </script>
 
 <template>
@@ -52,7 +76,7 @@
         </thead>
         <tbody style="height: 20px">
           <tr v-for="row in metadataTable.rows" :style="{ 'background-color': bgColor(row[3]), color: fgColor(bgColor(row[3])) }">
-            <td class="border-b px-2" v-for="cell in row">{{ cell }}</td>
+            <td class="border-b px-2" v-for="(cell, idx) in row"><span v-html="renderCell(row, idx)"></span></td>
           </tr>
         </tbody>
       </table>
