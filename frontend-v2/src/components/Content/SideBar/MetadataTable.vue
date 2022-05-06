@@ -69,7 +69,7 @@
         <font-awesome-icon :icon="showTable ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
     </div>
-    <div v-show="showTable" class="flex flex-col overflow-y-scroll" style="height: 25vh">
+    <div v-show="showTable" class="flex flex-col overflow-y-scroll" style="max-height: 400px">
       <table class="w-full border-collapse border-b shadow">
         <thead class="bg-slate-500 text-gray-50">
           <th class="border text-left px-2" v-for="headerItem in metadataTable.header">{{ headerItem }}</th>

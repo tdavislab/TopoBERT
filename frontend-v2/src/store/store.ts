@@ -33,6 +33,7 @@ const state: RootState = {
   selectedNodes: [],
   minLinkStrength: 1,
   nodeSize: 'constant',
+  isLoading: false,
 };
 
 const mutations = {
@@ -81,6 +82,9 @@ const mutations = {
   setMTable(state: RootState, tableRows: string[][]) {
     state.mTable.rows = tableRows;
   },
+  setLoading(state: RootState, loading: boolean) {
+    state.isLoading = loading;
+  },
 };
 
 const actions = {
@@ -103,6 +107,28 @@ const actions = {
         intervals: context.state.mapperParams.intervals.selected,
       },
     };
+
+    axios.interceptors.request.use(
+      (config) => {
+        context.commit('setLoading', true);
+        return config;
+      },
+      (error) => {
+        context.commit('setLoading', false);
+        return Promise.reject(error);
+      }
+    );
+
+    axios.interceptors.response.use(
+      (response) => {
+        context.commit('setLoading', false);
+        return response;
+      },
+      (error) => {
+        context.commit('setLoading', false);
+        return Promise.reject(error);
+      }
+    );
 
     axios
       .get(url, options)

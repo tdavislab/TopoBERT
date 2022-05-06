@@ -97,15 +97,15 @@ def mgraph():
         label_train = '../data/dep/entities/train_aug.txt'
         label_test = '../data/dep/entities/test_aug.txt'
     elif dataset == 'roberta':
-        activation_train_file = f'../data/roberta/train/{epoch}/{layer}.txt'
-        activation_test_file = f'../data/roberta/test/{epoch}/{layer}.txt'
-        label_train = '../data/ss-role/entities/train.txt'
-        label_test = '../data/ss-role/entities/test.txt'
+        activation_train_file = f'../data/roberta/fine-tuned-bert-base-uncased/train/{epoch}/{layer}.txt'
+        activation_test_file = f'../data/roberta/fine-tuned-bert-base-uncased/test/{epoch}/{layer}.txt'
+        label_train = '../data/roberta/entities/train.txt'
+        label_test = '../data/roberta/entities/test.txt'
     elif dataset == 'berttiny':
-        activation_train_file = f'../data/bert-tiny/train/{epoch}/{layer}.txt'
-        activation_test_file = f'../data/bert-tiny/test/{epoch}/{layer}.txt'
-        label_train = '../data/ss-role/entities/train.txt'
-        label_test = '../data/ss-role/entities/test.txt'
+        activation_train_file = f'../data/bert-tiny/fine-tuned-bert-base-uncased/train/{epoch}/{layer}.txt'
+        activation_test_file = f'../data/bert-tiny/fine-tuned-bert-base-uncased/test/{epoch}/{layer}.txt'
+        label_train = '../data/bert-tiny/entities/train.txt'
+        label_test = '../data/bert-tiny/entities/test.txt'
     else:
         raise ValueError('Dataset not supported')
 
@@ -135,8 +135,9 @@ def mgraph():
 
     if data_split == 'trainknntest':
         graph = graph_generator.get_mapper(activation_train, label_train, config)
+        predicted_labels = label_test_pred[str(epoch)] if dataset in ['ss-role', 'ss-func', 'roberta', 'berttiny'] else None
         graph, attachments = utils.add_test_nodes(graph, activation_train, activation_test,
-                                                  label_train, label_test, label_test_pred[str(epoch)])
+                                                  label_train, label_test, predicted_labels, dataset)
         projection = utils.compute_projection(activation_train, label_train, ['train'] * len(activation_train), 'PCA')
         app.activations = activation_train
         app.labels = label_train
@@ -156,6 +157,7 @@ def mgraph():
     #     purities, bin_edges = None, None
 
     # return jsonify(graph=graph, purities=purities, bin_edges=bin_edges)
+
     return jsonify(graph=graph, projection=projection, attachments=attachments)
 
 

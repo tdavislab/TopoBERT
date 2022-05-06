@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 from MulticoreTSNE import MulticoreTSNE as TSNE
 from umap import UMAP
 
-label_list = [
+label_list_ss = [
     'p.Circumstance', 'p.Time', 'p.StartTime', 'p.EndTime', 'p.Frequency', 'p.Duration', 'p.Interval', 'p.Locus', 'p.Goal', 'p.Source',
     'p.Path', 'p.Direction', 'p.Extent', 'p.Means', 'p.Manner', 'p.Explanation', 'p.Purpose', 'p.Causer', 'p.Agent', 'p.Co-Agent',
     'p.Theme', 'p.Co-Theme', 'p.Topic', 'p.Stimulus', 'p.Experiencer', 'p.Originator', 'p.Recipient', 'p.Cost', 'p.Beneficiary',
@@ -15,6 +15,13 @@ label_list = [
     'p.PartPortion', 'p.Stuff', 'p.Accompanier', 'p.ComparisonRef', 'p.RateUnit', 'p.Quantity', 'p.Approximator', 'p.SocialRel',
     'p.OrgRole'
 ]
+
+label_list_dep = ['acl', 'acl:relcl', 'advcl', 'advmod', 'advmod:emph', 'advmod:lmod', 'amod', 'appos', 'aux', 'aux:pass', 'case', 'cc',
+                  'cc:preconj', 'ccomp', 'clf', 'compound', 'compound:lvc', 'compound:prt', 'compound:redup', 'compound:svc', 'conj', 'cop',
+                  'csubj', 'csubj:pass', 'dep', 'det', 'det-predet', 'det:numgov', 'det:nummod', 'det:poss', 'discourse', 'dislocated',
+                  'expl', 'expl:impers', 'expl:pass', 'expl:pv', 'fixed', 'flat', 'flat:foreign', 'flat:name', 'goeswith', 'iobj', 'list',
+                  'mark', 'nmod', 'nmod:poss', 'nmod:tmod', 'nsubj', 'nsubj:pass', 'nummod', 'nummod:gov', 'obj', 'obl', 'obl:agent',
+                  'obl:arg', 'obl:lmod', 'obl:tmod', 'orphan', 'parataxis', 'punct', 'reparandum', 'root', 'vocative', 'xcomp']
 
 
 def get_purities(graph):
@@ -87,7 +94,7 @@ def fetch_test_metadata(test_label, test_ids):
     return metadata
 
 
-def add_test_nodes(graph, activation_train_df, activation_test_df, label_train, label_test, pred_labels):
+def add_test_nodes(graph, activation_train_df, activation_test_df, label_train, label_test, pred_labels, dataset):
 
     def memberPointify(metadata, mindex):
         metadata = dict(metadata)
@@ -95,7 +102,8 @@ def add_test_nodes(graph, activation_train_df, activation_test_df, label_train, 
         metadata['sentId'] = metadata.pop('sent_id')
         metadata['wordId'] = metadata.pop('word_id')
         metadata['classLabel'] = metadata.pop('label')
-        metadata['predLabel'] = pred_labels.iloc[mindex]
+        if pred_labels is not None:
+            metadata['predLabel'] = pred_labels.iloc[mindex]
         return metadata
 
     # fit nearest neighbors model on activations_train
@@ -103,15 +111,21 @@ def add_test_nodes(graph, activation_train_df, activation_test_df, label_train, 
     # get distances and indices of nearest neighbors on activations_test
     indices = nbrs.kneighbors(activation_test_df, return_distance=False)
 
+    if dataset == 'dep':
+        label_list = label_list_dep
+    else:
+        label_list = label_list_ss
+
     attachment_distributions = dict([(label, []) for label in label_list])
 
     graph_to_test_points = defaultdict(list)
 
     for i, train_index in enumerate(indices):
-        attachment_distributions[label_test.loc[i]['label']].append(label_train.loc[train_index[0]]['label'])
-        node_id = get_train_index_node_id(graph, train_index)
-        if node_id:
-            graph_to_test_points[node_id].append(i)
+        if label_test.loc[i]['label'] in label_list:
+            attachment_distributions[label_test.loc[i]['label']].append(label_train.loc[train_index[0]]['label'])
+            node_id = get_train_index_node_id(graph, train_index)
+            if node_id:
+                graph_to_test_points[node_id].append(i)
 
     for i, node_id in enumerate(graph_to_test_points):
         test_node_name = 'test_node_' + str(i)

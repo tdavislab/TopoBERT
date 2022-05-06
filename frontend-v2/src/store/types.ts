@@ -120,4 +120,5 @@ export interface RootState {
   bubbleGlyph: boolean;
   transitionEffect: boolean;
   selectedNodes: NodeEntity[];
+  isLoading: boolean;
 }
