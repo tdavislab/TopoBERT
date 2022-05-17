@@ -117,7 +117,7 @@ export const defaults = {
     Others: { color: '#989898', selected: false },
     // 'p.Test': { color: '#c7c7c7', selected: false },
   },
-  defaultColorSchemeDep: {
+  defaultColorSchemeDepBackup: {
     acl: { color: '#46075a', selected: false },
     'acl:relcl': { color: '#470d60', selected: false },
     advcl: { color: '#471365', selected: false },
@@ -182,6 +182,103 @@ export const defaults = {
     vocative: { color: '#ece51b', selected: false },
     xcomp: { color: '#f6e620', selected: false },
     Others: { color: '#989898', selected: false },
+  },
+  defaultColorSchemeDep: {
+    // core dependents of clausal predicates
+    nsubj: { color: '#56c667', selected: false },
+    'nsubj:pass': { color: '#56c667', selected: false },
+    'nsubj:outer': { color: '#56c667', selected: false },
+    obj: { color: '#80ce5c', selected: false },
+    iobj: { color: '#a9c152', selected: false },
+
+    csubj: { color: '#2cac7e', selected: false },
+    'csubj:pass': { color: '#2cac7e', selected: false },
+    'csubj:outer': { color: '#2cac7e', selected: false },
+    ccomp: { color: '#21b290', selected: false },
+
+    xcomp: { color: '#1febf1', selected: false },
+
+    // noun dependents
+    nummod: { color: '#8f5bd7', selected: false },
+    'nummod:gov': { color: '#8f5bd7', selected: false },
+    appos: { color: '#b08bed', selected: false },
+    nmod: { color: '#be2cdc', selected: false },
+    'nmod:npmod': { color: '#be2cdc', selected: false },
+    'nmod:poss': { color: '#be2cdc', selected: false },
+    'nmod:tmod': { color: '#be2cdc', selected: false },
+
+    acl: { color: '#46075a', selected: false },
+    'acl:relcl': { color: '#470d60', selected: false },
+
+    amod: { color: '#c31e8f', selected: false },
+    det: { color: '#e174c2', selected: false },
+    'det:predet': { color: '#e174c2', selected: false },
+    'det:numgov': { color: '#e174c2', selected: false },
+    'det:nummod': { color: '#e174c2', selected: false },
+    'det:poss': { color: '#e174c2', selected: false },
+
+    // case-marking, prepositions, possessive
+    case: { color: '#0a5d5d', selected: false },
+
+    // Non-core dependents of clausal predicates
+    obl: { color: '#f42f2f', selected: false },
+    'obl:agent': { color: '#f42f2f', selected: false },
+    'obl:npmod': { color: '#f42f2f', selected: false },
+    'obl:arg': { color: '#f42f2f', selected: false },
+    'obl:lmod': { color: '#f42f2f', selected: false },
+    'obl:tmod': { color: '#f42f2f', selected: false },
+
+    advcl: { color: '#b00b44', selected: false },
+
+    advmod: { color: '#4c0505', selected: false },
+    'advmod:emph': { color: '#4c0505', selected: false },
+    'advmod:lmod': { color: '#4c0505', selected: false },
+
+    // Compounding and unanalyzed
+    compound: { color: '#3b528b', selected: false },
+    'compound:lvc': { color: '#39568c', selected: false },
+    'compound:prt': { color: '#375b8d', selected: false },
+    'compound:redup': { color: '#355f8d', selected: false },
+    'compound:svc': { color: '#33638d', selected: false },
+    fixed: { color: '#1fa088', selected: false },
+
+    flat: { color: '#4e6eba', selected: false },
+    'flat:foreign': { color: '#4e6eba', selected: false },
+    'flat:name': { color: '#4e6eba', selected: false },
+    goeswith: { color: '#8098e5', selected: false },
+
+    // Loose joining relations
+    list: { color: '#44b632', selected: false },
+    dislocated: { color: '#379b2a', selected: false },
+    parataxis: { color: '#328425', selected: false },
+    orphan: { color: '#317132', selected: false },
+    reparandum: { color: '#67ae7f', selected: false },
+
+    // Special clausal dependents
+    vocative: { color: '#ff8e19', selected: false },
+    discourse: { color: '#c06a0b', selected: false },
+    expl: { color: '#9d4c00', selected: false },
+    'expl:impers': { color: '#9d4c00', selected: false },
+    'expl:pass': { color: '#9d4c00', selected: false },
+    'expl:pv': { color: '#9d4c00', selected: false },
+
+    aux: { color: '#e59e07', selected: false },
+    'aux:pass': { color: '#e59e07', selected: false },
+    cop: { color: '#9e6e05', selected: false },
+
+    mark: { color: '#c0a708', selected: false },
+
+    // Coordination
+    conj: { color: '#90f142', selected: false },
+    cc: { color: '#6ab231', selected: false },
+    'cc:preconj': { color: '#6ab231', selected: false },
+
+    // Other
+    root: { color: '#e2e418', selected: false },
+    punct: { color: '#ff9ca9', selected: false },
+    dep: { color: '#91e4ff', selected: false },
+
+    clf: { color: '#121212', selected: false },
   },
   defaultTable: {
     header: ['sent_id', 'word_id', 'word', 'label', 'sentence'],
