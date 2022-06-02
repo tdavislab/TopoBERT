@@ -163,6 +163,7 @@ def mgraph():
 
 @app.route('/get_graph', methods=['GET', 'POST'])
 def get_graph():
+    # possibly reduntant
     params: str = request.args.get('params')
     iteration: int = int(request.args.get('iteration'))
     layer: int = int(request.args.get('layer'))

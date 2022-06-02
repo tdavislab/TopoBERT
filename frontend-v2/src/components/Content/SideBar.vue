@@ -13,7 +13,7 @@
   <div class="grid gap-y-4">
     <MapperControls></MapperControls>
     <GraphControls> </GraphControls>
-    <!-- <Statistics></Statistics> -->
+    <Statistics></Statistics>
     <Projection></Projection>
     <FilterDistribution></FilterDistribution>
     <Attachment></Attachment>

@@ -40,7 +40,7 @@ export const defaults = {
       paramList: [
         { name: '25', value: 25 },
         { name: '50', value: 50 },
-        { name: '100', value: 100 },
+        { name: '75', value: 75 },
       ],
       selected: 50,
     },
