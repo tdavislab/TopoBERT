@@ -9,6 +9,7 @@
   import DropdownIntervals from './MapperControls/DropdownIntervals.vue';
   import DropdownOverlap from './MapperControls/DropdownOverlap.vue';
   import DropdownLayout from './MapperControls/DropdownLayout.vue';
+  import DropdownMinSamples from './MapperControls/DropdownMinSamples.vue';
 
   const store = useStore();
   const mapperParams = computed(() => store.state.mapperParams);
@@ -26,7 +27,9 @@
     <DropdownIntervals></DropdownIntervals>
     <DropdownOverlap></DropdownOverlap>
     <DropdownLayout></DropdownLayout>
-
+    <DropdownMinSamples></DropdownMinSamples>
+  </div>
+  <div class="grid gap-2 grid-cols-2">
     <UpdateGraph></UpdateGraph>
     <AddParamConfig></AddParamConfig>
   </div>

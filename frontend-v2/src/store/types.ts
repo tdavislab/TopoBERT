@@ -98,6 +98,7 @@ export type MapperParams = {
   intervals: ParamList;
   overlap: ParamList;
   layout: ParamList;
+  minSamples: ParamList;
 };
 
 export interface RootState {

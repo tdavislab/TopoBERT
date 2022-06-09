@@ -69,8 +69,9 @@ def mgraph():
     filter_func: str = request.args.get('filter')
     overlap: float = float(request.args.get('overlap', type=int)) / 100
     intervals: int = request.args.get('intervals', type=int)
+    min_samples: int = request.args.get('minSamples', type=int)
 
-    cache_key = f'{dataset}_{epoch}_{layer}_{data_split}_{metric}_{filter_func}_{overlap}_{intervals}'
+    cache_key = f'{dataset}_{epoch}_{layer}_{data_split}_{metric}_{filter_func}_{overlap}_{intervals}_{min_samples}'
 
     if CACHING and cache_key in cache:
         app.logger.info(f'Cache hit for {cache_key}')
@@ -79,7 +80,7 @@ def mgraph():
 
     app.logger.info(f'Request params = {dataset} {epoch} {layer} {data_split} {metric} {filter_func} {overlap} {intervals}')
 
-    config = graph_generator.Config(metric=metric, filter_func=filter_func, intervals=intervals, overlap=overlap)
+    config = graph_generator.Config(metric=metric, filter_func=filter_func, intervals=intervals, overlap=overlap, min_samples=min_samples)
 
     if dataset == 'ss-role':
         activation_train_file = f'../data/ss-role/fine-tuned-bert-base-uncased/train/{epoch}/{layer}.txt'

@@ -170,7 +170,6 @@ function BeeswarmChart(
 ) {
   // Compute values.
   const X = d3.map(data, x).map((x) => (x == null ? NaN : +x));
-  console.log({ data, d3, x });
   const T = title == null ? null : d3.map(data, title);
   const G = group == null ? null : d3.map(data, group);
 

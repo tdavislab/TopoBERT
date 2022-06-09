@@ -1,6 +1,7 @@
 from calendar import leapdays
 from collections import defaultdict
 import dataclasses
+from distutils.command.config import config
 from email.policy import default
 
 import kneed
@@ -31,6 +32,7 @@ class Config:
     filter_func: str = 'l2'
     intervals: int = 50
     overlap: float = 0.5
+    min_samples: int = 3
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -189,7 +191,6 @@ def memberPointify(metadata, mindex):
 def add_node_metadata(graph, metadata_source, activations):
     # create PCA model first
     nodewise_activations = np.vstack([np.mean(activations.iloc[graph['nodes'][node_name]], axis=0) for node_name in graph['nodes']])
-    print(nodewise_activations.shape)
     pca_positions = PCA(n_components=2).fit_transform(nodewise_activations)
 
     for i, node_name in enumerate(graph['nodes']):
@@ -268,7 +269,7 @@ def elbow_eps(data):
     return eps
 
 
-def create_mapper(file_name, label_file, activation_file, graph_output_file, conf):
+def create_mapper(file_name, label_file, activation_file, graph_output_file, conf: Config):
     # if os.path.isfile(graph_output_file + file_name.replace('.txt', '.json')):
     #     return
 
@@ -292,7 +293,7 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
         raise KeyError('Unexpected filter function')
 
     eps = elbow_eps(activations)
-    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=DBSCAN_MIN_SAMPLES),
+    graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps, metric=conf.metric, min_samples=conf.min_samples),
                        cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
     add_node_metadata(graph, labels, activations)
@@ -301,7 +302,7 @@ def create_mapper(file_name, label_file, activation_file, graph_output_file, con
     return serialize_graph(graph), activations, labels
 
 
-def get_mapper(activations, labels, conf):
+def get_mapper(activations, labels, conf: Config):
     labels['l2norm'] = np.expand_dims(np.linalg.norm(activations.to_numpy(), axis=1), 1)
     mapper = km.KeplerMapper()
     eps = elbow_eps(activations)
@@ -320,7 +321,7 @@ def get_mapper(activations, labels, conf):
             raise KeyError('Unexpected filter function')
 
         graph = mapper.map(projected_data, activations, clusterer=DBSCAN(eps=eps * 0.75, metric=conf.metric,
-                           min_samples=DBSCAN_MIN_SAMPLES), cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
+                           min_samples=conf.min_samples), cover=km.Cover(n_cubes=conf.intervals, perc_overlap=conf.overlap))
 
     print(f'Generated graph with {len(graph["nodes"])} nodes and {len(graph["links"])} edges')
     add_node_metadata(graph, labels, activations)

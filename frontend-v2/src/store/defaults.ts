@@ -44,6 +44,14 @@ export const defaults = {
       ],
       selected: 50,
     },
+    minSamples: {
+      paramList: [
+        { name: '1', value: 1 },
+        { name: '3', value: 3 },
+        { name: '5', value: 5 },
+      ],
+      selected: 3,
+    },
     layout: {
       paramList: [
         { name: 'Force Directed', value: 'force' },

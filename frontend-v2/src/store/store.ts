@@ -105,6 +105,7 @@ const actions = {
         filter: context.state.mapperParams.filter.selected,
         overlap: context.state.mapperParams.overlap.selected,
         intervals: context.state.mapperParams.intervals.selected,
+        minSamples: context.state.mapperParams.minSamples.selected,
       },
     };
 
