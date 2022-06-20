@@ -40,7 +40,6 @@
     if (idx !== 4) {
       return row[idx];
     } else {
-      return;
       const word_idx = parseInt(row[1]) - 1;
       const sentence = row[4];
       // underline word at word_idx in sentence

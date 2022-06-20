@@ -31,3 +31,5 @@ notebooks/cache*/
 notebooks/images/
 backend/server-v2/cache*/
 backend/server-v2/cache/cache.db
+notebooks/gw-cache/*
+notebooks/Notes.md

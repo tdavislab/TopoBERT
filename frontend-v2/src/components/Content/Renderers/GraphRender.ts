@@ -55,16 +55,15 @@ export default class GraphRenderer {
     this.nodeSizeScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.memberPoints.length));
     this.nodeColorScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.avgFilterValue));
 
+    const forceLink = d3.forceLink(graph.links).id((d: any) => d.id);
+    const forceCharge = d3.forceManyBody().strength(-1000);
     const simulation = d3
       .forceSimulation(graph.nodes)
-      .force(
-        'link',
-        d3.forceLink(graph.links).id((d: any) => d.id)
-      )
-      .force('charge', d3.forceManyBody().strength(-1000))
+      .force('link', forceLink)
+      .force('charge', forceCharge)
       .force('center', d3.forceCenter(0, 0))
-      .force('x', d3.forceX())
-      .force('y', d3.forceY())
+      .force('x', d3.forceX().strength(0.1))
+      .force('y', d3.forceY().strength(0.1))
       .stop();
 
     simulation.tick(200);

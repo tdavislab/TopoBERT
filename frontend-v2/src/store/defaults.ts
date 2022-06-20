@@ -66,12 +66,12 @@ export const defaults = {
   },
   defaultDatasetList: {
     datasets: [
-      { name: 'SuperSense Role', value: 'ss-role' },
+      { name: 'SuperSense Role - BERT Base', value: 'ss-role' },
+      // { name: 'Part of Speech', value: 'pos' },
+      { name: 'SuperSense Role - RoBERTa', value: 'roberta' },
+      { name: 'SuporSense Role - BERTTiny', value: 'berttiny' },
       { name: 'SuperSense Function', value: 'ss-func' },
-      { name: 'Part of Speech', value: 'pos' },
       { name: 'Dependency', value: 'dep' },
-      { name: 'RoBERTa - SS Role', value: 'roberta' },
-      { name: 'BERTTiny -  SS Role', value: 'berttiny' },
     ],
     selected: 'ss-role',
   },

@@ -140,8 +140,6 @@ const actions = {
         const projectionData = response.data.projection as ProjectionData;
         const attachments = response.data.attachments as Attachment;
 
-        console.log(projectionData, context.state.colorMap);
-
         context.commit('setGraph', graph);
         context.commit('setProjectionData', projectionData);
 
