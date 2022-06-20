@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
-  import { useStore } from '../../store/store';
+  import { useStore } from '../../../../store/store';
 
   const store = useStore();
   const datasetList = computed(() => store.state.datasetList);
@@ -11,9 +11,9 @@
 </script>
 
 <template>
-  <div class="rounded">
+  <div class="grid grid-cols-3">
     <label for="dataset-select">Dataset</label>
-    <select name="dataset-select" id="dataset-select" class="" v-model="datasetList.selected" v-on:change="datasetUpdate()">
+    <select name="dataset-select" id="dataset-select" class="col-span-2" v-model="datasetList.selected" v-on:change="datasetUpdate()">
       <option disabled>Select Dataset</option>
       <option v-for="dataset in datasetList.datasets" :value="dataset.value">
         {{ dataset.name }}
@@ -23,10 +23,10 @@
 </template>
 
 <style lang="postcss" scoped>
-  label {
+  /* label {
     @apply bg-gray-200 rounded-l text-gray-500 p-2;
   }
   select {
     @apply text-gray-600 p-2 bg-gray-50 rounded-r hover:bg-gray-100 focus:outline focus:outline-2 focus:outline-blue-300;
-  }
+  } */
 </style>

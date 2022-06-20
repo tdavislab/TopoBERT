@@ -10,6 +10,7 @@
   import DropdownOverlap from './MapperControls/DropdownOverlap.vue';
   import DropdownLayout from './MapperControls/DropdownLayout.vue';
   import DropdownMinSamples from './MapperControls/DropdownMinSamples.vue';
+  import DatasetSelectorVue from './MapperControls/DatasetSelector.vue';
 
   const store = useStore();
   const mapperParams = computed(() => store.state.mapperParams);
@@ -21,6 +22,7 @@
 
 <template>
   <div class="grid gap-2 grid-cols-2">
+    <DatasetSelectorVue></DatasetSelectorVue>
     <DropdownDataSplit></DropdownDataSplit>
     <DropdownMetric></DropdownMetric>
     <DropdownFilter></DropdownFilter>
