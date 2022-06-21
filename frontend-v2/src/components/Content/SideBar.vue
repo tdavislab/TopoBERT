@@ -16,7 +16,7 @@
     <Statistics></Statistics>
     <Projection></Projection>
     <FilterDistribution></FilterDistribution>
-    <Attachment></Attachment>
+    <!-- <Attachment></Attachment> -->
     <LabelFilter></LabelFilter>
     <MetadataTable></MetadataTable>
   </div>

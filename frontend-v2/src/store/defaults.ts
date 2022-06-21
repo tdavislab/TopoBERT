@@ -292,9 +292,6 @@ export const defaults = {
     header: ['sent_id', 'word_id', 'word', 'label', 'sentence'],
     rows: [
       // TODO: Replace with approriate interface
-      // ['a', 'b', 'c', 'd'],
-      // ['a', 'b', 'c', 'd'],
-      // ['a', 'b', 'c', 'd'],
     ],
   },
   defaultGraph: {

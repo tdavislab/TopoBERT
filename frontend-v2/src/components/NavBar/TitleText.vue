@@ -1,5 +1,5 @@
 <template>
-  <span class="text-2xl">TopoBERT</span>
+  <span class="text-4xl">TopoBERT</span>
 </template>
 
 <script lang="ts" setup></script>

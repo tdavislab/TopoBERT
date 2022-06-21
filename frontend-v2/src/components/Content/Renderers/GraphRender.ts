@@ -64,10 +64,11 @@ export default class GraphRenderer {
       .force('center', d3.forceCenter(0, 0))
       .force('x', d3.forceX().strength(0.1))
       .force('y', d3.forceY().strength(0.1))
+      .alphaDecay(0.05)
       .stop();
 
-    simulation.tick(200);
-    // simulation.alphaDecay(1);
+    simulation.tick(100);
+    simulation.alphaDecay(0.05);
     simulation.restart();
 
     this.simulation = simulation;
