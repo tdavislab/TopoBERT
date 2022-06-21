@@ -10,15 +10,15 @@
   <div class="bg-slate-700 text-gray-50 p-4 w-full">
     <!-- <LayerSelector></LayerSelector> -->
     <!-- <DatasetSelector></DatasetSelector> -->
-    <div class="grid grid-cols-12 gap-x-3">
+    <div class="grid grid-cols-8 gap-x-3">
       <div class="col-span-2">
         <TitleText></TitleText>
       </div>
-      <div class="col-span-6"></div>
-      <div class="col-span-2">
+      <div class="col-span-5"></div>
+      <!-- <div class="col-span-1">
         <SearchBar></SearchBar>
-      </div>
-      <div class="col-span-1"></div>
+      </div> -->
+      <!-- <div class="col-span-1"></div> -->
       <div class="col-span-1">
         <ColorSchemeDesigner></ColorSchemeDesigner>
       </div>

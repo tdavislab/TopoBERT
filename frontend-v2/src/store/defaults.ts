@@ -289,7 +289,7 @@ export const defaults = {
     clf: { color: '#121212', selected: false },
   },
   defaultTable: {
-    header: ['sent_id', 'word_id', 'word', 'label', 'sentence'],
+    header: ['sent_id', 'word_id', 'word', 'class', 'sentence'],
     rows: [
       // TODO: Replace with approriate interface
     ],

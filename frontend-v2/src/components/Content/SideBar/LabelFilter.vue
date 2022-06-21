@@ -33,12 +33,12 @@
   <div class="grid gap-3 border rounded p-3 transition-all">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleLabelFilter()">
-        <span class="mr-2">Filter Labels</span>
+        <span class="mr-2">Highlight Classes in graph</span>
         <font-awesome-icon :icon="showLabelFilter ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
       <div class="flex">
         <div>
-          <span class="mr-2">Selected: {{ numSelected }}</span>
+          <span class="mr-2 text-base">Selected classes: {{ numSelected }}</span>
           <font-awesome-icon icon="times-circle" class="cursor-pointer" title="Clear selection" @click="clearLabelSelection()"></font-awesome-icon>
         </div>
       </div>

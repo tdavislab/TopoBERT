@@ -34,7 +34,7 @@
 </script>
 
 <template>
-  <div><button @click="toggleModal()">Change Color Scheme</button></div>
+  <div><button class="w-full" @click="toggleModal()">Change Color Scheme</button></div>
 
   <!-- <div v-show="showModal" class="fixed z-10 top-0 w-full left-0" id="modal">
     <div class="flex items-center justify-center pt-4 px-4 pb-20 text-center sm:block sm:p-0">

@@ -18,10 +18,10 @@
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative h-full">
     <div class="absolute right-0 m-2 text-gray-500 text-sm">{{ numNodes }} nodes, {{ numEdges }} edges</div>
 
-    <div id="svg-container" class="grid">
+    <div id="svg-container" class="grid h-full">
       <svg id="new-svg" width="100%" height="100%" class="h-0 absolute w-0" viewBox="-2000 -1250 4000 2500">
         <g id="new-svg-g">
           <g class="link_group"></g>

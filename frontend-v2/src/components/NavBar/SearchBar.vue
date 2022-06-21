@@ -24,9 +24,10 @@
 </script>
 
 <template>
-  <div class="rounded">
-    <input type="search" placeholder="Search by word" v-model="searchTerm" v-on:keyup.enter="filterWord()" />
-    <button @click="filterWord()">
+  <div class="rounded grid grid-cols-12 border p-3 items-center">
+    <label class="col-span-4">Search word in graph:</label>
+    <input class="col-span-6 bg-gray-100" type="search" placeholder="" v-model="searchTerm" v-on:keyup.enter="filterWord()" />
+    <button @click="filterWord()" class="col-span-2 text-white">
       <font-awesome-icon icon="search"></font-awesome-icon>
     </button>
   </div>

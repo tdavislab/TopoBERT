@@ -8,7 +8,7 @@
 
 <template>
   <div id="param-filter-div" class="grid grid-cols-3">
-    <label for="filter-select">Filter</label>
+    <label for="filter-select">Filter function</label>
     <select name="filter-select" id="filter-select" class="col-span-2" v-model="mapperParams.filter.selected">
       <option disabled>Select filter</option>
       <option v-for="filter in mapperParams.filter.paramList" :value="filter.value">
