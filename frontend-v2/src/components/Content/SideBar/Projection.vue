@@ -9,7 +9,7 @@
 </script>
 
 <template>
-  <div class="grid gap-3 border rounded p-3 bg-gray-50 transition-all">
+  <div class="grid gap-3 border rounded p-3 transition-all">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleStats()">
         <span class="mr-2">Projection</span>

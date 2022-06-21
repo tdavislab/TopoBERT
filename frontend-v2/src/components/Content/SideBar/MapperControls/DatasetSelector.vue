@@ -11,9 +11,9 @@
 </script>
 
 <template>
-  <div class="grid grid-cols-3">
+  <div class="grid grid-cols-4">
     <label for="dataset-select">Dataset</label>
-    <select name="dataset-select" id="dataset-select" class="col-span-2" v-model="datasetList.selected" v-on:change="datasetUpdate()">
+    <select name="dataset-select" id="dataset-select" class="col-span-3" v-model="datasetList.selected" v-on:change="datasetUpdate()">
       <option disabled>Select Dataset</option>
       <option v-for="dataset in datasetList.datasets" :value="dataset.value">
         {{ dataset.name }}

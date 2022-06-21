@@ -9,14 +9,14 @@
 </script>
 
 <template>
-  <div class="grid gap-4 border rounded p-3 bg-gray-50">
-    <LayerSelector></LayerSelector>
-  </div>
-  <div class="grid gap-4 border rounded p-3 bg-gray-50">
-    <IterationSlider></IterationSlider>
-    <!-- <JaccardFilter></JaccardFilter> -->
-    <!-- <NodeSizeToggle></NodeSizeToggle> -->
-  </div>
+  <!-- <div class="grid gap-4 border rounded p-3 bg-gray-50"> -->
+  <!-- <LayerSelector></LayerSelector> -->
+  <!-- </div> -->
+  <!-- <div class="grid gap-4 border rounded p-3 bg-gray-50"> -->
+  <!-- <IterationSlider></IterationSlider> -->
+  <!-- <JaccardFilter></JaccardFilter> -->
+  <!-- <NodeSizeToggle></NodeSizeToggle> -->
+  <!-- </div> -->
 
   <!-- <div class="grid gap-4 border rounded p-3 bg-gray-50">
     <div class="grid grid-cols-3">

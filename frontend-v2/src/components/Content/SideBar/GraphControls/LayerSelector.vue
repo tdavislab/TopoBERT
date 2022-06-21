@@ -13,8 +13,8 @@
 
 <template>
   <div class="grid grid-cols-12">
-    <span class="col-span-1 my-2">Layer:</span>
-    <div class="col-span-11">
+    <span class="col-span-2 my-2">Layer:</span>
+    <div class="col-span-10">
       <div v-for="layerId in layers" class="layer-btn" :class="{ selectedlayer: selectedLayer === layerId }" @click="changeLayer(layerId)">
         {{ layerId }}
       </div>

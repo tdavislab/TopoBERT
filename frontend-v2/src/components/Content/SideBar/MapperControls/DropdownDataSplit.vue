@@ -7,9 +7,9 @@
 </script>
 
 <template>
-  <div id="param-datasplit-div" class="grid grid-cols-3">
+  <div id="param-datasplit-div" class="grid grid-cols-4">
     <label for="data-split-select">Split</label>
-    <select name="data-split-select" id="data-split-select" class="col-span-2" v-model="mapperParams.dataSplit.selected">
+    <select name="data-split-select" id="data-split-select" class="col-span-3" v-model="mapperParams.dataSplit.selected">
       <option disabled>Select Data Split</option>
       <option v-for="dataSplit in mapperParams.dataSplit.paramList" :value="dataSplit.value">
         {{ dataSplit.name }}

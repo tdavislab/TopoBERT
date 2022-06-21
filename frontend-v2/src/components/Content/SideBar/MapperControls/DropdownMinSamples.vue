@@ -8,7 +8,7 @@
 
 <template>
   <div id="param-overlap-div" class="grid grid-cols-3">
-    <label for="overlap-select">Min Samples</label>
+    <label for="overlap-select">DBSCAN Min Samples</label>
     <select name="overlap-select" id="overlap-select" class="col-span-2" v-model="mapperParams.minSamples.selected">
       <option disabled>Select DBSCAN min_samples</option>
       <option v-for="minSample in mapperParams.minSamples.paramList" :value="minSample.value">

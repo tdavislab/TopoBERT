@@ -7,12 +7,22 @@
 </script>
 
 <template>
-  <div class="flex justify-between align-middle bg-slate-700 text-gray-50 p-4">
+  <div class="bg-slate-700 text-gray-50 p-4 w-full">
     <!-- <LayerSelector></LayerSelector> -->
     <!-- <DatasetSelector></DatasetSelector> -->
-    <TitleText></TitleText>
-    <SearchBar></SearchBar>
-    <ColorSchemeDesigner></ColorSchemeDesigner>
+    <div class="grid grid-cols-12 gap-x-3">
+      <div class="col-span-2">
+        <TitleText></TitleText>
+      </div>
+      <div class="col-span-6"></div>
+      <div class="col-span-2">
+        <SearchBar></SearchBar>
+      </div>
+      <div class="col-span-1"></div>
+      <div class="col-span-1">
+        <ColorSchemeDesigner></ColorSchemeDesigner>
+      </div>
+    </div>
   </div>
 </template>
 

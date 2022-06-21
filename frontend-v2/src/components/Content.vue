@@ -4,12 +4,12 @@
 </script>
 
 <template>
-  <div class="w-screen h-full p-2">
-    <div class="grid grid-cols-12 gap-x-3 h-full">
-      <div class="col-span-8 h-full border rounded">
+  <div class="p-2">
+    <div class="grid grid-cols-12 gap-x-3">
+      <div class="col-span-9 border rounded">
         <Graph></Graph>
       </div>
-      <div class="col-span-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100;">
+      <div class="col-span-3 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-100;">
         <SideBar></SideBar>
       </div>
     </div>

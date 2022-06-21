@@ -1,39 +1,39 @@
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
   import { useStore } from '../../../store/store';
   import AddParamConfig from './MapperControls/AddParamConfig.vue';
-  import UpdateGraph from './MapperControls/UpdateGraph.vue';
-  import DropdownDataSplit from './MapperControls/DropdownDataSplit.vue';
   import DropdownMetric from './MapperControls/DropdownMetric.vue';
   import DropdownFilter from './MapperControls/DropdownFilter.vue';
   import DropdownIntervals from './MapperControls/DropdownIntervals.vue';
   import DropdownOverlap from './MapperControls/DropdownOverlap.vue';
   import DropdownLayout from './MapperControls/DropdownLayout.vue';
   import DropdownMinSamples from './MapperControls/DropdownMinSamples.vue';
-  import DatasetSelectorVue from './MapperControls/DatasetSelector.vue';
 
   const store = useStore();
-  const mapperParams = computed(() => store.state.mapperParams);
+  let showMapperControls = ref(false);
 
-  function updateParams() {
-    store.dispatch('updateGraph');
+  function toggleMapperControls() {
+    showMapperControls.value = !showMapperControls.value;
   }
 </script>
 
 <template>
-  <div class="grid gap-2 grid-cols-2">
-    <DatasetSelectorVue></DatasetSelectorVue>
-    <DropdownDataSplit></DropdownDataSplit>
-    <DropdownMetric></DropdownMetric>
-    <DropdownFilter></DropdownFilter>
-    <DropdownIntervals></DropdownIntervals>
-    <DropdownOverlap></DropdownOverlap>
-    <DropdownLayout></DropdownLayout>
-    <DropdownMinSamples></DropdownMinSamples>
-  </div>
-  <div class="grid gap-2 grid-cols-2">
-    <UpdateGraph></UpdateGraph>
-    <AddParamConfig></AddParamConfig>
+  <div class="grid gap-3 border rounded p-3 transition-all">
+    <div class="text-xl flex justify-between">
+      <span class="cursor-pointer" @click="toggleMapperControls()">
+        <span class="mr-2">Mapper Parameters</span>
+        <font-awesome-icon :icon="showMapperControls ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
+      </span>
+    </div>
+    <div v-show="showMapperControls" class="grid gap-2">
+      <DropdownMetric></DropdownMetric>
+      <DropdownFilter></DropdownFilter>
+      <DropdownIntervals></DropdownIntervals>
+      <DropdownOverlap></DropdownOverlap>
+      <DropdownMinSamples></DropdownMinSamples>
+      <DropdownLayout></DropdownLayout>
+      <AddParamConfig></AddParamConfig>
+    </div>
   </div>
 </template>
 
