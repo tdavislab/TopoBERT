@@ -5,6 +5,7 @@
   import Projection from './SideBar/Projection.vue';
   import DatasetControls from './SideBar/DatasetControls.vue';
   import UpdateGraph from './SideBar/MapperControls/UpdateGraph.vue';
+  import InputDataPanel from './SideBar/InputDataPanel/InputDataPanel.vue';
 </script>
 
 <template>
@@ -12,10 +13,9 @@
     <div class="grid gap-y-4">
       <UpdateGraph></UpdateGraph>
       <DatasetControls></DatasetControls>
+      <InputDataPanel></InputDataPanel>
       <MapperControls></MapperControls>
       <GraphControls> </GraphControls>
-      <MetadataTable></MetadataTable>
-      <Projection></Projection>
     </div>
   </div>
 </template>

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
   import { computed, ref } from 'vue';
   import { store } from '../../../store/store';
+  import Projection from './Projection.vue';
 
-  let showTable = ref(false);
+  let showTable = ref(true);
   const metadataTable = computed(() => {
     let sortedRows = store.state.mTable.rows.sort((a, b) => {
       if (a[3] < b[3]) {
@@ -65,11 +66,11 @@
   <div class="grid gap-3 border rounded p-3 transition-all">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleTable()">
-        <span class="mr-2">Input Data Panel</span>
+        <span class="mr-2">Selected Nodes' Input Data Examples</span>
         <font-awesome-icon :icon="showTable ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
     </div>
-    <div v-show="showTable" class="flex flex-col overflow-y-scroll" style="max-height: 600px">
+    <div v-show="showTable" class="flex flex-col overflow-y-scroll" style="max-height: 500px">
       <table class="w-full border-collapse border-b shadow">
         <thead class="bg-slate-500 text-gray-50">
           <th class="border text-left px-2" v-for="headerItem in metadataTable.header">{{ headerItem }}</th>
