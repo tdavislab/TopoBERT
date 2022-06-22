@@ -35,7 +35,7 @@
 </script>
 
 <template>
-  <div class="absolute m-5 bottom-0" style="width: 350px" :class="showMinimap ? 'visible' : 'invisible'">
+  <div class="absolute m-5 top-0" style="width: 350px" :class="showMinimap ? 'visible' : 'invisible'">
     <button class="absolute right-0 m-2" @click="store.commit('resetSelectedNodes')">Reset</button>
     <svg id="minimap-svg" class="border rounded shadow bg-white" width="350" height="150">
       <g transform="translate(75, 75)">

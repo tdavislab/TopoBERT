@@ -7,9 +7,9 @@ export const defaults = {
     dataSplit: {
       paramList: [
         { name: 'Train', value: 'train' },
-        { name: 'Test', value: 'test' },
-        { name: 'Train ∪ Test', value: 'trainutest' },
-        { name: 'Train + Test (knn)', value: 'trainknntest' },
+        { name: 'Validation', value: 'test' },
+        // { name: 'Train ∪ Test', value: 'trainutest' },
+        { name: 'Train + Validation (via Node attachment)', value: 'trainknntest' },
       ],
       selected: 'train',
     },
