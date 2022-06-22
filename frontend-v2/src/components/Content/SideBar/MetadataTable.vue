@@ -66,7 +66,7 @@
   <div class="grid gap-3 border rounded p-3 transition-all bg-gray-50">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleTable()">
-        <span class="mr-2">Selected Nodes' Input Data Examples</span>
+        <span class="mr-2">Selected Nodes' Data</span>
         <font-awesome-icon :icon="showTable ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
     </div>
