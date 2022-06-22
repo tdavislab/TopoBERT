@@ -24,10 +24,10 @@
 </script>
 
 <template>
-  <div class="rounded grid grid-cols-12 border p-3 items-center">
+  <div class="rounded grid grid-cols-12 border p-3 items-center bg-gray-50">
     <label class="col-span-4">Search word in graph:</label>
-    <input class="col-span-6 bg-gray-100" type="search" placeholder="" v-model="searchTerm" v-on:keyup.enter="filterWord()" />
-    <button @click="filterWord()" class="col-span-2 text-white">
+    <input class="col-span-6 bg-gray-200" type="search" placeholder="" v-model="searchTerm" v-on:keyup.enter="filterWord()" />
+    <button @click="filterWord()" class="col-span-2 text-white rounded">
       <font-awesome-icon icon="search"></font-awesome-icon>
     </button>
   </div>
@@ -38,6 +38,6 @@
     @apply rounded-l p-2 text-gray-600 outline-none focus:outline focus:outline-2 focus:outline-blue-300 focus:outline-offset-0;
   }
   button {
-    @apply p-2 px-3 rounded-r bg-indigo-500 rounded hover:bg-indigo-600 transition-all;
+    @apply p-2 px-3 rounded-r bg-indigo-500 hover:bg-indigo-600 transition-all;
   }
 </style>

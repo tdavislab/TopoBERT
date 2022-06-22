@@ -9,14 +9,14 @@
 </script>
 
 <template>
-  <div class="grid gap-3 border rounded p-3 transition-all">
+  <div class="grid gap-3 border rounded p-3 transition-all bg-gray-50">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleStats()">
         <span class="mr-2">Input Data PCA Projection</span>
         <font-awesome-icon :icon="showProjection ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
     </div>
-    <svg v-show="showProjection" id="projection-svg" class="bg-white" width="100%" height="450" viewBox="0 0 100 100">
+    <svg v-show="showProjection" id="projection-svg" class="bg-white border" width="100%" height="450" viewBox="0 0 100 100">
       <g id="projection-svg-g"></g>
     </svg>
   </div>

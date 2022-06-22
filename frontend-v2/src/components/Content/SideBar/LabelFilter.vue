@@ -30,7 +30,7 @@
 </script>
 
 <template>
-  <div class="grid gap-3 border rounded p-3 transition-all">
+  <div class="grid gap-3 border rounded p-3 transition-all bg-gray-50">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleLabelFilter()">
         <span class="mr-2">Highlight Classes in graph</span>
