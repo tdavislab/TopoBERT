@@ -70,8 +70,8 @@ export interface MemberPoints {
 }
 
 export interface LinkEntity {
-  source: string;
-  target: string;
+  source: NodeEntity;
+  target: NodeEntity;
   intersection: number;
 }
 

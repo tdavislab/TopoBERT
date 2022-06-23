@@ -33,7 +33,7 @@ export default class GraphRenderer {
     this.nodeColorScale = d3.scaleSequential(d3.interpolateTurbo);
     this.nodeSizeScale = d3.scaleLinear().range([15, 50]);
     this.linkColorScale = d3.scaleSequential(d3.interpolatePlasma);
-    this.linkSizeScale = d3.scaleLinear().range([1, 10]);
+    this.linkSizeScale = d3.scaleLinear().range([5, 20]);
     this.glyphRenderer = new PieGlyph(8);
     this.nodeD3 = d3.select('#graph-svg').selectAll('g');
     this.linkD3 = d3.select('#graph-svg').selectAll('line');
@@ -55,8 +55,14 @@ export default class GraphRenderer {
     this.nodeSizeScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.memberPoints.length));
     this.nodeColorScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.avgFilterValue));
 
+    // find largest node's index
+    const max_node_index = d3.maxIndex(graph.nodes, (node) => node.memberPoints.length);
+    console.log('max_node_index', max_node_index);
+
     const forceLink = d3.forceLink(graph.links).id((d: any) => d.id);
-    const forceCharge = d3.forceManyBody().strength(-1000);
+    // const forceCharge = d3.forceManyBody().strength(-1000);
+    const forceCharge = d3.forceManyBody().strength((d: any, i: number) => (i === max_node_index ? -10000 : -500));
+
     const simulation = d3
       .forceSimulation(graph.nodes)
       .force('link', forceLink)
@@ -101,6 +107,43 @@ export default class GraphRenderer {
 
       store.dispatch('updateMetadataTable');
     });
+
+    nodes
+      .on('mouseenter', function (enterEvent, d) {
+        // find IDs of all nodes in the connected component
+        function connectedComponent(node: NodeEntity) {
+          const visited = new Set();
+          const queue = [node];
+
+          while (queue.length > 0) {
+            const current = queue.shift()!;
+            visited.add(current.id);
+
+            const current_node_links = graph.links.filter((link) => link.source.id === current.id || link.target.id === current.id);
+
+            for (const link of current_node_links) {
+              if (link.source.id === current.id && !visited.has(link.target.id)) {
+                queue.push(link.target);
+              } else if (link.target.id === current.id && !visited.has(link.source.id)) {
+                queue.push(link.source);
+              }
+            }
+          }
+
+          return visited;
+        }
+
+        const connected_component = connectedComponent(d);
+        links
+          .transition()
+          .duration(500)
+          .attr('opacity', 0.05)
+          .filter((link) => connected_component.has(link.source.id) || connected_component.has(link.target.id))
+          .attr('opacity', 1);
+      })
+      .on('mouseleave', function (leaveEvent, d) {
+        links.attr('opacity', 1);
+      });
 
     this.nodeD3 = nodes;
     this.linkD3 = links;
