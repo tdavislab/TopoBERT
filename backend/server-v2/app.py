@@ -103,10 +103,10 @@ def mgraph():
         label_train = '../data/roberta/entities/train.txt'
         label_test = '../data/roberta/entities/test.txt'
     elif dataset == 'berttiny':
-        activation_train_file = f'../data/bert-tiny/fine-tuned-bert-base-uncased/train/{epoch}/{layer}.txt'
-        activation_test_file = f'../data/bert-tiny/fine-tuned-bert-base-uncased/test/{epoch}/{layer}.txt'
-        label_train = '../data/bert-tiny/entities/train.txt'
-        label_test = '../data/bert-tiny/entities/test.txt'
+        activation_train_file = f'../data/berttiny/fine-tuned-bert-base-uncased/train/{epoch}/{layer}.txt'
+        activation_test_file = f'../data/berttiny/fine-tuned-bert-base-uncased/test/{epoch}/{layer}.txt'
+        label_train = '../data/berttiny/entities/train.txt'
+        label_test = '../data/berttiny/entities/test.txt'
     else:
         raise ValueError('Dataset not supported')
 

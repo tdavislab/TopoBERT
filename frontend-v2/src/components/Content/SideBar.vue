@@ -1,7 +1,6 @@
 <script lang="ts" setup>
   import MapperControls from './SideBar/MapperControls.vue';
   import GraphControls from './SideBar/GraphControls.vue';
-  import MetadataTable from './SideBar/MetadataTable.vue';
   import Projection from './SideBar/Projection.vue';
   import DatasetControls from './SideBar/DatasetControls.vue';
   import UpdateGraph from './SideBar/MapperControls/UpdateGraph.vue';
@@ -16,6 +15,7 @@
       <InputDataPanel></InputDataPanel>
       <MapperControls></MapperControls>
       <GraphControls> </GraphControls>
+      <Projection></Projection>
     </div>
   </div>
 </template>

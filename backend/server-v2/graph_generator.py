@@ -266,6 +266,8 @@ def elbow_eps(data):
     distances = np.sort(distances, axis=0)[::-1]
     kneedle = kneed.KneeLocator(distances[:, 1], np.linspace(0, 1, num=len(distances)), curve='convex', direction='decreasing')
     eps = kneedle.knee
+    if eps is None:
+        eps = 15
     return eps
 
 

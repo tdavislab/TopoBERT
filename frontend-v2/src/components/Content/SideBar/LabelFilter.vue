@@ -27,6 +27,13 @@
   function clearLabelSelection() {
     store.commit('clearLabelSelection');
   }
+
+  function processLabel(labelName: string) {
+    if (labelName.startsWith('p.')) {
+      return labelName.split('.')[1];
+    }
+    return labelName;
+  }
 </script>
 
 <template>
@@ -52,7 +59,7 @@
         :class="{ 'label-selected': labelInfo.selected }"
         @click="filterClickHandler(labelInfo)"
       >
-        {{ labelName }}
+        {{ processLabel(labelName) }}
       </div>
     </div>
   </div>

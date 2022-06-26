@@ -39,6 +39,9 @@
 
   function renderCell(row: string[], idx: number) {
     if (idx !== 4) {
+      if (idx === 3 && row[idx].startsWith('p.')) {
+        return row[idx].split('.')[1];
+      }
       return row[idx];
     } else {
       const word_idx = parseInt(row[1]) - 1;
@@ -66,7 +69,7 @@
   <div class="grid gap-3 border rounded p-3 transition-all bg-gray-50">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleTable()">
-        <span class="mr-2">Selected Nodes' Data</span>
+        <span class="mr-2">Sentence Data</span>
         <font-awesome-icon :icon="showTable ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
     </div>

@@ -68,6 +68,7 @@ const mutations = {
   resetSelectedNodes(state: RootState) {
     state.selectedNodes = [];
     state.graphRenderer.clearHighlight();
+    state.mTable.rows = [['-', '-', '-', '-', '-']];
   },
   setTrackingMode(state: RootState, mode: boolean) {
     state.trackingMode = mode;

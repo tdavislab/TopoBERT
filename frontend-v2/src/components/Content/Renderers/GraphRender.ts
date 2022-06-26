@@ -1,7 +1,4 @@
 import * as d3 from 'd3';
-import { BaseType, HierarchyPointNode, Path, PieArcDatum, utcParse } from 'd3';
-import { onUpdated } from 'vue';
-import { defaults } from '../../../store/defaults';
 import { store } from '../../../store/store';
 import { Graph, NodeEntity, LinkEntity, MemberPoints } from '../../../store/types';
 import PieGlyph from './PieGlyphRenderer';
@@ -33,7 +30,7 @@ export default class GraphRenderer {
     this.nodeColorScale = d3.scaleSequential(d3.interpolateTurbo);
     this.nodeSizeScale = d3.scaleLinear().range([15, 50]);
     this.linkColorScale = d3.scaleSequential(d3.interpolatePlasma);
-    this.linkSizeScale = d3.scaleLinear().range([5, 20]);
+    this.linkSizeScale = d3.scaleLinear().range([1, 10]);
     this.glyphRenderer = new PieGlyph(8);
     this.nodeD3 = d3.select('#graph-svg').selectAll('g');
     this.linkD3 = d3.select('#graph-svg').selectAll('line');
@@ -55,13 +52,11 @@ export default class GraphRenderer {
     this.nodeSizeScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.memberPoints.length));
     this.nodeColorScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.avgFilterValue));
 
-    // find largest node's index
-    const max_node_index = d3.maxIndex(graph.nodes, (node) => node.memberPoints.length);
-    console.log('max_node_index', max_node_index);
-
     const forceLink = d3.forceLink(graph.links).id((d: any) => d.id);
-    // const forceCharge = d3.forceManyBody().strength(-1000);
-    const forceCharge = d3.forceManyBody().strength((d: any, i: number) => (i === max_node_index ? -10000 : -500));
+    const forceCharge = d3.forceManyBody().strength(-1000);
+    // find largest node's index
+    // const max_node_index = d3.maxIndex(graph.nodes, (node) => node.memberPoints.length);
+    // const forceCharge = d3.forceManyBody().strength((d: any, i: number) => (i === max_node_index ? -10000 : -500));
 
     const simulation = d3
       .forceSimulation(graph.nodes)
@@ -137,12 +132,13 @@ export default class GraphRenderer {
         links
           .transition()
           .duration(500)
-          .attr('opacity', 0.05)
+          .attr('opacity', 0.15)
+          // .attr('stroke-width', (d) => {this
           .filter((link) => connected_component.has(link.source.id) || connected_component.has(link.target.id))
           .attr('opacity', 1);
       })
       .on('mouseleave', function (leaveEvent, d) {
-        links.attr('opacity', 1);
+        links.transition().duration(500).attr('opacity', 1);
       });
 
     this.nodeD3 = nodes;

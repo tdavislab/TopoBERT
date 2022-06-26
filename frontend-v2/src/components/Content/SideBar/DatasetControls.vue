@@ -18,7 +18,7 @@
   <div class="grid gap-3 border rounded p-3 transition-all">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleDataControls()">
-        <span class="mr-2">Data Controls</span>
+        <span class="mr-2">Data Source parameters</span>
         <font-awesome-icon :icon="showDataControls ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
     </div>

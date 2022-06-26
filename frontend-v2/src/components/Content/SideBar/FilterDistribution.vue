@@ -19,13 +19,13 @@
 </script>
 
 <template>
-  <div class="grid gap-3 border rounded p-3 transition-all">
+  <div class="grid gap-3 border rounded p-3 transition-all bg-gray-50">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleStats()">
-        <span class="mr-2">Selected Node Filter Function Distribution</span>
+        <span class="mr-2">Filter Function Distribution</span>
         <font-awesome-icon :icon="showFilterDistribution ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
-      <span class="text-base">Num Selected: {{ numSelected }}</span>
+      <!-- <span class="text-base">Number of selected nodes: {{ numSelected }}</span> -->
     </div>
     <svg v-show="showFilterDistribution" id="filter-dist-svg" class="bg-white" width="100%" height="300" viewBox="0 0 1000 500">
       <g id="filter-dist-svg-g">
