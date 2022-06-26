@@ -166,6 +166,7 @@ const actions = {
         }
 
         context.dispatch('updateMetadataTable');
+        context.commit('clearLabelSelection');
       })
       .catch((error) => {
         console.log(error);
