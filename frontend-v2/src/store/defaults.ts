@@ -291,6 +291,7 @@ export const defaults = {
   defaultTable: {
     header: ['sent_id', 'word_id', 'word', 'class', 'sentence'],
     rows: [
+      ['-', '-', '-', '-', '-'],
       // TODO: Replace with approriate interface
     ],
   },
