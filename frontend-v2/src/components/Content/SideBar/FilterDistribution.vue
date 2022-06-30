@@ -22,7 +22,7 @@
   <div class="grid gap-3 border rounded p-3 transition-all bg-gray-50">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleStats()">
-        <span class="mr-2">Filter Function Distribution</span>
+        <span class="mr-2">Lens (Filter Function) Distribution</span>
         <font-awesome-icon :icon="showFilterDistribution ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
       <!-- <span class="text-base">Number of selected nodes: {{ numSelected }}</span> -->
