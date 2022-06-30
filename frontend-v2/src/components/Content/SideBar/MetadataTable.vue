@@ -76,7 +76,9 @@
     <div v-show="showTable" class="flex flex-col overflow-y-scroll" style="max-height: 500px">
       <table class="w-full border-collapse border-b shadow">
         <thead class="bg-slate-500 text-gray-50">
-          <th class="border text-left px-2" v-for="headerItem in metadataTable.header">{{ headerItem }}</th>
+          <tr>
+            <th class="border text-left px-2 sticky top-0 bg-slate-500" v-for="headerItem in metadataTable.header">{{ headerItem }}</th>
+          </tr>
         </thead>
         <tbody style="height: 20px">
           <tr v-for="row in metadataTable.rows" :style="{ 'background-color': bgColor(row[3]), color: fgColor(bgColor(row[3])) }">
