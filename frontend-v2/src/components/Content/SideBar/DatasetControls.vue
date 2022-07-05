@@ -3,9 +3,7 @@
   import IterationSlider from './GraphControls/IterationSlider.vue';
   import DatasetSelector from './MapperControls/DatasetSelector.vue';
   import DropdownDataSplit from './MapperControls/DropdownDataSplit.vue';
-  import AddParamConfig from './MapperControls/AddParamConfig.vue';
-  import UpdateGraph from './MapperControls/UpdateGraph.vue';
-  import { computed, ref } from 'vue';
+  import { ref } from 'vue';
 
   let showDataControls = ref(true);
 
@@ -18,7 +16,7 @@
   <div class="grid gap-3 border rounded p-3 transition-all">
     <div class="text-xl flex justify-between">
       <span class="cursor-pointer" @click="toggleDataControls()">
-        <span class="mr-2">Data Source parameters</span>
+        <span class="mr-2">Data Source Parameters</span>
         <font-awesome-icon :icon="showDataControls ? 'chevron-up' : 'chevron-down'"></font-awesome-icon>
       </span>
     </div>
@@ -42,3 +40,5 @@
     @apply text-gray-600 p-2 bg-gray-100 rounded-r  hover:bg-gray-200 focus:outline focus:outline-2 focus:outline-blue-300;
   }
 </style>
+
+<!-- summary of chapters - what is impact - how they can go from here from a high-level point of view. tools and techniques for furthering and expanding -->

@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <div class="p-2 h-full">
+  <div class="p-2 h-full overflow-scroll">
     <div class="grid grid-cols-12 gap-x-3 h-full">
       <div class="col-span-8 border rounded">
         <Graph></Graph>

@@ -52,8 +52,15 @@ export default class GraphRenderer {
     this.nodeSizeScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.memberPoints.length));
     this.nodeColorScale.domain(<[number, number]>d3.extent(graph.nodes, (node) => node.avgFilterValue));
 
-    const forceLink = d3.forceLink(graph.links).id((d: any) => d.id);
+    const forceLink = d3
+      .forceLink(graph.links)
+      .id((d: any) => d.id)
+      .distance(100)
+      // .strength((d: any) => 0.5)
+      .iterations(5);
+
     const forceCharge = d3.forceManyBody().strength(-1000);
+
     // find largest node's index
     // const max_node_index = d3.maxIndex(graph.nodes, (node) => node.memberPoints.length);
     // const forceCharge = d3.forceManyBody().strength((d: any, i: number) => (i === max_node_index ? -10000 : -500));
@@ -62,6 +69,10 @@ export default class GraphRenderer {
       .forceSimulation(graph.nodes)
       .force('link', forceLink)
       .force('charge', forceCharge)
+      .force(
+        'collision',
+        d3.forceCollide().radius((d: any) => graph_obj.nodeSizeScale(d.memberPoints.length))
+      )
       .force('center', d3.forceCenter(0, 0))
       .force('x', d3.forceX().strength(0.1))
       .force('y', d3.forceY().strength(0.1))
