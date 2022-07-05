@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="h-full border rounded p-2">
+  <div class="border rounded p-2 min-h-full">
     <div class="grid gap-y-4">
       <UpdateGraph></UpdateGraph>
       <DatasetControls></DatasetControls>
