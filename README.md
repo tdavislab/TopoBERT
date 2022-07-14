@@ -5,7 +5,23 @@ The system allows users to interactively explore the fine-tuning process and cha
 TopoBERT is aimed at NLP practitioners who want to explore the fine-tuning process of transformer models and for linguistic experts interested in understanding the lexical, synactic, and semantic concepts captured by the model.
 
 ## Requirements
-TopoBERT requires following a working Docker installation
+TopoBERT requires python 3.6 and node.js 8.11.0 or higher.
 
 ## Installation
-TODO
+Start the server
+
+```bash
+pip install -r requirements.txt
+cd backend/server
+python -m flask run
+```
+
+Start the frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the browser and navigate to the URL provided by the server (typically http://localhost:3000).

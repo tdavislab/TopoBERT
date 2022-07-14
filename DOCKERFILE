@@ -1,0 +1,13 @@
+FROM continuumio/anaconda3
+
+WORKDIR /app
+
+# Create conda environment
+COPY environment.yml .
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Make RUN commands use the conda environment
+# SHELL ["conda", "run", "-n", "probing", "/bin/bash", "-c"]
+
+RUN python -c "import flask"
