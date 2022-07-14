@@ -4,7 +4,8 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from graph_generator import read_labels
 from sklearn.decomposition import PCA
-from MulticoreTSNE import MulticoreTSNE as TSNE
+# from MulticoreTSNE import MulticoreTSNE as TSNE
+from sklearn.manifold import TSNE
 from umap import UMAP
 
 label_list_ss = [
