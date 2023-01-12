@@ -41,6 +41,33 @@ export default class GraphRenderer {
     this.svg = d3.select(svg_selector);
     this.pieColorScale = pieColorScale;
 
+    // create a node with one member point from each class
+    console.log(Object.entries(store.state.colorMap));
+    
+    // const dummyNode: NodeEntity = {
+    //   id: 'dummy',
+    //   name: 'dummy',
+    //   avgFilterValue: 50,
+    //   x_pca: 0,
+    //   y_pca: 0,
+    //   x: 0,
+    //   y: 0,
+    //   type: 'train',
+    //   memberPoints: Object.entries(store.state.colorMap).map(([className, color]) => {
+    //     return {
+    //       classLabel: className,
+    //       l2norm: 1000,
+    //       memberId: 1234,
+    //       sentId: 4321,
+    //       sentence: 'dummy',
+    //       word: 'dummy',
+    //       wordId: 0
+    //     };
+    //   })
+    // }
+
+    // graph.nodes.push(dummyNode);
+
     let node_group = this.svg.select('g g.node_group');
     const link_group = this.svg.select('g g.link_group');
 

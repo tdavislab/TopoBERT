@@ -1,4 +1,4 @@
-name: topobert-clean
+name: topobert
 channels:
   - defaults
 dependencies:
@@ -63,4 +63,3 @@ dependencies:
     - umap-learn==0.5.3
     - werkzeug==2.0.3
     - zipp==3.6.0
-prefix: /home/archit/anaconda3/envs/topobert-clean
