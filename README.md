@@ -8,7 +8,7 @@ TopoBERT is aimed at NLP practitioners who want to explore the fine-tuning proce
 TopoBERT requires python 3.6 and node.js 8.11.0 or higher.
 
 ## Data Loading
- * Go to repo-root/backend
+ * Go to the folder ```backend```
  * Create a folder ```data```
  * Download all datasets from https://drive.google.com/drive/folders/1va-BA6DPkWqt5tke7kDM3U8iDh9hJTw-?usp=sharing 
  * Extract and put the datasets under the foler  ```data/```
